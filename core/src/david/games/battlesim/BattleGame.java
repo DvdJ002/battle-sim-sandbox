@@ -1,31 +1,52 @@
 package david.games.battlesim;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
 
-public class BattleGame extends ApplicationAdapter {
+import david.games.battlesim.assets.AssetDescriptors;
+import david.games.battlesim.screen.MenuScreen;
+
+public class BattleGame extends Game {
 	SpriteBatch batch;
-	Texture img;
+	public static AssetManager assetManager;
+	private Screen currentScreen;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		loadAssetManager();
+
+		setScreen(new MenuScreen(this));
 	}
 
 	@Override
-	public void render () {
-		ScreenUtils.clear(1, 0, 0, 1);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
+	public void setScreen(Screen screen) {
+		super.setScreen(screen);
 	}
-	
+
+	@Override
+	public Screen getScreen() {
+		return currentScreen;
+	}
+
+	private void loadAssetManager(){
+		assetManager = new AssetManager();
+		assetManager.load(AssetDescriptors.UI_SKIN);
+		assetManager.finishLoading();
+	}
+
+	public AssetManager getAssetManager(){
+		return assetManager;
+	}
+	public SpriteBatch getBatch() {
+		return batch;
+	}
+
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
+		assetManager.dispose();
 	}
 }
