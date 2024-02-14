@@ -3,9 +3,11 @@ package david.games.battlesim;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import david.games.battlesim.assets.AssetDescriptors;
+import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.screen.MenuScreen;
 
 public class BattleGame extends Game {
@@ -34,6 +36,12 @@ public class BattleGame extends Game {
 	private void loadAssetManager(){
 		assetManager = new AssetManager();
 		assetManager.load(AssetDescriptors.UI_SKIN);
+		assetManager.load(AssetPaths.SLASHER, Texture.class);
+		assetManager.load(AssetPaths.SHOOTER, Texture.class);
+		assetManager.load(AssetPaths.PLAYER, Texture.class);
+		assetManager.load(AssetPaths.MENU_BACKGROUND, Texture.class);
+		assetManager.load(AssetPaths.GAME_BACKGROUND, Texture.class);
+		assetManager.load(AssetPaths.STAGE_SELECT, Texture.class);
 		assetManager.finishLoading();
 	}
 
