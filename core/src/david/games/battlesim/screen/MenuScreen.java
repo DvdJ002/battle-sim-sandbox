@@ -105,7 +105,7 @@ public class MenuScreen extends ScreenAdapter {
         buttonTable.defaults().padLeft(30).padRight(30);
 
         buttonTable.setBackground(new TextureRegionDrawable(
-                new TextureRegion(new Texture(Gdx.files.internal(AssetPaths.BACKGROUND)))
+                new TextureRegion(new Texture(Gdx.files.internal(AssetPaths.MENU_BACKGROUND)))
         ));
 
         buttonTable.add(titleImage).padTop(10).padBottom(100).colspan(1).row();

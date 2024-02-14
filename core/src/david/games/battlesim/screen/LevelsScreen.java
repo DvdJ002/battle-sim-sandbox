@@ -78,7 +78,7 @@ public class LevelsScreen extends ScreenAdapter {
         buttonTable.top();
 
         buttonTable.setBackground(new TextureRegionDrawable(
-                new TextureRegion(new Texture(Gdx.files.internal(AssetPaths.BACKGROUND)))
+                new TextureRegion(new Texture(Gdx.files.internal(AssetPaths.MENU_BACKGROUND)))
         ));
 
         Image titleImage = new Image(new TextureRegionDrawable(
@@ -93,6 +93,12 @@ public class LevelsScreen extends ScreenAdapter {
             } else {
                 buttonTable.add(new TextButton("Stage " + i, skin)).padBottom(10).expandX().fill();
             }
+            buttonTable.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    game.setScreen(new BattleScreen(game));
+                }
+            });
         }
 
         TextButton menuButton = new TextButton("Menu" , skin);
