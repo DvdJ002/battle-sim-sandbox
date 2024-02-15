@@ -1,5 +1,7 @@
 package david.games.battlesim.screen;
 
+import static david.games.battlesim.BattleGame.assetManager;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
@@ -74,7 +76,7 @@ public class MenuScreen extends ScreenAdapter {
         table.defaults().pad(20);
 
         Image titleImage = new Image(new TextureRegionDrawable(
-                new TextureRegion(new Texture(Gdx.files.internal(AssetPaths.TITLE)))
+                new TextureRegion(assetManager.get(AssetPaths.TITLE, Texture.class))
         ));
 
         TextButton levelsButton = new TextButton("Play", skin);
@@ -105,7 +107,7 @@ public class MenuScreen extends ScreenAdapter {
         buttonTable.defaults().padLeft(30).padRight(30);
 
         buttonTable.setBackground(new TextureRegionDrawable(
-                new TextureRegion(new Texture(Gdx.files.internal(AssetPaths.MENU_BACKGROUND)))
+                new TextureRegion(assetManager.get(AssetPaths.MENU_BACKGROUND, Texture.class))
         ));
 
         buttonTable.add(titleImage).padTop(10).padBottom(100).colspan(1).row();

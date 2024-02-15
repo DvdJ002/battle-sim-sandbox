@@ -9,6 +9,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -22,6 +23,7 @@ import david.games.battlesim.config.GameConfig;
 import david.games.battlesim.elements.ClassicEnemy;
 import david.games.battlesim.elements.EnemyType;
 import david.games.battlesim.elements.Player;
+import david.games.battlesim.util.MovementUtil;
 
 public class BattleScreen extends ScreenAdapter {
 
@@ -51,11 +53,11 @@ public class BattleScreen extends ScreenAdapter {
 
         mousePosition = new Vector3(0,0,0);
 
-        gameBackground = new Texture(AssetPaths.GAME_BACKGROUND);
+        gameBackground = assetManager.get(AssetPaths.GAME_BACKGROUND, Texture.class);
 
         player = new Player(100, 100);
         enemies = new ArrayList<>();
-        enemies.add(new ClassicEnemy(EnemyType.SLASHER, 300f, 300f, 200f));
+        enemies.add(new ClassicEnemy(EnemyType.SLASHER, 500f, 500f));
     }
 
     @Override
@@ -67,15 +69,15 @@ public class BattleScreen extends ScreenAdapter {
         ScreenUtils.clear(0f, 0f, 0f, 0f);
 
         handleInput();
-        update();
+        update(delta);
 
         batch.begin();
         draw();
         batch.end();
     }
 
-    private void update(){
-        updateEnemies();
+    private void update(float delta){
+        updateEnemies(delta);
     }
 
     public void draw(){
@@ -113,12 +115,18 @@ public class BattleScreen extends ScreenAdapter {
         }
     }
 
-    private void updateEnemies(){
+    private void updateEnemies(float delta){
         for (ClassicEnemy enemy: enemies){
-            enemy.update();
+            enemy.update(delta, player.getPositionVector());
             // Check for collision with player
             if (overlaps(player.hitbox, enemy.hitbox)) {
-                player.onCollision();
+                // player.onCollision();
+            }
+
+            if (enemy.type == EnemyType.SLASHER &&
+                MovementUtil.isNear(player.hitbox.x, player.hitbox.y, enemy.hitbox.x, enemy.hitbox.y, 200f)
+            ){
+                enemy.dash(400f, player.getPositionVector());
             }
         }
     }

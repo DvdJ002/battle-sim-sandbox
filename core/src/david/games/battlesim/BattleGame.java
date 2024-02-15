@@ -37,10 +37,12 @@ public class BattleGame extends Game {
 		assetManager = new AssetManager();
 		assetManager.load(AssetDescriptors.UI_SKIN);
 		assetManager.load(AssetPaths.SLASHER, Texture.class);
+		assetManager.load(AssetPaths.SLASHER_ATTACK, Texture.class);
 		assetManager.load(AssetPaths.SHOOTER, Texture.class);
 		assetManager.load(AssetPaths.PLAYER, Texture.class);
 		assetManager.load(AssetPaths.MENU_BACKGROUND, Texture.class);
 		assetManager.load(AssetPaths.GAME_BACKGROUND, Texture.class);
+		assetManager.load(AssetPaths.TITLE, Texture.class);
 		assetManager.load(AssetPaths.STAGE_SELECT, Texture.class);
 		assetManager.finishLoading();
 	}

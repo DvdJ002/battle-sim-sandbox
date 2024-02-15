@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import static david.games.battlesim.BattleGame.assetManager;
@@ -33,6 +34,7 @@ public class Player {
 
     public void draw(SpriteBatch batch, float turnX, float turnY){
         float angle = findAngleBetweenPoints(hitbox.x, hitbox.y, turnX, turnY);
+        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         batch.draw(
                 texture, hitbox.x - hitbox.radius, hitbox.y - hitbox.radius, diameter/2, diameter/2,
                 diameter, diameter, 1, 1, angle, 0, 0,
@@ -53,19 +55,19 @@ public class Player {
         switch (direction){
             case "up":
                 hitbox.y += speed * delta;
-                if (hitbox.y > GameConfig.HEIGHT - hitbox.radius - 8f) { hitbox.y = GameConfig.HEIGHT - hitbox.radius - 8f; }
+                if (hitbox.y > GameConfig.HEIGHT - hitbox.radius) { hitbox.y = GameConfig.HEIGHT - hitbox.radius; }
                 break;
             case "down":
                 hitbox.y -= delta * speed;
-                if (hitbox.y < 9f) { hitbox.y = 9f; }
+                if (hitbox.y < hitbox.radius) { hitbox.y = hitbox.radius; }
                 break;
             case "left":
                 hitbox.x -= delta * speed;
-                if (hitbox.x < 11f) { hitbox.x = 11f; }
+                if (hitbox.x < hitbox.radius) { hitbox.x = hitbox.radius; }
                 break;
             case "right":
                 hitbox.x += delta * speed;
-                if (hitbox.x > GameConfig.WIDTH - hitbox.radius - 11f) { hitbox.x = GameConfig.WIDTH - hitbox.radius - 11f; }
+                if (hitbox.x > GameConfig.WIDTH - hitbox.radius) { hitbox.x = GameConfig.WIDTH - hitbox.radius; }
                 break;
         }
     }
@@ -92,6 +94,10 @@ public class Player {
     }
 
     public void onCollision(){
-        System.out.println("Colliding \n .............");
+        // System.out.println("Colliding \n .............");
+    }
+
+    public Vector2 getPositionVector(){
+        return new Vector2(hitbox.x, hitbox.y);
     }
 }
