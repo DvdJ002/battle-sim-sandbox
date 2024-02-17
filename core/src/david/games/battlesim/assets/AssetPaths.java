@@ -3,6 +3,7 @@ package david.games.battlesim.assets;
 public class AssetPaths {
     public static final String SLASHER = "gameplay/slasher.png";
     public static final String SLASHER_ATTACK = "gameplay/slasher_attack.png";
+    public static final String KAMIKAZE = "gameplay/kamikaze.png";
     public static final String SHOOTER = "gameplay/shooter.png";
     public static final String PLAYER = "gameplay/player.png";
     public static final String MENU_BACKGROUND = "gameplay/menu_background.jpg";

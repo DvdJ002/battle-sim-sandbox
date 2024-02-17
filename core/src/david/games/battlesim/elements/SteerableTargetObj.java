@@ -7,15 +7,14 @@ import com.badlogic.gdx.math.Vector2;
 
 public class SteerableTargetObj implements Steerable<Vector2> {
     private Vector2 linearVelocity = new Vector2(0, 0), position;
-    private float orientation, angularVelocity, speed;  // Current orientation in radians
-    private float maxLinearSpeed = 100.0f, maxLinearAcceleration = 100.0f, boundingRadius;
+    private float orientation, angularVelocity;  // Current orientation in radians
+    private float maxLinearSpeed = 100.0f, maxLinearAcceleration = 100.0f;
     private float maxAngularSpeed = 100.0f, maxAngularAcceleration = 100.0f;
     private float zeroLinearSpeedThreshold = 10f;
     boolean tagged;
 
-    public SteerableTargetObj(float x, float y, float boundingRadius) {
+    public SteerableTargetObj(float x, float y) {
         position = new Vector2(x, y);
-        this.boundingRadius = boundingRadius;
     }
 
     public void updatePosition(float x, float y){
@@ -34,10 +33,7 @@ public class SteerableTargetObj implements Steerable<Vector2> {
     }
 
     @Override
-    public float getBoundingRadius() {
-        return boundingRadius;
-    }
-
+    public float getBoundingRadius() { return 100f; }
     @Override
     public boolean isTagged() {
         return tagged;

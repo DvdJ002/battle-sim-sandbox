@@ -38,6 +38,7 @@ public class BattleGame extends Game {
 		assetManager.load(AssetDescriptors.UI_SKIN);
 		assetManager.load(AssetPaths.SLASHER, Texture.class);
 		assetManager.load(AssetPaths.SLASHER_ATTACK, Texture.class);
+		assetManager.load(AssetPaths.KAMIKAZE, Texture.class);
 		assetManager.load(AssetPaths.SHOOTER, Texture.class);
 		assetManager.load(AssetPaths.PLAYER, Texture.class);
 		assetManager.load(AssetPaths.MENU_BACKGROUND, Texture.class);

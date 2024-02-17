@@ -9,21 +9,22 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import david.games.battlesim.BattleGame;
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.GameConfig;
-import david.games.battlesim.elements.ClassicEnemy;
-import david.games.battlesim.elements.EnemyType;
+import david.games.battlesim.elements.Enemy;
+import david.games.battlesim.elements.KamikazeEnemy;
 import david.games.battlesim.elements.Player;
-import david.games.battlesim.util.MovementUtil;
+import david.games.battlesim.elements.ShooterEnemy;
+import david.games.battlesim.elements.SlasherEnemy;
 
 public class BattleScreen extends ScreenAdapter {
 
@@ -31,7 +32,7 @@ public class BattleScreen extends ScreenAdapter {
     private final AssetManager assetManager;
     private SpriteBatch batch;
     private Player player;
-    private ArrayList<ClassicEnemy> enemies;
+    private ArrayList<Enemy> enemies;
 
 
     private Viewport viewport;
@@ -57,7 +58,9 @@ public class BattleScreen extends ScreenAdapter {
 
         player = new Player(100, 100);
         enemies = new ArrayList<>();
-        enemies.add(new ClassicEnemy(EnemyType.SLASHER, 500f, 500f));
+        enemies.add(new SlasherEnemy(500f, 500f));
+        enemies.add(new KamikazeEnemy(400f, 400f));
+        enemies.add(new ShooterEnemy(250f, 254f));
     }
 
     @Override
@@ -110,24 +113,17 @@ public class BattleScreen extends ScreenAdapter {
     }
 
     private void drawEnemies(){
-        for (ClassicEnemy enemy: enemies){
+        for (Enemy enemy: enemies){
             enemy.draw(batch);
         }
     }
 
     private void updateEnemies(float delta){
-        for (ClassicEnemy enemy: enemies){
+        for (Iterator<Enemy> it = enemies.iterator(); it.hasNext();) {
+            Enemy enemy = it.next();
             enemy.update(delta, player.getPositionVector());
-            // Check for collision with player
-            if (overlaps(player.hitbox, enemy.hitbox)) {
-                // player.onCollision();
-            }
-
-            if (enemy.type == EnemyType.SLASHER &&
-                MovementUtil.isNear(player.hitbox.x, player.hitbox.y, enemy.hitbox.x, enemy.hitbox.y, 200f)
-            ){
-                enemy.dash(400f, player.getPositionVector());
-            }
+            if (overlaps(player.hitbox, enemy.hitbox)) { player.onCollision(); }
+            if (!enemy.isAlive) { it.remove(); }
         }
     }
     @Override

@@ -2,10 +2,8 @@ package david.games.battlesim.elements;
 
 import static david.games.battlesim.util.MovementUtil.findAngleBetweenPoints;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -18,32 +16,27 @@ import david.games.battlesim.config.GameConfig;
 public class Player {
     public Circle hitbox;
     Texture texture;
-    float diameter, speed;
+    public float speed = 280f, health = 100f;
     private float phaseDuration = 2.0f, phaseTimer = 0.0f, phaseCooldown;
     private boolean phasing;
     public Player(float x, float y){
         texture = assetManager.get(AssetPaths.PLAYER, Texture.class);
-
         hitbox = new Circle();
         hitbox.radius = GameConfig.WIDTH/20;
         hitbox.x = x;
         hitbox.y = y;
-        this.diameter = hitbox.radius * 2;
-        this.speed = 280;
     }
 
     public void draw(SpriteBatch batch, float turnX, float turnY){
         float angle = findAngleBetweenPoints(hitbox.x, hitbox.y, turnX, turnY);
-        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         batch.draw(
-                texture, hitbox.x - hitbox.radius, hitbox.y - hitbox.radius, diameter/2, diameter/2,
-                diameter, diameter, 1, 1, angle, 0, 0,
+                texture, hitbox.x - hitbox.radius, hitbox.y - hitbox.radius, hitbox.radius, hitbox.radius,
+                hitbox.radius*2, hitbox.radius*2, 1, 1, angle, 0, 0,
                 texture.getWidth(), texture.getHeight(), false, false
         );
 
         if (phasing) {
             phaseTimer -= 0.3f;
-
             if (phaseTimer <= 0f) {
                 speed -= 1000;
                 phasing = false;
@@ -83,18 +76,15 @@ public class Player {
         }
     }
 
-    public void drawHitbox(){
-        ShapeRenderer renderer = new ShapeRenderer();
-        renderer.begin(ShapeRenderer.ShapeType.Line);
-
-        renderer.setColor(Color.RED);
-        renderer.circle(hitbox.x, hitbox.y, hitbox.radius);
-
-        renderer.end();
+    public void onCollision(){
+        changeHealth(-5f);
+        // Particle effects/animations etc.
     }
 
-    public void onCollision(){
-        // System.out.println("Colliding \n .............");
+    public void changeHealth(float change){
+        health += change;
+        if (health <= 0f){ System.out.println("Game over!"); }
+        else if (health > 100) { health = 100f; }
     }
 
     public Vector2 getPositionVector(){
