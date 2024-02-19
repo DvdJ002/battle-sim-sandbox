@@ -9,6 +9,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -20,6 +21,7 @@ import java.util.Iterator;
 import david.games.battlesim.BattleGame;
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.GameConfig;
+import david.games.battlesim.elements.Bullet;
 import david.games.battlesim.elements.Enemy;
 import david.games.battlesim.elements.KamikazeEnemy;
 import david.games.battlesim.elements.Player;
@@ -33,6 +35,7 @@ public class BattleScreen extends ScreenAdapter {
     private SpriteBatch batch;
     private Player player;
     private ArrayList<Enemy> enemies;
+    private ArrayList<Bullet> bullets;
 
 
     private Viewport viewport;
@@ -61,6 +64,8 @@ public class BattleScreen extends ScreenAdapter {
         enemies.add(new SlasherEnemy(500f, 500f));
         enemies.add(new KamikazeEnemy(400f, 400f));
         enemies.add(new ShooterEnemy(250f, 254f));
+
+        bullets = new ArrayList<>();
     }
 
     @Override
@@ -80,12 +85,14 @@ public class BattleScreen extends ScreenAdapter {
     }
 
     private void update(float delta){
+        updateBullets(delta);
         updateEnemies(delta);
     }
 
     public void draw(){
         batch.draw(gameBackground, 0, 0, GameConfig.WIDTH, GameConfig.HEIGHT);
         drawEnemies();
+        drawBullets();
         player.draw(batch, mousePosition.x, mousePosition.y);
     }
 
@@ -110,6 +117,10 @@ public class BattleScreen extends ScreenAdapter {
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             player.phase();
         }
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            Vector2 playerPos = player.getPositionVector();
+            bullets.add(new Bullet(playerPos.x, playerPos.y, player.faceAngle));
+        }
     }
 
     private void drawEnemies(){
@@ -117,13 +128,33 @@ public class BattleScreen extends ScreenAdapter {
             enemy.draw(batch);
         }
     }
+    private void drawBullets(){
+        for (Bullet bullet: bullets){
+            bullet.draw(batch);
+        }
+    }
 
     private void updateEnemies(float delta){
-        for (Iterator<Enemy> it = enemies.iterator(); it.hasNext();) {
-            Enemy enemy = it.next();
+        for (Iterator<Enemy> it_e = enemies.iterator(); it_e.hasNext();) {
+            Enemy enemy = it_e.next();
             enemy.update(delta, player.getPositionVector());
             if (overlaps(player.hitbox, enemy.hitbox)) { player.onCollision(); }
-            if (!enemy.isAlive) { it.remove(); }
+            for (Iterator<Bullet> it_b = bullets.iterator(); it_b.hasNext();) {
+                Bullet bullet = it_b.next();
+                // A bullet struck the enemy
+                if (overlaps(bullet.hitbox, enemy.hitbox)) {
+                    enemy.takeHit("bullet");
+                    it_b.remove();
+                }
+            }
+            if (!enemy.isAlive) { it_e.remove(); }
+        }
+    }
+    private void updateBullets(float delta){
+        for (Iterator<Bullet> it = bullets.iterator(); it.hasNext();) {
+            Bullet bullet = it.next();
+            bullet.update(delta);
+            if (!bullet.isAlive) { it.remove(); }
         }
     }
     @Override

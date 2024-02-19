@@ -16,7 +16,7 @@ import david.games.battlesim.config.GameConfig;
 public class Player {
     public Circle hitbox;
     Texture texture;
-    public float speed = 280f, health = 100f;
+    public float speed = 280f, health = 100f, faceAngle;
     private float phaseDuration = 2.0f, phaseTimer = 0.0f, phaseCooldown;
     private boolean phasing;
     public Player(float x, float y){
@@ -28,10 +28,10 @@ public class Player {
     }
 
     public void draw(SpriteBatch batch, float turnX, float turnY){
-        float angle = findAngleBetweenPoints(hitbox.x, hitbox.y, turnX, turnY);
+        faceAngle = findAngleBetweenPoints(hitbox.x, hitbox.y, turnX, turnY);
         batch.draw(
                 texture, hitbox.x - hitbox.radius, hitbox.y - hitbox.radius, hitbox.radius, hitbox.radius,
-                hitbox.radius*2, hitbox.radius*2, 1, 1, angle, 0, 0,
+                hitbox.radius*2, hitbox.radius*2, 1, 1, faceAngle, 0, 0,
                 texture.getWidth(), texture.getHeight(), false, false
         );
 
@@ -83,7 +83,9 @@ public class Player {
 
     public void changeHealth(float change){
         health += change;
-        if (health <= 0f){ System.out.println("Game over!"); }
+        if (health <= 0f){
+            //System.out.println("Game over!");
+        }
         else if (health > 100) { health = 100f; }
     }
 

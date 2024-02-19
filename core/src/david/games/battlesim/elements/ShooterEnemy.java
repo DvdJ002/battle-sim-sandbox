@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import david.games.battlesim.assets.AssetPaths;
 
 public class ShooterEnemy extends Enemy{
-    private float shootingRate = 2f, evadeRange = 400f;
+    private float shootingRate = 2f, evadeRange = 300f;
     public boolean evading = true;
     public ShooterEnemy(float x, float y){
         super(x, y);
@@ -43,7 +43,7 @@ public class ShooterEnemy extends Enemy{
     public void chase(){
         steeringBehavior = new Arrive<>(this, target);
         evading = false;
-        maxLinearAcceleration = 150.0f;
-        maxAngularAcceleration = 150.0f;
+        maxLinearAcceleration = 40.0f;
+        maxAngularAcceleration = 40.0f;
     }
 }

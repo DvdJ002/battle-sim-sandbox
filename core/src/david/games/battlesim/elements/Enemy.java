@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.Objects;
+
 import david.games.battlesim.config.GameConfig;
 
 public class Enemy implements Steerable<Vector2> {
@@ -82,8 +84,9 @@ public class Enemy implements Steerable<Vector2> {
         }
     }
 
-    public void changeHealth(float change){
-        health += change;
+    public void takeHit(String type){
+        if (Objects.equals(type, "bullet")) { health -= 25f; }
+        // Check if health went over 100 or under 0
         if (health <= 0f){ isAlive = false; }
         else if (health > 100) { health = 100f; }
     }
