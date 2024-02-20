@@ -9,7 +9,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
@@ -64,7 +63,7 @@ public class BattleScreen extends ScreenAdapter {
         player = new Player(100, 100);
         enemies = new ArrayList<>();
         enemies.add(new SlasherEnemy(500f, 500f));
-        enemies.add(new KamikazeEnemy(400f, 400f));
+        // enemies.add(new KamikazeEnemy(400f, 400f));
         enemies.add(new ShooterEnemy(250f, 254f));
 
         bullets = new ArrayList<>();
@@ -89,8 +88,8 @@ public class BattleScreen extends ScreenAdapter {
     }
 
     private void update(float delta){
-        updateBullets(delta);
         updateEnemies(delta);
+        updateBullets(delta);
     }
 
     public void draw(){
@@ -122,11 +121,7 @@ public class BattleScreen extends ScreenAdapter {
             player.phase();
         }
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            Vector2 playerPos = player.getPositionVector();
-            if (bulletPool.getFree() != 0){ System.out.println("Obtained bullet from pool!"); }
-            Bullet bullet = bulletPool.obtain();
-            bullet.initFromPool(playerPos.x, playerPos.y, player.faceAngle);
-            bullets.add(bullet);
+            player.shootBullet(bulletPool, bullets);
         }
     }
 
@@ -145,12 +140,18 @@ public class BattleScreen extends ScreenAdapter {
         for (Iterator<Enemy> it_e = enemies.iterator(); it_e.hasNext();) {
             Enemy enemy = it_e.next();
             enemy.update(delta, player.getPositionVector());
-            if (overlaps(player.hitbox, enemy.hitbox)) { player.onCollision(); }
+            if (overlaps(player.hitbox, enemy.hitbox)) { player.takeHit("collision"); }
+            if (enemy instanceof ShooterEnemy && !((ShooterEnemy) enemy).reloading){
+                ((ShooterEnemy) enemy).shootBullet(player.getPositionVector(), bulletPool, bullets);
+            }
             for (Iterator<Bullet> it_b = bullets.iterator(); it_b.hasNext();) {
                 Bullet bullet = it_b.next();
-                // A bullet struck the enemy
-                if (overlaps(bullet.hitbox, enemy.hitbox)) {
+                // Check if bullet hit the enemy or the player
+                if (bullet.isAlive && bullet.fromPlayer && overlaps(bullet.hitbox, enemy.hitbox)) {
                     enemy.takeHit("bullet");
+                    bullet.isAlive = false;
+                } else if (bullet.isAlive && !bullet.fromPlayer && overlaps(bullet.hitbox, player.hitbox)) {
+                    player.takeHit("bullet");
                     bullet.isAlive = false;
                 }
             }
@@ -161,13 +162,15 @@ public class BattleScreen extends ScreenAdapter {
         Bullet bullet;
         for (int i = bullets.size(); --i >= 0;) {
             bullet = bullets.get(i);
-            bullet.update(delta);
             if (!bullet.isAlive) {
                 bullets.remove(i);
                 bulletPool.free(bullet);
+            } else {
+                bullet.update(delta);
             }
         }
     }
+
     @Override
     public void hide() {
         dispose();

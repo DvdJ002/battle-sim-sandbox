@@ -16,18 +16,19 @@ public class Bullet implements Pool.Poolable {
     public Circle hitbox;
     Texture texture;
     public float angle, speed = 1750f;
-    public boolean isAlive = true;
+    public boolean isAlive = true, fromPlayer = true;
 
-    public Bullet(float x, float y, float angle) {
+    public Bullet(float x, float y, float angle, boolean fromPlayer) {
         texture = assetManager.get(AssetPaths.BULLET_BLUE, Texture.class);
         hitbox = new Circle();
         hitbox.radius = GameConfig.WIDTH/45;
         hitbox.x = x;
         hitbox.y = y;
         this.angle = angle;
+        this.fromPlayer = fromPlayer;
     }
     public Bullet(){
-        this(0f, 0f, 90f);
+        this(0f, 0f, 90f, true);
     }
 
     public void draw(SpriteBatch batch){
@@ -51,10 +52,11 @@ public class Bullet implements Pool.Poolable {
         }
     }
 
-    public void initFromPool(float x, float y, float angle){
+    public void initFromPool(float x, float y, float angle, boolean fromPlayer){
         hitbox.x = x;
         hitbox.y = y;
         this.angle = angle;
+        this.fromPlayer = fromPlayer;
     }
 
     @Override

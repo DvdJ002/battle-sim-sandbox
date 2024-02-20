@@ -6,9 +6,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import static david.games.battlesim.BattleGame.assetManager;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.GameConfig;
@@ -76,17 +80,26 @@ public class Player {
         }
     }
 
-    public void onCollision(){
-        changeHealth(-5f);
+    public void takeHit(String type){
+        if (Objects.equals(type, "bullet")) { changeHealth(-25f); }
+        else if (Objects.equals(type, "collision")) { changeHealth(-2f); }
         // Particle effects/animations etc.
     }
 
     public void changeHealth(float change){
         health += change;
+        System.out.println("Player health is: " + health);
         if (health <= 0f){
-            //System.out.println("Game over!");
+            // System.out.println("Game over!");
         }
         else if (health > 100) { health = 100f; }
+    }
+
+    public void shootBullet(Pool<Bullet> bulletPool, ArrayList<Bullet> bullets){
+        // if (bulletPool.getFree() != 0){ System.out.println("Player obtained bullet from pool!"); }
+        Bullet bullet = bulletPool.obtain();
+        bullet.initFromPool(hitbox.x, hitbox.y, faceAngle, true);
+        bullets.add(bullet);
     }
 
     public Vector2 getPositionVector(){
