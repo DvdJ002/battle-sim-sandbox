@@ -5,13 +5,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Pool;
 
 import static david.games.battlesim.BattleGame.assetManager;
 
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.GameConfig;
 
-public class Bullet {
+public class Bullet implements Pool.Poolable {
     public Circle hitbox;
     Texture texture;
     public float angle, speed = 1750f;
@@ -24,6 +25,9 @@ public class Bullet {
         hitbox.x = x;
         hitbox.y = y;
         this.angle = angle;
+    }
+    public Bullet(){
+        this(0f, 0f, 90f);
     }
 
     public void draw(SpriteBatch batch){
@@ -45,5 +49,18 @@ public class Bullet {
             hitbox.x + hitbox.radius > GameConfig.WIDTH + 10f || hitbox.x + hitbox.radius < 0f) {
             isAlive = false;
         }
+    }
+
+    public void initFromPool(float x, float y, float angle){
+        hitbox.x = x;
+        hitbox.y = y;
+        this.angle = angle;
+    }
+
+    @Override
+    public void reset() {
+        isAlive = true;
+        hitbox.x = 0f;
+        hitbox.y = 0f;
     }
 }

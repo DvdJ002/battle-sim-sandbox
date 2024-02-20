@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -36,7 +38,7 @@ public class BattleScreen extends ScreenAdapter {
     private Player player;
     private ArrayList<Enemy> enemies;
     private ArrayList<Bullet> bullets;
-
+    private Pool<Bullet> bulletPool;
 
     private Viewport viewport;
     private OrthographicCamera camera;
@@ -66,6 +68,8 @@ public class BattleScreen extends ScreenAdapter {
         enemies.add(new ShooterEnemy(250f, 254f));
 
         bullets = new ArrayList<>();
+        bulletPool = Pools.get(Bullet.class, 15);
+        bulletPool.fill(5);
     }
 
     @Override
@@ -119,7 +123,10 @@ public class BattleScreen extends ScreenAdapter {
         }
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             Vector2 playerPos = player.getPositionVector();
-            bullets.add(new Bullet(playerPos.x, playerPos.y, player.faceAngle));
+            if (bulletPool.getFree() != 0){ System.out.println("Obtained bullet from pool!"); }
+            Bullet bullet = bulletPool.obtain();
+            bullet.initFromPool(playerPos.x, playerPos.y, player.faceAngle);
+            bullets.add(bullet);
         }
     }
 
@@ -144,17 +151,21 @@ public class BattleScreen extends ScreenAdapter {
                 // A bullet struck the enemy
                 if (overlaps(bullet.hitbox, enemy.hitbox)) {
                     enemy.takeHit("bullet");
-                    it_b.remove();
+                    bullet.isAlive = false;
                 }
             }
             if (!enemy.isAlive) { it_e.remove(); }
         }
     }
     private void updateBullets(float delta){
-        for (Iterator<Bullet> it = bullets.iterator(); it.hasNext();) {
-            Bullet bullet = it.next();
+        Bullet bullet;
+        for (int i = bullets.size(); --i >= 0;) {
+            bullet = bullets.get(i);
             bullet.update(delta);
-            if (!bullet.isAlive) { it.remove(); }
+            if (!bullet.isAlive) {
+                bullets.remove(i);
+                bulletPool.free(bullet);
+            }
         }
     }
     @Override
