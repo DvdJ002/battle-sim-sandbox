@@ -32,8 +32,8 @@ public class SlasherEnemy extends Enemy {
                 dashing = false;
                 texture = assetManager.get(AssetPaths.SLASHER, Texture.class);
             }
-        } else if (isNear(playerPosition.x, playerPosition.y, hitbox.x, hitbox.y, 200f)){
-            this.dash(400f, playerPosition);
+        } else if (isNear(playerPosition.x, playerPosition.y, hitbox.x, hitbox.y, 300f)){
+            this.dash(600f, playerPosition);
         }
     }
 

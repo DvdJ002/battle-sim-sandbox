@@ -85,7 +85,7 @@ public class Enemy implements Steerable<Vector2> {
     }
 
     public void takeHit(String type){
-        if (Objects.equals(type, "bullet")) { health -= 25f; }
+        if (Objects.equals(type, "bullet")) { health -= 10f; }
         // Check if health went over 100 or under 0
         if (health <= 0f){ isAlive = false; }
         else if (health > 100) { health = 100f; }

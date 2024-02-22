@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.TimeUtils;
 
@@ -18,17 +19,23 @@ import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.GameConfig;
 
 public class Player {
-    public Circle hitbox;
-    Texture texture;
-    public float speed = 280f, health = 100f, faceAngle;
+    public Circle hitbox, shieldHitbox;
+    Texture texture, shieldTexture;
+    public float speed = 280f, health = 100f, shieldHealth = 100f, faceAngle;
     private float phaseDuration = 2.0f, phaseTimer = 0.0f, phaseCooldown;
     private boolean phasing;
+    public boolean shielding = false;
     public Player(float x, float y){
         texture = assetManager.get(AssetPaths.PLAYER, Texture.class);
+        shieldTexture = assetManager.get(AssetPaths.PLAYER_SHIELD, Texture.class);
         hitbox = new Circle();
-        hitbox.radius = GameConfig.WIDTH/20;
+        hitbox.radius = GameConfig.WIDTH/20; // 40
         hitbox.x = x;
         hitbox.y = y;
+        shieldHitbox = new Circle();
+        shieldHitbox.radius = hitbox.radius * 1.25f; // 50
+        shieldHitbox.x = x;
+        shieldHitbox.y = y;
     }
 
     public void draw(SpriteBatch batch, float turnX, float turnY){
@@ -39,6 +46,15 @@ public class Player {
                 texture.getWidth(), texture.getHeight(), false, false
         );
 
+        if (shielding) {
+            batch.draw(
+                    shieldTexture, hitbox.x - shieldHitbox.radius, hitbox.y - shieldHitbox.radius,
+                    shieldHitbox.radius, shieldHitbox.radius, shieldHitbox.radius*2, shieldHitbox.radius*2,
+                    1, 1, faceAngle, 0, 0,
+                    shieldTexture.getWidth(), shieldTexture.getHeight(), false, false
+            );
+        }
+
         if (phasing) {
             phaseTimer -= 0.3f;
             if (phaseTimer <= 0f) {
@@ -46,6 +62,8 @@ public class Player {
                 phasing = false;
             }
         }
+
+        System.out.println("Shield health: " + shieldHealth);
     }
 
     public void movePlayer(float delta, String direction) {
@@ -67,6 +85,8 @@ public class Player {
                 if (hitbox.x > GameConfig.WIDTH - hitbox.radius) { hitbox.x = GameConfig.WIDTH - hitbox.radius; }
                 break;
         }
+        shieldHitbox.x = hitbox.x;
+        shieldHitbox.y = hitbox.y;
     }
 
     public void phase(){
@@ -83,16 +103,23 @@ public class Player {
     public void takeHit(String type){
         if (Objects.equals(type, "bullet")) { changeHealth(-25f); }
         else if (Objects.equals(type, "collision")) { changeHealth(-2f); }
+        else if (Objects.equals(type, "kamikaze")) { changeHealth(-75f); }
         // Particle effects/animations etc.
     }
 
     public void changeHealth(float change){
-        health += change;
-        System.out.println("Player health is: " + health);
-        if (health <= 0f){
-            // System.out.println("Game over!");
+        if (shielding){
+            shieldHealth += change;
+            if (shieldHealth <= 0f){
+                this.deactivateShield();
+            }
+        } else {
+            health += change;
+            if (health <= 0f){
+                System.out.println("Game over!");
+            }
+            else if (health > 100) { health = 100f; }
         }
-        else if (health > 100) { health = 100f; }
     }
 
     public void shootBullet(Pool<Bullet> bulletPool, ArrayList<Bullet> bullets){
@@ -100,6 +127,15 @@ public class Player {
         Bullet bullet = bulletPool.obtain();
         bullet.initFromPool(hitbox.x, hitbox.y, faceAngle, true);
         bullets.add(bullet);
+    }
+
+    public void activateShield(){
+        if (shieldHealth > 0f) { shielding = true; }
+        // texture = assetManager.get(AssetPaths.PLAYER_SHIELDED, Texture.class);
+    }
+    public void deactivateShield(){
+        shielding = false;
+        // texture = assetManager.get(AssetPaths.PLAYER, Texture.class);
     }
 
     public Vector2 getPositionVector(){

@@ -11,11 +11,10 @@ import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.GameConfig;
 
 public class KamikazeEnemy extends Enemy {
-    private final float explodingRange = 150f;
-
+    private final float explodingRange = 120f;
     public KamikazeEnemy(float x, float y) {
         super(x, y);
-        // The kamikaze accelerates way faster than other enemies
+        // The kamikaze accelerates faster than other enemies
         maxLinearAcceleration = 600.0f;
         maxAngularAcceleration = 600.0f;
         texture = assetManager.get(AssetPaths.KAMIKAZE, Texture.class);
@@ -26,6 +25,7 @@ public class KamikazeEnemy extends Enemy {
     @Override
     public void update(float delta, Vector2 playerPosition){
         super.update(delta, playerPosition);
+        // Kamikaze reached necessary distance from player and exploded
         if (isNear(hitbox.x, hitbox.y, playerPosition.x, playerPosition.y, explodingRange)){
             isAlive = false;
         }

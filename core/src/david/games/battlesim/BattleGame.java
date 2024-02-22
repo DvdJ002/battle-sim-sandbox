@@ -41,6 +41,7 @@ public class BattleGame extends Game {
 		assetManager.load(AssetPaths.KAMIKAZE, Texture.class);
 		assetManager.load(AssetPaths.SHOOTER, Texture.class);
 		assetManager.load(AssetPaths.PLAYER, Texture.class);
+		assetManager.load(AssetPaths.PLAYER_SHIELD, Texture.class);
 		assetManager.load(AssetPaths.BULLET_BLUE, Texture.class);
 		assetManager.load(AssetPaths.MENU_BACKGROUND, Texture.class);
 		assetManager.load(AssetPaths.GAME_BACKGROUND, Texture.class);

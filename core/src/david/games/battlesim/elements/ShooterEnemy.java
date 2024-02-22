@@ -13,7 +13,6 @@ import com.badlogic.gdx.utils.Pool;
 import java.util.ArrayList;
 
 import david.games.battlesim.assets.AssetPaths;
-import david.games.battlesim.screen.BattleScreen;
 
 public class ShooterEnemy extends Enemy{
     private float reloadTimer = 0f, reloadDuration = 2f, evadeRange = 300f;

@@ -28,10 +28,12 @@ import david.games.battlesim.elements.KamikazeEnemy;
 import david.games.battlesim.elements.Player;
 import david.games.battlesim.elements.ShooterEnemy;
 import david.games.battlesim.elements.SlasherEnemy;
+import david.games.battlesim.util.MyInputProcessor;
 
 public class BattleScreen extends ScreenAdapter {
 
     private final BattleGame game;
+    MyInputProcessor inputProcessor;
     private final AssetManager assetManager;
     private SpriteBatch batch;
     private Player player;
@@ -61,10 +63,15 @@ public class BattleScreen extends ScreenAdapter {
         gameBackground = assetManager.get(AssetPaths.GAME_BACKGROUND, Texture.class);
 
         player = new Player(100, 100);
+        inputProcessor = new MyInputProcessor(player);
+        Gdx.input.setInputProcessor(inputProcessor);
+
         enemies = new ArrayList<>();
-        enemies.add(new SlasherEnemy(500f, 500f));
-        // enemies.add(new KamikazeEnemy(400f, 400f));
-        enemies.add(new ShooterEnemy(250f, 254f));
+        //enemies.add(new SlasherEnemy(200f, 500f));
+        //enemies.add(new SlasherEnemy(400f, 500f));
+        enemies.add(new ShooterEnemy(300f, 580f));
+        //enemies.add(new KamikazeEnemy(500f, 400f));
+
 
         bullets = new ArrayList<>();
         bulletPool = Pools.get(Bullet.class, 15);
@@ -117,9 +124,6 @@ public class BattleScreen extends ScreenAdapter {
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             player.movePlayer(Gdx.graphics.getDeltaTime(), "down");
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            player.phase();
-        }
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             player.shootBullet(bulletPool, bullets);
         }
@@ -140,9 +144,14 @@ public class BattleScreen extends ScreenAdapter {
         for (Iterator<Enemy> it_e = enemies.iterator(); it_e.hasNext();) {
             Enemy enemy = it_e.next();
             enemy.update(delta, player.getPositionVector());
-            if (overlaps(player.hitbox, enemy.hitbox)) { player.takeHit("collision"); }
+            if (player.shielding && overlaps(player.shieldHitbox, enemy.hitbox)) { player.takeHit("collision"); }
+            else if (!player.shielding && overlaps(player.hitbox, enemy.hitbox)) { player.takeHit("collision"); }
+
             if (enemy instanceof ShooterEnemy && !((ShooterEnemy) enemy).reloading){
                 ((ShooterEnemy) enemy).shootBullet(player.getPositionVector(), bulletPool, bullets);
+            }
+            else if (enemy instanceof KamikazeEnemy && !enemy.isAlive) {
+                player.takeHit("kamikaze");
             }
             for (Iterator<Bullet> it_b = bullets.iterator(); it_b.hasNext();) {
                 Bullet bullet = it_b.next();
@@ -150,9 +159,16 @@ public class BattleScreen extends ScreenAdapter {
                 if (bullet.isAlive && bullet.fromPlayer && overlaps(bullet.hitbox, enemy.hitbox)) {
                     enemy.takeHit("bullet");
                     bullet.isAlive = false;
-                } else if (bullet.isAlive && !bullet.fromPlayer && overlaps(bullet.hitbox, player.hitbox)) {
-                    player.takeHit("bullet");
-                    bullet.isAlive = false;
+                }
+                if (bullet.isAlive && !bullet.fromPlayer) {
+                    if (player.shielding && overlaps(bullet.hitbox, player.shieldHitbox)) {
+                        player.takeHit("bullet");
+                        bullet.isAlive = false;
+                    }
+                    else if (!player.shielding && overlaps(bullet.hitbox, player.hitbox)) {
+                        player.takeHit("bullet");
+                        bullet.isAlive = false;
+                    }
                 }
             }
             if (!enemy.isAlive) { it_e.remove(); }
