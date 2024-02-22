@@ -153,8 +153,7 @@ public class BattleScreen extends ScreenAdapter {
             else if (enemy instanceof KamikazeEnemy && !enemy.isAlive) {
                 player.takeHit("kamikaze");
             }
-            for (Iterator<Bullet> it_b = bullets.iterator(); it_b.hasNext();) {
-                Bullet bullet = it_b.next();
+            for (Bullet bullet : bullets) {
                 // Check if bullet hit the enemy or the player
                 if (bullet.isAlive && bullet.fromPlayer && overlaps(bullet.hitbox, enemy.hitbox)) {
                     enemy.takeHit("bullet");
@@ -164,8 +163,7 @@ public class BattleScreen extends ScreenAdapter {
                     if (player.shielding && overlaps(bullet.hitbox, player.shieldHitbox)) {
                         player.takeHit("bullet");
                         bullet.isAlive = false;
-                    }
-                    else if (!player.shielding && overlaps(bullet.hitbox, player.hitbox)) {
+                    } else if (!player.shielding && overlaps(bullet.hitbox, player.hitbox)) {
                         player.takeHit("bullet");
                         bullet.isAlive = false;
                     }

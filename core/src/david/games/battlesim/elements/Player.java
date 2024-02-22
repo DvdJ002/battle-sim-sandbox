@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.TimeUtils;
 
@@ -23,8 +22,8 @@ public class Player {
     Texture texture, shieldTexture;
     public float speed = 280f, health = 100f, shieldHealth = 100f, faceAngle;
     private float phaseDuration = 2.0f, phaseTimer = 0.0f, phaseCooldown;
-    private boolean phasing;
-    public boolean shielding = false;
+    public float shieldRechargeDuration = 50f, shieldRechargeTimer = 0.0f;
+    public boolean phasing, shielding = false, shieldRecharging = false;
     public Player(float x, float y){
         texture = assetManager.get(AssetPaths.PLAYER, Texture.class);
         shieldTexture = assetManager.get(AssetPaths.PLAYER_SHIELD, Texture.class);
@@ -47,6 +46,7 @@ public class Player {
         );
 
         if (shielding) {
+            // Draw shield around player
             batch.draw(
                     shieldTexture, hitbox.x - shieldHitbox.radius, hitbox.y - shieldHitbox.radius,
                     shieldHitbox.radius, shieldHitbox.radius, shieldHitbox.radius*2, shieldHitbox.radius*2,
@@ -54,7 +54,11 @@ public class Player {
                     shieldTexture.getWidth(), shieldTexture.getHeight(), false, false
             );
         }
+        updateTimers();
+    }
 
+    private void updateTimers(){
+        // Phasing timer
         if (phasing) {
             phaseTimer -= 0.3f;
             if (phaseTimer <= 0f) {
@@ -62,8 +66,14 @@ public class Player {
                 phasing = false;
             }
         }
-
-        System.out.println("Shield health: " + shieldHealth);
+        // Shield recharge timer
+        if (shieldRecharging) {
+            shieldRechargeTimer -= 0.1f;
+            if (shieldRechargeTimer <= 0f){
+                shieldHealth = 100f;
+                shieldRecharging = false;
+            }
+        }
     }
 
     public void movePlayer(float delta, String direction) {
@@ -112,6 +122,8 @@ public class Player {
             shieldHealth += change;
             if (shieldHealth <= 0f){
                 this.deactivateShield();
+                shieldRechargeTimer = shieldRechargeDuration;
+                shieldRecharging = true;
             }
         } else {
             health += change;
@@ -120,22 +132,24 @@ public class Player {
             }
             else if (health > 100) { health = 100f; }
         }
+        System.out.println("Player health: " + health);
+        System.out.println("Shield health: " + shieldHealth);
     }
 
     public void shootBullet(Pool<Bullet> bulletPool, ArrayList<Bullet> bullets){
-        // if (bulletPool.getFree() != 0){ System.out.println("Player obtained bullet from pool!"); }
-        Bullet bullet = bulletPool.obtain();
-        bullet.initFromPool(hitbox.x, hitbox.y, faceAngle, true);
-        bullets.add(bullet);
+        if (!shielding){
+            // if (bulletPool.getFree() != 0){ System.out.println("Player obtained bullet from pool!"); }
+            Bullet bullet = bulletPool.obtain();
+            bullet.initFromPool(hitbox.x, hitbox.y, faceAngle, true);
+            bullets.add(bullet);
+        }
     }
 
     public void activateShield(){
         if (shieldHealth > 0f) { shielding = true; }
-        // texture = assetManager.get(AssetPaths.PLAYER_SHIELDED, Texture.class);
     }
     public void deactivateShield(){
         shielding = false;
-        // texture = assetManager.get(AssetPaths.PLAYER, Texture.class);
     }
 
     public Vector2 getPositionVector(){
