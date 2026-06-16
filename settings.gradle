@@ -1,1 +1,3 @@
 include 'desktop', 'core'
+include ':test'
+include ':core:test'

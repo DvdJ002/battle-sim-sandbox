@@ -1,196 +1,147 @@
 package david.games.battlesim.screen;
 
-import static com.badlogic.gdx.math.Intersector.overlaps;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import david.games.battlesim.BattleGame;
-import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.GameConfig;
-import david.games.battlesim.elements.Bullet;
-import david.games.battlesim.elements.Enemy;
-import david.games.battlesim.elements.KamikazeEnemy;
-import david.games.battlesim.elements.Player;
-import david.games.battlesim.elements.ShooterEnemy;
-import david.games.battlesim.elements.SlasherEnemy;
-import david.games.battlesim.util.MyInputProcessor;
+import david.games.battlesim.config.database.LevelConfigDatabase;
+import david.games.battlesim.ui.Hud;
+import david.games.battlesim.util.InputState;
+import david.games.battlesim.world.BattleWorld;
 
 public class BattleScreen extends ScreenAdapter {
-
     private final BattleGame game;
-    MyInputProcessor inputProcessor;
-    private final AssetManager assetManager;
     private SpriteBatch batch;
-    private Player player;
-    private ArrayList<Enemy> enemies;
-    private ArrayList<Bullet> bullets;
-    private Pool<Bullet> bulletPool;
-
-    private Viewport viewport;
-    private OrthographicCamera camera;
+    private ShapeRenderer sr;
     Vector3 mousePosition;
+    InputState inputState;
 
-    private Texture gameBackground;
+    private OrthographicCamera camera;
+    private Viewport viewport;
+    private BattleWorld world;
+    private LevelConfigDatabase levelConfigDatabase;
 
-    public BattleScreen(BattleGame game) {
+    OrthographicCamera hudCamera;
+    private Viewport hudViewport;
+    private Hud hud;
+
+    private int currentLevelCode;
+
+    public BattleScreen(BattleGame game, int levelCode) {
         this.game = game;
-        assetManager = game.getAssetManager();
+        this.currentLevelCode = levelCode;
     }
 
     @Override
     public void show() {
-        camera = new OrthographicCamera();
-        viewport = new FitViewport(GameConfig.WIDTH, GameConfig.HEIGHT, camera);
         batch = game.getBatch();
-
+        sr = game.getShapeRenderer();
+        inputState = new InputState();
         mousePosition = new Vector3(0,0,0);
 
-        gameBackground = assetManager.get(AssetPaths.GAME_BACKGROUND, Texture.class);
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(GameConfig.WIDTH, GameConfig.HEIGHT, camera);
+        world = new BattleWorld(game);
+        levelConfigDatabase = new LevelConfigDatabase();
 
-        player = new Player(100, 100);
-        inputProcessor = new MyInputProcessor(player);
-        Gdx.input.setInputProcessor(inputProcessor);
+        hudCamera = new OrthographicCamera();
+        hudViewport = new FitViewport(GameConfig.WIDTH, GameConfig.HEIGHT, hudCamera);
+        hud = new Hud();
 
-        enemies = new ArrayList<>();
-        //enemies.add(new SlasherEnemy(200f, 500f));
-        //enemies.add(new SlasherEnemy(400f, 500f));
-        enemies.add(new ShooterEnemy(300f, 580f));
-        //enemies.add(new KamikazeEnemy(500f, 400f));
-
-
-        bullets = new ArrayList<>();
-        bulletPool = Pools.get(Bullet.class, 15);
-        bulletPool.fill(5);
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height, true);
+        world.startLevel(levelConfigDatabase.get("level" + this.currentLevelCode));
     }
 
     public void render(float delta) {
         ScreenUtils.clear(0f, 0f, 0f, 0f);
 
-        handleInput();
-        update(delta);
-
-        batch.begin();
-        draw();
-        batch.end();
-    }
-
-    private void update(float delta){
-        updateEnemies(delta);
-        updateBullets(delta);
-    }
-
-    public void draw(){
-        batch.draw(gameBackground, 0, 0, GameConfig.WIDTH, GameConfig.HEIGHT);
-        drawEnemies();
-        drawBullets();
-        player.draw(batch, mousePosition.x, mousePosition.y);
-    }
-
-    private void handleInput() {
         camera.update();
+        hudCamera.update();
         batch.setProjectionMatrix(camera.combined);
+
+        readInput();
+        world.update(delta, inputState);
+        handleWorldState();
+
+        // Gameplay drawing and icons
+        batch.begin();
+        world.draw(batch);
+        batch.setProjectionMatrix(hudCamera.combined);
+        hud.drawIcons(batch, world);
+        batch.end();
+
+        // Shape rendering (hud)
+        sr.setProjectionMatrix(hudCamera.combined);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+        sr.begin(ShapeRenderer.ShapeType.Filled);
+        hud.drawBars(sr, world);
+        sr.end();
+    }
+
+    public void readInput() {
+        // Go back to levels screen
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            endScreen();
+        }
+
+        // Player input
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) inputState.direction.y += 1;
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) inputState.direction.y -= 1;
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) inputState.direction.x -= 1;
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) inputState.direction.x += 1;
+
+        inputState.phasePressed = Gdx.input.isKeyJustPressed(Input.Keys.SPACE);
+        inputState.shieldActive = Gdx.input.isButtonPressed(Input.Buttons.RIGHT);
+        inputState.shootBulletPressed = Gdx.input.isButtonJustPressed(Input.Buttons.LEFT);
+
+        // General input
+        inputState.resetGamePressed = Gdx.input.isKeyJustPressed(Input.Keys.R);
+        inputState.debugSpawnEnemy = Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE);
+
         mousePosition.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-        camera.unproject(mousePosition);
+        viewport.unproject(mousePosition);
+        inputState.mousePosition = mousePosition;
+    }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            player.movePlayer(Gdx.graphics.getDeltaTime(), "left");
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            player.movePlayer(Gdx.graphics.getDeltaTime(), "right");
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            player.movePlayer(Gdx.graphics.getDeltaTime(), "up");
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            player.movePlayer(Gdx.graphics.getDeltaTime(), "down");
-        }
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            player.shootBullet(bulletPool, bullets);
+    private void handleWorldState() {
+        switch (world.state) {
+            case WON:
+            case LOST:
+            case STOPPED:
+            case EXIT_REQUESTED:
+                endScreen();
+                return;
+            case RUNNING: break;
         }
     }
 
-    private void drawEnemies(){
-        for (Enemy enemy: enemies){
-            enemy.draw(batch);
-        }
-    }
-    private void drawBullets(){
-        for (Bullet bullet: bullets){
-            bullet.draw(batch);
-        }
+    public void endScreen() {
+        game.setScreen(new LevelsScreen(game));
     }
 
-    private void updateEnemies(float delta){
-        for (Iterator<Enemy> it_e = enemies.iterator(); it_e.hasNext();) {
-            Enemy enemy = it_e.next();
-            enemy.update(delta, player.getPositionVector());
-            if (player.shielding && overlaps(player.shieldHitbox, enemy.hitbox)) { player.takeHit("collision"); }
-            else if (!player.shielding && overlaps(player.hitbox, enemy.hitbox)) { player.takeHit("collision"); }
-
-            if (enemy instanceof ShooterEnemy && !((ShooterEnemy) enemy).reloading){
-                ((ShooterEnemy) enemy).shootBullet(player.getPositionVector(), bulletPool, bullets);
-            }
-            else if (enemy instanceof KamikazeEnemy && !enemy.isAlive) {
-                player.takeHit("kamikaze");
-            }
-            for (Bullet bullet : bullets) {
-                // Check if bullet hit the enemy or the player
-                if (bullet.isAlive && bullet.fromPlayer && overlaps(bullet.hitbox, enemy.hitbox)) {
-                    enemy.takeHit("bullet");
-                    bullet.isAlive = false;
-                }
-                if (bullet.isAlive && !bullet.fromPlayer) {
-                    if (player.shielding && overlaps(bullet.hitbox, player.shieldHitbox)) {
-                        player.takeHit("bullet");
-                        bullet.isAlive = false;
-                    } else if (!player.shielding && overlaps(bullet.hitbox, player.hitbox)) {
-                        player.takeHit("bullet");
-                        bullet.isAlive = false;
-                    }
-                }
-            }
-            if (!enemy.isAlive) { it_e.remove(); }
-        }
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, true);
+        hudViewport.update(width, height, true);
     }
-    private void updateBullets(float delta){
-        Bullet bullet;
-        for (int i = bullets.size(); --i >= 0;) {
-            bullet = bullets.get(i);
-            if (!bullet.isAlive) {
-                bullets.remove(i);
-                bulletPool.free(bullet);
-            } else {
-                bullet.update(delta);
-            }
-        }
-    }
-
     @Override
     public void hide() {
         dispose();
     }
     @Override
     public void dispose() {
-        gameBackground.dispose();
+        super.dispose();
+        world.dispose();
     }
 }

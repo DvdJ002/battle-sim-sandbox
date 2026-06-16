@@ -1,4 +1,4 @@
-package david.games.battlesim.elements;
+package david.games.battlesim.elements.actors;
 
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.utils.Location;

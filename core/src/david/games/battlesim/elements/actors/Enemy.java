@@ -1,4 +1,4 @@
-package david.games.battlesim.elements;
+package david.games.battlesim.elements.actors;
 
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
@@ -9,30 +9,39 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.Objects;
-
+import david.games.battlesim.config.database.EnemyConfig;
+import david.games.battlesim.config.EnemySteeringState;
 import david.games.battlesim.config.GameConfig;
+import david.games.battlesim.elements.damage.DamageAction;
+import david.games.battlesim.elements.GameContext;
 
 public class Enemy implements Steerable<Vector2> {
     public Rectangle hitbox;
     Texture texture;
     SteerableTargetObj target;
-
+    EnemyConfig enemyConfig;
     protected static final SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<>(new Vector2());
     SteeringBehavior<Vector2> steeringBehavior;
     protected Vector2 linearVelocity = new Vector2(1f, 1f), position;
-    protected float orientation, angularVelocity, zeroLinearSpeedThreshold = 5f;
-    protected float maxLinearSpeed = 1500.0f, maxLinearAcceleration = 200.0f;
-    protected float maxAngularSpeed = 1500.0f, maxAngularAcceleration = 200.0f;
-    protected float health = 100f;
+    public EnemySteeringState steeringState;
+    public float damage, collideDamage, health, size;
     public boolean tagged, isAlive = true;
-    public Enemy(float x, float y) {
+    public Enemy(EnemyConfig enemyConfig, float x, float y) {
         hitbox = new Rectangle();
+
+        this.enemyConfig = enemyConfig;
+        this.collideDamage = enemyConfig.collideDamage;
+        this.size = enemyConfig.size;
+        this.health = enemyConfig.maxHealth;
+        this.damage = enemyConfig.baseDamage;
+        this.steeringState = enemyConfig.steeringState;
+
         hitbox.x = x;
         hitbox.y = y;
-        hitbox.width = GameConfig.WIDTH/14;
-        hitbox.height = GameConfig.WIDTH/14;
+        hitbox.width = enemyConfig.size;
+        hitbox.height = enemyConfig.size;
         position = new Vector2(hitbox.x, hitbox.y);
+
         target = new SteerableTargetObj(100f, 100f);
     }
 
@@ -43,7 +52,9 @@ public class Enemy implements Steerable<Vector2> {
         );
     }
 
-    public void update(float delta, Vector2 playerPosition){
+    public void update(float delta, GameContext context){
+        Player player = context.player;
+        Vector2 playerPosition = player.position;
         if (steeringBehavior != null){
             target.updatePosition(playerPosition.x, playerPosition.y);
             steeringBehavior.calculateSteering(steeringOutput);
@@ -84,11 +95,17 @@ public class Enemy implements Steerable<Vector2> {
         }
     }
 
-    public void takeHit(String type){
-        if (Objects.equals(type, "bullet")) { health -= 10f; }
+    public void takeHit(DamageAction damageAct){
+        health -= damageAct.amount;
         // Check if health went over 100 or under 0
         if (health <= 0f){ isAlive = false; }
-        else if (health > 100) { health = 100f; }
+        else if (health > enemyConfig.maxHealth) { health = enemyConfig.maxHealth; }
+
+        // Effects, particles etc.
+    }
+
+    public float getHealthPercentage() {
+        return health/enemyConfig.maxHealth;
     }
 
     @Override
@@ -98,7 +115,7 @@ public class Enemy implements Steerable<Vector2> {
 
     @Override
     public float getAngularVelocity() {
-        return angularVelocity;
+        return steeringState.angularVelocity;
     }
 
     @Override
@@ -118,52 +135,52 @@ public class Enemy implements Steerable<Vector2> {
 
     @Override
     public float getZeroLinearSpeedThreshold() {
-        return zeroLinearSpeedThreshold;
+        return steeringState.zeroLinearSpeedThreshold;
     }
 
     @Override
     public void setZeroLinearSpeedThreshold(float value) {
-        this.zeroLinearSpeedThreshold = value;
+        steeringState.zeroLinearSpeedThreshold = value;
     }
 
     @Override
     public float getMaxLinearSpeed() {
-        return maxLinearSpeed;
+        return steeringState.maxLinearSpeed;
     }
 
     @Override
     public void setMaxLinearSpeed(float maxLinearSpeed) {
-        this.maxLinearSpeed = maxLinearSpeed;
+        steeringState.maxLinearSpeed = maxLinearSpeed;
     }
 
     @Override
     public float getMaxLinearAcceleration() {
-        return maxLinearAcceleration;
+        return steeringState.maxLinearAcceleration;
     }
 
     @Override
     public void setMaxLinearAcceleration(float maxLinearAcceleration) {
-        this.maxLinearAcceleration = maxLinearAcceleration;
+        steeringState.maxLinearAcceleration = maxLinearAcceleration;
     }
 
     @Override
     public float getMaxAngularSpeed() {
-        return maxAngularSpeed;
+        return steeringState.maxAngularSpeed;
     }
 
     @Override
     public void setMaxAngularSpeed(float maxAngularSpeed) {
-        this.maxAngularSpeed = maxAngularSpeed;
+        steeringState.maxAngularSpeed = maxAngularSpeed;
     }
 
     @Override
     public float getMaxAngularAcceleration() {
-        return maxAngularAcceleration;
+        return steeringState.maxAngularAcceleration;
     }
 
     @Override
     public void setMaxAngularAcceleration(float maxAngularAcceleration) {
-        this.maxAngularAcceleration = maxAngularAcceleration;
+        steeringState.maxAngularAcceleration = maxAngularAcceleration;
     }
 
     @Override
@@ -173,12 +190,12 @@ public class Enemy implements Steerable<Vector2> {
 
     @Override
     public float getOrientation() {
-        return orientation;
+        return steeringState.orientation;
     }
 
     @Override
     public void setOrientation(float orientation) {
-        this.orientation = orientation;
+        steeringState.orientation = orientation;
     }
 
     @Override
@@ -195,6 +212,6 @@ public class Enemy implements Steerable<Vector2> {
 
     @Override
     public Location<Vector2> newLocation() {
-        return new Enemy(100f, 100f);
+        return new Enemy(new EnemyConfig(0f, 0f, 0f, 0f), 100f, 100f);
     }
 }

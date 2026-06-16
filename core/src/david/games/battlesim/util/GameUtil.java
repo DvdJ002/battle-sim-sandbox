@@ -3,12 +3,15 @@ package david.games.battlesim.util;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-public final class MovementUtil {
+import david.games.battlesim.elements.damage.DamageAction;
+import david.games.battlesim.elements.damage.DamageType;
+
+public final class GameUtil {
 
     // Returns angle from (srcX, srcY) to destination point (desX, desY)
     public static float findAngleBetweenPoints(float srcX, float srcY, float desX, float desY){
         float angle = (float) Math.atan2((desY - srcY), (desX - srcX));
-        return (((float) Math.toDegrees(angle) + 360) % 360) - 90;
+        return (((float) Math.toDegrees(angle) + 360) % 360);
     }
 
     // Returns a movement vector for the path from (srcX, srcY) -> (desX, desY)
@@ -32,7 +35,17 @@ public final class MovementUtil {
         return new Vector2(x, y);
     }
 
-    private MovementUtil() {
+    public static DamageAction getDamageAction(DamageType type, float amount, float intensity, float duration) {
+        DamageAction damageAction = new DamageAction();
+        damageAction.type = type;
+        damageAction.amount = amount;
+        damageAction.intensity = intensity;
+        damageAction.duration = duration;
+
+        return damageAction;
+    }
+
+    private GameUtil() {
         throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 }
