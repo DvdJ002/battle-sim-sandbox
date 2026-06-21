@@ -127,7 +127,7 @@ public class Hud {
     }
 
     public void drawText(SpriteBatch batch, BitmapFont font, BattleWorld worldState) {
-        float x =  GameConfig.WIDTH - padding - 130f;
+        float x =  GameConfig.WIDTH - padding - 140f;
         float y =  GameConfig.HEIGHT - padding;
         float time = worldState.levelTimer;
         if (time <= 3f) {

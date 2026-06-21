@@ -20,10 +20,11 @@ import david.games.battlesim.util.GameUtil;
 
 public class ShooterEnemy extends Enemy {
     private final EnemyConfig.ShooterConfig shooterConfig;
-    private float reloadTimer = 0f;
     private float  reloadDuration, bulletSpeed, evadeRange;
     private float speedEvade, speedChase;
     public boolean evading = true, reloading = true;
+    private float reloadTimer = 0f;
+
     public ShooterEnemy(EnemyConfig enemyConfig, float x, float y){
         super(enemyConfig, x, y);
         this.shooterConfig = (EnemyConfig.ShooterConfig) enemyConfig;
@@ -35,6 +36,8 @@ public class ShooterEnemy extends Enemy {
 
         texture = assetManager.get(AssetPaths.SHOOTER, Texture.class);
         steeringBehavior = new Evade<>(this, target);
+
+        reloadTimer = reloadDuration;
     }
 
     @Override
@@ -57,18 +60,21 @@ public class ShooterEnemy extends Enemy {
 
         updateBehavior(playerPosition);
 
-        if (reloading) {
-            reloadTimer += delta;
-            if (reloadTimer > reloadDuration) {
+        if (reloadTimer > 0f) {
+            reloadTimer -= delta;
+            if (reloadTimer <= 0f) {
                 reloadTimer = 0f;
                 reloading = false;
             }
         }
+
+        System.out.println("Reload timer: " + reloadTimer);
     }
 
     public void shootBullet(Vector2 playerPosition, BulletSpawner spawner){
         float angle = findAngleBetweenPoints(hitbox.x + (hitbox.width/2), hitbox.y + (hitbox.height/2), playerPosition.x, playerPosition.y);
         spawner.spawn(hitbox.x + (hitbox.width/2), hitbox.y + (hitbox.height/2), angle, bulletSpeed, damage, false);
+        reloadTimer = reloadDuration;
         reloading = true;
     }
 

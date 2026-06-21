@@ -25,7 +25,7 @@ public class Enemy implements Steerable<Vector2> {
     protected Vector2 linearVelocity = new Vector2(1f, 1f), position;
     public EnemySteeringState steeringState;
     public float damage, collideDamage, health, size;
-    public boolean tagged, isAlive = true;
+    public boolean tagged, isAlive = true, isInvincible = false;
     public Enemy(EnemyConfig enemyConfig, float x, float y) {
         hitbox = new Rectangle();
 
@@ -90,6 +90,10 @@ public class Enemy implements Steerable<Vector2> {
     }
 
     public void takeHit(DamageAction damageAct){
+        if (isInvincible) {
+            return;
+        }
+
         health -= damageAct.amount;
         // Check if health went over 100 or under 0
         if (health <= 0f){ isAlive = false; }

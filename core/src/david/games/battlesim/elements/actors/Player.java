@@ -273,8 +273,8 @@ public class Player {
                 MathUtils.sin(MathUtils.degreesToRadians * kbAngle)
         ).scl(speed * intensity);
 
-        // Briefly disable input with timer
-        disableMovement(intensity/100);
+        // Briefly disable input with timer, absolute value because intensity can be minus (suck)
+        disableMovement(Math.abs(intensity/100));
     }
 
     public void applySlowed(float intensity, float duration) {

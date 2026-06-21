@@ -116,14 +116,16 @@ public final class LevelConfigDatabase {
 
         levelConfigs.put("level4", config);
 
-        /* ************** Level 4 ************** */
+        /* ************** Level 5 ************** */
         // Wave 1
         waves = new ArrayList<>();
         spawnConfigs = new ArrayList<>();
 
-        waves.add(new LevelWaveConfig(100f, -1f, spawnConfigs));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(760f, 400f)));
 
-        config = new LevelConfig(20.5f, new Vector2(400f, 300f), waves);
+        waves.add(new LevelWaveConfig(5f, -1f, spawnConfigs));
+
+        config = new LevelConfig(101f, new Vector2(400f, 300f), waves);
 
         levelConfigs.put("level5", config);
     }

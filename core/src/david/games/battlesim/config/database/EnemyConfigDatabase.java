@@ -11,7 +11,7 @@ public final class EnemyConfigDatabase {
     public EnemyConfigDatabase() {
         /* ************** Kamikaze enemy ************** */
         EnemyConfig.KamikazeConfig kamikaze = new EnemyConfig.KamikazeConfig(
-            2f, 75f, 100f, GameConfig.DEFAULT_ENEMY_SIZE, 120f, 25f
+            2f, 75f, 80f, GameConfig.DEFAULT_ENEMY_SIZE, 120f, 25f
         );
         setDefaultAiConfig(kamikaze);
         kamikaze.steeringState.maxLinearAcceleration = 600.0f;
@@ -34,6 +34,18 @@ public final class EnemyConfigDatabase {
         setDefaultAiConfig(slasher);
 
         configs.put("slasher", slasher);
+
+        /* ************** Sucker enemy ************** */
+        EnemyConfig.SuckerConfig sucker = new EnemyConfig.SuckerConfig(
+                0f, 80f, 25f, 1f, 200f, GameConfig.DEFAULT_ENEMY_SIZE, 12f
+        );
+        setDefaultAiConfig(sucker);
+        sucker.steeringState.maxLinearAcceleration = 50.0f;
+        sucker.steeringState.maxAngularAcceleration = 50.0f;
+        sucker.steeringState.maxLinearSpeed = 50.0f;
+        sucker.steeringState.maxAngularSpeed = 50.0f;
+
+        configs.put("sucker", sucker);
     }
 
     private void setDefaultAiConfig(EnemyConfig instance) {

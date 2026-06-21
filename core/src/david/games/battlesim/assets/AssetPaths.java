@@ -6,6 +6,7 @@ public class AssetPaths {
     public static final String SLASHER_ATTACK = "gameplay/actors/slasher_attack.png";
     public static final String KAMIKAZE = "gameplay/actors/kamikaze.png";
     public static final String SHOOTER = "gameplay/actors/shooter.png";
+    public static final String SUCKER = "gameplay/actors/sucker.png";
     public static final String PLAYER = "gameplay/actors/player.png";
     public static final String PLAYER_SHIELD = "gameplay/actors/player_shield.png";
     public static final String BULLET_BLUE = "gameplay/actors/bullet_blue.png";

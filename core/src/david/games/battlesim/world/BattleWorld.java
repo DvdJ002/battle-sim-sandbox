@@ -27,6 +27,7 @@ import david.games.battlesim.elements.actors.KamikazeEnemy;
 import david.games.battlesim.elements.actors.Player;
 import david.games.battlesim.elements.actors.ShooterEnemy;
 import david.games.battlesim.elements.actors.SlasherEnemy;
+import david.games.battlesim.elements.actors.SuckerEnemy;
 import david.games.battlesim.elements.spawners.BulletSpawner;
 import david.games.battlesim.elements.spawners.ForceFieldSpawner;
 import david.games.battlesim.util.InputState;
@@ -96,9 +97,10 @@ public class BattleWorld {
         mousePosition = inputState.mousePosition;
 
         if (inputState.debugSpawnEnemy) {
-            enemies.add(new ShooterEnemy(enemyConfigDatabase.get("shooter"), mousePosition.x, mousePosition.y));
-            enemies.add(new KamikazeEnemy(enemyConfigDatabase.get("kamikaze"),mousePosition.x, mousePosition.y));
-            enemies.add(new SlasherEnemy(enemyConfigDatabase.get("slasher"), mousePosition.x, mousePosition.y));
+            //enemies.add(new ShooterEnemy(enemyConfigDatabase.get("shooter"), mousePosition.x, mousePosition.y));
+            //enemies.add(new KamikazeEnemy(enemyConfigDatabase.get("kamikaze"),mousePosition.x, mousePosition.y));
+            //enemies.add(new SlasherEnemy(enemyConfigDatabase.get("slasher"), mousePosition.x, mousePosition.y));
+            enemies.add(new SuckerEnemy(enemyConfigDatabase.get("sucker"), mousePosition.x, mousePosition.y));
         }
         if (inputState.resetGamePressed) {
             reset();
@@ -262,7 +264,7 @@ public class BattleWorld {
     /********************* WORLD OPERATIONS *********************/
     public void reset() {
         player.reset();
-        player.setPosition(100f, 100f);
+        player.setPosition(levelConfig.playerStart.x, levelConfig.playerStart.y);
         enemies.clear();
         forceFields.clear();
 

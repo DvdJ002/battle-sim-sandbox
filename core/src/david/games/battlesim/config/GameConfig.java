@@ -14,7 +14,7 @@ public class GameConfig {
     public static final float DEFAULT_ENEMY_SIZE = 50f;
     public static final float BOSS_SIZE = 57f;
 
-    public static final float EFFECT_ICON_SIZE = 42f;
+    public static final float EFFECT_ICON_SIZE = 40f;
 
 
     private GameConfig() {

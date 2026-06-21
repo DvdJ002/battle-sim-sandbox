@@ -50,6 +50,15 @@ public class EnemyConfig {
             this.detectionRadius = detectionRadius;
         }
     }
+    public static class SuckerConfig extends EnemyConfig {
+        public final float detectionRange, suckIntensity, forceFieldDuration;
+        public SuckerConfig(float collideDamage, float detectionRange, float suckIntensity, float damage, float maxHealth, float size, float forceFieldDuration) {
+            super(collideDamage, damage, maxHealth, size);
+            this.detectionRange = detectionRange;
+            this.suckIntensity = suckIntensity;
+            this.forceFieldDuration = forceFieldDuration;
+        }
+    }
 }
 
 
