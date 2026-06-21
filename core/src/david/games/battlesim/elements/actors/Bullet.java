@@ -12,12 +12,10 @@ import com.badlogic.gdx.utils.Pool;
 
 import static david.games.battlesim.BattleGame.assetManager;
 
-import java.util.Iterator;
-
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.GameConfig;
 import david.games.battlesim.elements.damage.DamageAction;
-import david.games.battlesim.elements.damage.DamageType;
+import david.games.battlesim.elements.damage.StatusEffect;
 import david.games.battlesim.elements.GameContext;
 import david.games.battlesim.util.GameUtil;
 
@@ -50,25 +48,22 @@ public class Bullet implements Pool.Poolable {
     }
 
     public void update(float delta, GameContext context){
-        for (Iterator<Enemy> it_e = context.enemies.iterator(); it_e.hasNext();) {
-            Enemy enemy = it_e.next();
-
+        for (Enemy enemy : context.enemies) {
             // Checks if bullet hit enemy
             if (isAlive && fromPlayer && overlaps(hitbox, enemy.hitbox)) {
-                DamageAction damageAct = GameUtil.getDamageAction(DamageType.PROJECTILE, damage,0f, 0f);
+                DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.PROJECTILE, damage, 0f, 0f);
                 damageAct.sourcePosition = new Vector2(hitbox.x, hitbox.y);
                 enemy.takeHit(damageAct);
                 isAlive = false;
             }
-
-            // Checks if bullet hit player
-            if (isAlive && !fromPlayer) {
-                if ((context.player.shielding && overlaps(hitbox, context.player.shieldHitbox)) || (!context.player.shielding && overlaps(hitbox, context.player.hitbox))) {
-                    DamageAction damageAct = GameUtil.getDamageAction(DamageType.PROJECTILE, damage, 0f, 0f);
-                    damageAct.sourcePosition = new Vector2(hitbox.x, hitbox.y);
-                    context.player.takeHit(damageAct);
-                    isAlive = false;
-                }
+        }
+        // Checks if bullet hit player
+        if (isAlive && !fromPlayer) {
+            if ((context.player.shielding && overlaps(hitbox, context.player.shieldHitbox)) || (!context.player.shielding && overlaps(hitbox, context.player.hitbox))) {
+                DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.PROJECTILE, damage, 0f, 0f);
+                damageAct.sourcePosition = new Vector2(hitbox.x, hitbox.y);
+                context.player.takeHit(damageAct);
+                isAlive = false;
             }
         }
 

@@ -88,20 +88,22 @@ public class LevelsScreen extends ScreenAdapter {
         ));
         buttonTable.add(titleImage).padTop(10).padBottom(100).colspan(5).row();
 
-        // Magic number (changed later with GameManager)
         for (int i = 1; i < 9; i++){
-            if (i % 4 == 0) {
-                buttonTable.add(new TextButton("Level " + i, skin)).padBottom(10).expandX().fill().row();
-            } else {
-                buttonTable.add(new TextButton("Level " + i, skin)).padBottom(10).expandX().fill();
-            }
-            final int finalI = i;
-            buttonTable.addListener(new ClickListener() {
+            final int level = i;
+
+            TextButton button = new TextButton("Level " + level, skin);
+            button.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    game.setScreen(new BattleScreen(game, finalI));
+                    game.setScreen(new BattleScreen(game, level));
                 }
             });
+
+            if (i % 4 == 0) {
+                buttonTable.add(button).padBottom(10).expandX().fill().row();
+            } else {
+                buttonTable.add(button).padBottom(10).expandX().fill();
+            }
         }
 
         TextButton menuButton = new TextButton("Menu" , skin);

@@ -42,6 +42,8 @@ public class BattleGame extends Game {
 	private void loadAssetManager(){
 		assetManager = new AssetManager();
 		assetManager.load(AssetDescriptors.UI_SKIN);
+		assetManager.load(AssetDescriptors.UI_FONT);
+
 		assetManager.load(AssetPaths.SLASHER, Texture.class);
 		assetManager.load(AssetPaths.SLASHER_ATTACK, Texture.class);
 		assetManager.load(AssetPaths.KAMIKAZE, Texture.class);
@@ -49,6 +51,9 @@ public class BattleGame extends Game {
 		assetManager.load(AssetPaths.PLAYER, Texture.class);
 		assetManager.load(AssetPaths.PLAYER_SHIELD, Texture.class);
 		assetManager.load(AssetPaths.BULLET_BLUE, Texture.class);
+		assetManager.load(AssetPaths.FORCE_FIELD_BLUE, Texture.class);
+		assetManager.load(AssetPaths.FORCE_FIELD_DARK, Texture.class);
+
 		assetManager.load(AssetPaths.MENU_BACKGROUND, Texture.class);
 		assetManager.load(AssetPaths.GAME_BACKGROUND, Texture.class);
 		assetManager.load(AssetPaths.TITLE, Texture.class);
@@ -59,6 +64,7 @@ public class BattleGame extends Game {
 		assetManager.load(AssetPaths.EFFECT_SUCKED, Texture.class);
 		assetManager.load(AssetPaths.EFFECT_POISONED, Texture.class);
 		assetManager.load(AssetPaths.EFFECT_UNKNOWN, Texture.class);
+		assetManager.load(AssetPaths.EFFECT_INVINCIBLE, Texture.class);
 
 		assetManager.finishLoading();
 	}

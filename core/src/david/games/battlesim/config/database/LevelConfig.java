@@ -3,18 +3,16 @@ package david.games.battlesim.config.database;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class LevelConfig {
     public float timeLimit;
     public Vector2 playerStart;
-    private Map<ArrayList<EnemySpawnConfig>, LevelTriggerConfig> waves;
+    public ArrayList<LevelWaveConfig> waves;
 
     public LevelConfig(
             float timeLimit,
             Vector2 playerStart,
-            Map<ArrayList<EnemySpawnConfig>, LevelTriggerConfig> waves
+            ArrayList<LevelWaveConfig> waves
     ) {
         this.timeLimit = timeLimit;
         this.playerStart = playerStart;

@@ -63,13 +63,7 @@ public class Enemy implements Steerable<Vector2> {
         }
     }
 
-    private void applySteering (SteeringAcceleration<Vector2> steering, float delta) {
-        linearVelocity.mulAdd(steering.linear, delta).limit(getMaxLinearSpeed());
-        position.mulAdd(linearVelocity, delta);
-        hitbox.x = position.x;
-        hitbox.y = position.y;
-    }
-
+    /********************* OPERATIONS *********************/
     private void applyBounds(){
         boolean corrected = false;
         if (position.y > GameConfig.HEIGHT - hitbox.height) {
@@ -106,6 +100,14 @@ public class Enemy implements Steerable<Vector2> {
 
     public float getHealthPercentage() {
         return health/enemyConfig.maxHealth;
+    }
+
+    /********************* MOVEMENT BEHAVIOR & METHOD OVERRIDES *********************/
+    private void applySteering (SteeringAcceleration<Vector2> steering, float delta) {
+        linearVelocity.mulAdd(steering.linear, delta).limit(getMaxLinearSpeed());
+        position.mulAdd(linearVelocity, delta);
+        hitbox.x = position.x;
+        hitbox.y = position.y;
     }
 
     @Override

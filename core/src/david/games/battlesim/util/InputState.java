@@ -9,6 +9,7 @@ public class InputState {
         public boolean shieldActive;
         public boolean phasePressed;
         public boolean shootBulletPressed;
+        public boolean forceFieldPressed;
 
         // GENERAL
         public Vector3 mousePosition;
@@ -27,6 +28,7 @@ public class InputState {
                         ", shieldActive=" + shieldActive +
                         ", phasePressed=" + phasePressed +
                         ", shootBulletPressed=" + shootBulletPressed +
+                        ", forceFieldPressed=" + forceFieldPressed +
                         ", mousePosition=" + mousePosition +
                         ", resetGamePressed=" + resetGamePressed +
                         ", debugSpawnEnemy=" + debugSpawnEnemy +

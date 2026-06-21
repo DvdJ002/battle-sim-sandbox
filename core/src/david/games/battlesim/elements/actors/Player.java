@@ -2,7 +2,6 @@ package david.games.battlesim.elements.actors;
 
 import static david.games.battlesim.util.GameUtil.findAngleBetweenPoints;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
@@ -17,8 +16,9 @@ import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.GameConfig;
 import david.games.battlesim.config.database.PlayerConfig;
 import david.games.battlesim.elements.damage.DamageAction;
-import david.games.battlesim.elements.damage.DamageType;
+import david.games.battlesim.elements.damage.StatusEffect;
 import david.games.battlesim.elements.spawners.BulletSpawner;
+import david.games.battlesim.elements.spawners.ForceFieldSpawner;
 import david.games.battlesim.util.GameUtil;
 
 public class Player {
@@ -33,13 +33,15 @@ public class Player {
     public float faceAngle;
 
     // Timers
-    public float phaseCooldownTimer = 0f, phaseActiveTimer = 0f;
+    public float phaseCooldownTimer = 0.0f, phaseActiveTimer = 0.0f;
+    public float forceFieldCooldownTimer = 0.0f;
     public float shieldRechargeTimer = 0.0f;
     public float disableMovementTimer = 0.0f;
     public float slowedTimer = 0.0f;
+    public float invincibleTimer = 0.0f;
 
     // Boolean states
-    public boolean shielding = false;
+    public boolean shielding = false, invincible = false;
 
     public Player(PlayerConfig config, float x, float y){
         texture = assetManager.get(AssetPaths.PLAYER, Texture.class);
@@ -63,6 +65,7 @@ public class Player {
         this.shieldHealth = config.maxHealth;
     }
 
+    /********************* DRAW *********************/
     public void draw(SpriteBatch batch, float turnX, float turnY){
         float size = hitbox.radius * 2f;
         faceAngle = findAngleBetweenPoints(hitbox.x, hitbox.y, turnX, turnY);
@@ -84,56 +87,7 @@ public class Player {
         }
     }
 
-    private void updateTimers(float delta){
-        // Phase cooldown timer
-        if (phaseCooldownTimer > 0f) {
-            phaseCooldownTimer -= delta;
-            if (phaseCooldownTimer <= 0f) {
-                phaseCooldownTimer = 0f;
-            }
-        }
-        // Phase active timer
-        if (phaseActiveTimer > 0f) {
-            phaseActiveTimer -= delta;
-            if (phaseActiveTimer <= 0f) {
-                speed -= 1000;
-                phaseActiveTimer = 0f;
-            }
-        }
-
-        // Shield recharge timer
-        if (shieldRechargeTimer > 0f) {
-            shieldRechargeTimer -= delta;
-            if (shieldRechargeTimer <= 0f){
-                shieldHealth = config.maxShieldHealth;
-            }
-        }
-        // Disable movement timer
-        if (disableMovementTimer > 0f) {
-            disableMovementTimer -= delta;
-        }
-        // Slowed effect timer
-        if (slowedTimer > 0f) {
-            slowedTimer -= delta;
-            if (slowedTimer <= 0f){
-                speed = config.baseSpeed;
-            }
-        }
-    }
-
-    public void reset() {
-        // Reset health
-        health = config.maxHealth;
-        shieldHealth = config.maxShieldHealth;
-
-        // Reset timers
-        phaseCooldownTimer = 0f;
-        phaseActiveTimer = 0f;
-        shieldRechargeTimer = 0f;
-        disableMovementTimer = 0f;
-        slowedTimer = 0f;
-    }
-
+    /********************* UPDATE *********************/
     public void update(float delta) {
         // WASD input
         if (isMovementDisabled()) {
@@ -163,6 +117,57 @@ public class Player {
         updateTimers(delta);
     }
 
+    private void updateTimers(float delta){
+        // Phase cooldown timer, only if not shielding
+        if (phaseCooldownTimer > 0f && !shielding) {
+            phaseCooldownTimer -= delta;
+            if (phaseCooldownTimer <= 0f) {
+                phaseCooldownTimer = 0f;
+            }
+        }
+        // Phase active timer
+        if (phaseActiveTimer > 0f) {
+            phaseActiveTimer -= delta;
+            if (phaseActiveTimer <= 0f) {
+                speed -= 1000;
+                phaseActiveTimer = 0f;
+            }
+        }
+
+        // Force field ability cooldown timer
+        if (forceFieldCooldownTimer > 0f) {
+            forceFieldCooldownTimer -= delta;
+        }
+
+        // Shield recharge timer
+        if (shieldRechargeTimer > 0f) {
+            shieldRechargeTimer -= delta;
+            if (shieldRechargeTimer <= 0f){
+                shieldHealth = config.maxShieldHealth;
+            }
+        }
+        // Disable movement timer
+        if (disableMovementTimer > 0f) {
+            disableMovementTimer -= delta;
+        }
+        // Slowed effect timer
+        if (slowedTimer > 0f) {
+            slowedTimer -= delta;
+            if (slowedTimer <= 0f){
+                speed = config.baseSpeed;
+            }
+        }
+        // Slowed effect timer
+        if (invincibleTimer > 0f) {
+            invincibleTimer -= delta;
+            if (invincibleTimer <= 0f){
+                invincibleTimer = 0.0f;
+                invincible = false;
+            }
+        }
+    }
+
+    /********************* IN-GAME ACTIONS *********************/
     public void phase(){
         if (phaseCooldownTimer <= 0f && phaseActiveTimer <= 0f) {
             phaseActiveTimer = config.phaseDuration;
@@ -175,11 +180,45 @@ public class Player {
         shieldRechargeTimer = config.shieldRechargeDuration;
     }
 
-    public void disableMovement(float intensity) {
-        disableMovementTimer = intensity/100;
+    public void shootBullet(BulletSpawner bulletSpawner){
+        if (!shielding){
+            bulletSpawner.spawn(hitbox.x, hitbox.y, faceAngle, config.bulletSpeed, config.bulletDamage,true);
+        }
+    }
+
+    public void forceField(ForceFieldSpawner forceFieldSpawner){
+        if (!shielding && forceFieldCooldownTimer <= 0f){
+            forceFieldSpawner.spawn(position.x, position.y, config.forceFieldDamage, config.forceFieldDuration, config.forceFieldSize, true, true);
+
+            forceFieldCooldownTimer = config.forceFieldCooldown;
+            disableMovement(config.forceFieldDuration);
+            applyInvincible(config.forceFieldDuration);
+        }
+    }
+
+
+    /********************* OPERATIONS *********************/
+    public void reset() {
+        // Reset health
+        health = config.maxHealth;
+        shieldHealth = config.maxShieldHealth;
+
+        // Reset timers
+        phaseCooldownTimer = 0.01f;
+        phaseActiveTimer = 0.01f;
+        shieldRechargeTimer = 0.01f;
+        disableMovementTimer = 0.01f;
+        slowedTimer = 0.01f;
+        forceFieldCooldownTimer = 0.01f;
+    }
+
+    public void disableMovement(float duration) {
+        disableMovementTimer = duration;
     }
 
     public void takeHit(DamageAction damageAct){
+        if (invincible) { return; }
+
         changeHealth(-damageAct.amount);
         System.out.println("Player took damage, TYPE: " + damageAct.type);
 
@@ -210,8 +249,6 @@ public class Player {
             }
             else if (health > config.maxHealth) { health = config.maxHealth; }
         }
-        System.out.println("Player health: " + health);
-        System.out.println("Shield health: " + shieldHealth);
     }
 
     // Applies bounds, sets new position, hitbox, and shield position
@@ -229,12 +266,6 @@ public class Player {
         shieldHitbox.y = y;
     }
 
-    public void shootBullet(BulletSpawner bulletSpawner){
-        if (!shielding){
-            bulletSpawner.spawn(hitbox.x, hitbox.y, faceAngle, config.bulletSpeed, config.bulletDamage,true);
-        }
-    }
-
     public void applyKnockback(Vector2 sourcePos, float intensity) {
         float kbAngle = GameUtil.findAngleBetweenPoints(sourcePos.x, sourcePos.y, position.x, position.y);
         velocity.set(
@@ -243,7 +274,7 @@ public class Player {
         ).scl(speed * intensity);
 
         // Briefly disable input with timer
-        disableMovement(intensity);
+        disableMovement(intensity/100);
     }
 
     public void applySlowed(float intensity, float duration) {
@@ -251,6 +282,13 @@ public class Player {
             // Slow player by intensity for duration
             speed -= intensity;
             slowedTimer = duration;
+        }
+    }
+
+    public void applyInvincible(float duration) {
+        if (invincibleTimer <= 0f) {
+            invincible = true;
+            invincibleTimer = duration;
         }
     }
 
@@ -262,10 +300,11 @@ public class Player {
         return disableMovementTimer > 0f;
     }
 
-    public ArrayList<DamageType> getActiveEffects() {
-        ArrayList<DamageType> effects = new ArrayList<>();
-        if (disableMovementTimer > 0f) effects.add(DamageType.KNOCKBACK);
-        if (slowedTimer > 0f) effects.add(DamageType.SLOWED);
+    public ArrayList<StatusEffect> getActiveEffects() {
+        ArrayList<StatusEffect> effects = new ArrayList<>();
+        if (disableMovementTimer > 0f) effects.add(StatusEffect.KNOCKBACK);
+        if (slowedTimer > 0f) effects.add(StatusEffect.SLOWED);
+        if (invincible) effects.add(StatusEffect.INVINCIBLE);
 
         return effects;
     }

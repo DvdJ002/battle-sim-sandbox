@@ -14,7 +14,7 @@ import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.database.EnemyConfig;
 import david.games.battlesim.elements.GameContext;
 import david.games.battlesim.elements.damage.DamageAction;
-import david.games.battlesim.elements.damage.DamageType;
+import david.games.battlesim.elements.damage.StatusEffect;
 import david.games.battlesim.elements.spawners.BulletSpawner;
 import david.games.battlesim.util.GameUtil;
 
@@ -50,7 +50,7 @@ public class ShooterEnemy extends Enemy {
 
         // Player damages shooter enemy if touching
         if (overlaps(player.hitbox, hitbox)) {
-            DamageAction damageAct = GameUtil.getDamageAction(DamageType.NONE, collideDamage, 0f, 0f);
+            DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.NONE, collideDamage, 0f, 0f);
             damageAct.sourcePosition = new Vector2(player.hitbox.x, player.hitbox.y);
             takeHit(damageAct);
         }
@@ -66,6 +66,13 @@ public class ShooterEnemy extends Enemy {
         }
     }
 
+    public void shootBullet(Vector2 playerPosition, BulletSpawner spawner){
+        float angle = findAngleBetweenPoints(hitbox.x + (hitbox.width/2), hitbox.y + (hitbox.height/2), playerPosition.x, playerPosition.y);
+        spawner.spawn(hitbox.x + (hitbox.width/2), hitbox.y + (hitbox.height/2), angle, bulletSpeed, damage, false);
+        reloading = true;
+    }
+
+    /********************* MOVEMENT BEHAVIOR *********************/
     public void updateBehavior(Vector2 playerPosition){
         if (!evading && isNear(playerPosition.x, playerPosition.y, hitbox.x, hitbox.y, evadeRange)) {
             this.evade();
@@ -86,11 +93,5 @@ public class ShooterEnemy extends Enemy {
         evading = false;
         steeringState.maxLinearAcceleration = speedChase;
         steeringState.maxAngularAcceleration = speedChase;
-    }
-
-    public void shootBullet(Vector2 playerPosition, BulletSpawner spawner){
-        float angle = findAngleBetweenPoints(hitbox.x + (hitbox.width/2), hitbox.y + (hitbox.height/2), playerPosition.x, playerPosition.y);
-        spawner.spawn(hitbox.x + (hitbox.width/2), hitbox.y + (hitbox.height/2), angle, bulletSpeed, damage, false);
-        reloading = true;
     }
 }

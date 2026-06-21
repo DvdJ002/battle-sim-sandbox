@@ -3,8 +3,10 @@ package david.games.battlesim.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
@@ -12,7 +14,10 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import static david.games.battlesim.BattleGame.assetManager;
+
 import david.games.battlesim.BattleGame;
+import david.games.battlesim.assets.AssetDescriptors;
 import david.games.battlesim.config.GameConfig;
 import david.games.battlesim.config.database.LevelConfigDatabase;
 import david.games.battlesim.ui.Hud;
@@ -23,6 +28,7 @@ public class BattleScreen extends ScreenAdapter {
     private final BattleGame game;
     private SpriteBatch batch;
     private ShapeRenderer sr;
+    private BitmapFont font;
     Vector3 mousePosition;
     InputState inputState;
 
@@ -46,18 +52,21 @@ public class BattleScreen extends ScreenAdapter {
     public void show() {
         batch = game.getBatch();
         sr = game.getShapeRenderer();
+        font = assetManager.get(AssetDescriptors.UI_FONT);
+        font.setColor(Color.BLACK);
         inputState = new InputState();
         mousePosition = new Vector3(0,0,0);
 
         camera = new OrthographicCamera();
         viewport = new FitViewport(GameConfig.WIDTH, GameConfig.HEIGHT, camera);
-        world = new BattleWorld(game);
+        world = new BattleWorld();
         levelConfigDatabase = new LevelConfigDatabase();
 
         hudCamera = new OrthographicCamera();
         hudViewport = new FitViewport(GameConfig.WIDTH, GameConfig.HEIGHT, hudCamera);
         hud = new Hud();
 
+        System.out.println("Starting stage " + this.currentLevelCode);
         world.startLevel(levelConfigDatabase.get("level" + this.currentLevelCode));
     }
 
@@ -72,11 +81,12 @@ public class BattleScreen extends ScreenAdapter {
         world.update(delta, inputState);
         handleWorldState();
 
-        // Gameplay drawing and icons
+        // Game elements drawing, plus UI icons and text
         batch.begin();
         world.draw(batch);
         batch.setProjectionMatrix(hudCamera.combined);
         hud.drawIcons(batch, world);
+        hud.drawText(batch, font, world);
         batch.end();
 
         // Shape rendering (hud)
@@ -104,6 +114,7 @@ public class BattleScreen extends ScreenAdapter {
         inputState.phasePressed = Gdx.input.isKeyJustPressed(Input.Keys.SPACE);
         inputState.shieldActive = Gdx.input.isButtonPressed(Input.Buttons.RIGHT);
         inputState.shootBulletPressed = Gdx.input.isButtonJustPressed(Input.Buttons.LEFT);
+        inputState.forceFieldPressed = Gdx.input.isKeyJustPressed(Input.Keys.Q);
 
         // General input
         inputState.resetGamePressed = Gdx.input.isKeyJustPressed(Input.Keys.R);

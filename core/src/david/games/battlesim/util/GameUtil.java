@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import david.games.battlesim.elements.damage.DamageAction;
-import david.games.battlesim.elements.damage.DamageType;
+import david.games.battlesim.elements.damage.StatusEffect;
 
 public final class GameUtil {
 
@@ -35,7 +35,7 @@ public final class GameUtil {
         return new Vector2(x, y);
     }
 
-    public static DamageAction getDamageAction(DamageType type, float amount, float intensity, float duration) {
+    public static DamageAction getDamageAction(StatusEffect type, float amount, float intensity, float duration) {
         DamageAction damageAction = new DamageAction();
         damageAction.type = type;
         damageAction.amount = amount;

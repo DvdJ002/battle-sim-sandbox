@@ -6,6 +6,7 @@ public class PlayerConfig {
     public float phaseDuration, phaseCooldown;
     public float shieldRechargeDuration;
     public float bulletSpeed, bulletDamage;
+    public float forceFieldDamage, forceFieldDuration, forceFieldSize, forceFieldCooldown;
 
     public PlayerConfig(
             float speed,
@@ -16,7 +17,11 @@ public class PlayerConfig {
             float phaseCooldown,
             float shieldRechargeDuration,
             float bulletSpeed,
-            float bulletDamage
+            float bulletDamage,
+            float forceFieldDamage,
+            float forceFieldDuration,
+            float forceFieldSize,
+            float forceFieldCooldown
     ) {
         this.baseSpeed = speed;
         this.speedDampening = speedDampening;
@@ -27,5 +32,10 @@ public class PlayerConfig {
         this.shieldRechargeDuration = shieldRechargeDuration;
         this.bulletSpeed = bulletSpeed;
         this.bulletDamage = bulletDamage;
+        this.forceFieldDamage = forceFieldDamage;
+        this.forceFieldDuration = forceFieldDuration;
+        this.forceFieldSize = forceFieldSize;
+        this.forceFieldCooldown = forceFieldCooldown;
+
     }
 }

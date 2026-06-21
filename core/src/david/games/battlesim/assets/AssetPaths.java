@@ -9,6 +9,8 @@ public class AssetPaths {
     public static final String PLAYER = "gameplay/actors/player.png";
     public static final String PLAYER_SHIELD = "gameplay/actors/player_shield.png";
     public static final String BULLET_BLUE = "gameplay/actors/bullet_blue.png";
+    public static final String FORCE_FIELD_BLUE = "gameplay/actors/force_field_blue.png";
+    public static final String FORCE_FIELD_DARK = "gameplay/actors/force_field_dark.png";
 
     // UI
     public static final String MENU_BACKGROUND = "gameplay/ui/menu_background.jpg";
@@ -21,9 +23,11 @@ public class AssetPaths {
     public static final String EFFECT_SUCKED = "gameplay/ui/effect_suck.png";
     public static final String EFFECT_POISONED = "gameplay/ui/effect_poison.png";
     public static final String EFFECT_UNKNOWN = "gameplay/ui/effect_unknown.png";
+    public static final String EFFECT_INVINCIBLE = "gameplay/ui/effect_invincible.png";
 
-    // SKIN
+    // SKIN AND FONT
     public static final String UI_SKIN = "ui/flat-earth-ui.json";
+    public static final String UI_FONT = "ui/arial-32.fnt";
 
     private AssetPaths() {
     }

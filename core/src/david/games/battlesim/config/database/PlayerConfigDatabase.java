@@ -12,9 +12,13 @@ public class PlayerConfigDatabase {
                 100f,
                 0.1f,
                 1.25f,
-                15f,
+                9f,
                 1000f,
-                10f
+                150f,
+                9f,
+                2.3f,
+                110f,
+                20f
         );
     }
 

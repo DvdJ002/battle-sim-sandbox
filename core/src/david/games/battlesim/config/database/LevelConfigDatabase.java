@@ -6,61 +6,126 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import david.games.battlesim.config.GameConfig;
-
 public final class LevelConfigDatabase {
     private Map<String, LevelConfig> levelConfigs = new HashMap<>();
 
     public LevelConfigDatabase() {
+        ArrayList<LevelWaveConfig> waves = new ArrayList<>();
+        ArrayList<EnemySpawnConfig> spawnConfigs = new ArrayList<>();
+
         /* ************** Level 1 ************** */
-        ArrayList<EnemySpawnConfig> spawnConfigs1 = new ArrayList<>();
-        Map<ArrayList<EnemySpawnConfig>, LevelTriggerConfig> waves1 = new HashMap<>();
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(100f, 400f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(400f, 400f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(700f, 400f)));
+        spawnConfigs.add(new EnemySpawnConfig("slasher", new Vector2(200f, 300f)));
+        spawnConfigs.add(new EnemySpawnConfig("slasher", new Vector2(600f, 300f)));
+        waves.add(new LevelWaveConfig(20f, -1f, spawnConfigs));
 
-        spawnConfigs1.add(new EnemySpawnConfig("shooter", new Vector2(400f, 400f)));
-        spawnConfigs1.add(new EnemySpawnConfig("shooter", new Vector2(450f, 400f)));
-        spawnConfigs1.add(new EnemySpawnConfig("shooter", new Vector2(350f, 400f)));
+        spawnConfigs = new ArrayList<>();
 
-        waves1.put(spawnConfigs1, new LevelTriggerConfig(0f, 0f));
+        spawnConfigs.add(new EnemySpawnConfig("kamikaze", new Vector2(400f, 400f)));
+        spawnConfigs.add(new EnemySpawnConfig("kamikaze", new Vector2(450f, 400f)));
+        spawnConfigs.add(new EnemySpawnConfig("kamikaze", new Vector2(350f, 400f)));
+        spawnConfigs.add(new EnemySpawnConfig("kamikaze", new Vector2(450f, 300f)));
+        waves.add(new LevelWaveConfig(10f, -1f, spawnConfigs));
 
-        LevelConfig config = new LevelConfig(90f, new Vector2(100f, 100f), waves1);
+        LevelConfig config = new LevelConfig(23f, new Vector2(400f, 100f), waves);
 
         levelConfigs.put("level1", config);
 
         /* ************** Level 2 ************** */
-        ArrayList<EnemySpawnConfig> spawnConfigs2 = new ArrayList<>();
-        Map<ArrayList<EnemySpawnConfig>, LevelTriggerConfig> waves2 = new HashMap<>();
+        waves = new ArrayList<>();
+        spawnConfigs = new ArrayList<>();
 
-        spawnConfigs2.add(new EnemySpawnConfig("kamikaze", new Vector2(400f, 400f)));
-        spawnConfigs2.add(new EnemySpawnConfig("slasher", new Vector2(450f, 400f)));
-        spawnConfigs2.add(new EnemySpawnConfig("shooter", new Vector2(350f, 400f)));
+        spawnConfigs.add(new EnemySpawnConfig("kamikaze", new Vector2(400f, 400f)));
+        spawnConfigs.add(new EnemySpawnConfig("slasher", new Vector2(450f, 400f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(350f, 400f)));
 
-        waves2.put(spawnConfigs2, new LevelTriggerConfig(45f, 0f));
+        waves.add(new LevelWaveConfig(10f, -1f, spawnConfigs));
 
-        config = new LevelConfig(90f, new Vector2(100f, 100f), waves2);
+        config = new LevelConfig(13f, new Vector2(400f, 100f), waves);
 
         levelConfigs.put("level2", config);
 
         /* ************** Level 3 ************** */
-        ArrayList<EnemySpawnConfig> spawnConfigs3 = new ArrayList<>();
-        Map<ArrayList<EnemySpawnConfig>, LevelTriggerConfig> waves3 = new HashMap<>();
+        // Wave 1
+        waves = new ArrayList<>();
+        spawnConfigs = new ArrayList<>();
 
-        spawnConfigs3.add(new EnemySpawnConfig("kamikaze", new Vector2(400f, 400f)));
-        spawnConfigs3.add(new EnemySpawnConfig("kamikaze", new Vector2(450f, 400f)));
-        spawnConfigs3.add(new EnemySpawnConfig("kamikaze", new Vector2(350f, 400f)));
-        spawnConfigs3.add(new EnemySpawnConfig("kamikaze", new Vector2(450f, 300f)));
-        waves3.put(spawnConfigs3, new LevelTriggerConfig(0f, 0f));
+        spawnConfigs.add(new EnemySpawnConfig("kamikaze", new Vector2(400f, 400f)));
+        spawnConfigs.add(new EnemySpawnConfig("kamikaze", new Vector2(450f, 400f)));
+        spawnConfigs.add(new EnemySpawnConfig("kamikaze", new Vector2(350f, 400f)));
+        waves.add(new LevelWaveConfig(25f, -1f, spawnConfigs));
 
-        spawnConfigs3.clear();
+        // Wave 2
+        spawnConfigs = new ArrayList<>();
 
-        ArrayList<EnemySpawnConfig> spawnConfigs3_2 = new ArrayList<>();
+        spawnConfigs.add(new EnemySpawnConfig("slasher", new Vector2(400f, 400f)));
 
-        spawnConfigs3.add(new EnemySpawnConfig("slasher", new Vector2(400f, 400f)));
-        spawnConfigs3.add(new EnemySpawnConfig("slasher", new Vector2(450f, 400f)));
-        waves3.put(spawnConfigs3_2, new LevelTriggerConfig(45f, 0f));
+        waves.add(new LevelWaveConfig(-1f, 2f, spawnConfigs));
 
-        config = new LevelConfig(90f, new Vector2(100f, 100f), waves3);
+        // Wave 3
+        spawnConfigs = new ArrayList<>();
 
+        spawnConfigs.add(new EnemySpawnConfig("slasher", new Vector2(400f, 400f)));
+
+        waves.add(new LevelWaveConfig(-1f, 2f, spawnConfigs));
+
+        // Wave 4
+        spawnConfigs = new ArrayList<>();
+
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(400f, 400f)));
+
+        waves.add(new LevelWaveConfig(-1f, 1f, spawnConfigs));
+
+        // Wave 5
+        spawnConfigs = new ArrayList<>();
+
+        spawnConfigs.add(new EnemySpawnConfig("kamikaze", new Vector2(450f, 400f)));
+        spawnConfigs.add(new EnemySpawnConfig("kamikaze", new Vector2(400f, 400f)));
+        spawnConfigs.add(new EnemySpawnConfig("kamikaze", new Vector2(450f, 400f)));
+        spawnConfigs.add(new EnemySpawnConfig("kamikaze", new Vector2(350f, 400f)));
+        spawnConfigs.add(new EnemySpawnConfig("kamikaze", new Vector2(300f, 400f)));
+
+        waves.add(new LevelWaveConfig(-1f, 0f, spawnConfigs));
+
+        config = new LevelConfig(28f, new Vector2(400f, 100f), waves);
         levelConfigs.put("level3", config);
+
+        /* ************** Level 4 ************** */
+        // Wave 1
+        waves = new ArrayList<>();
+        spawnConfigs = new ArrayList<>();
+
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(20f, 200f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(20f, 300f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(20f, 400f)));
+
+        waves.add(new LevelWaveConfig(20f, -1f, spawnConfigs));
+
+        // Wave 2
+        spawnConfigs = new ArrayList<>();
+
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(760f, 200f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(760f, 300f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(760f, 400f)));
+
+        waves.add(new LevelWaveConfig(18f, -1f, spawnConfigs));
+
+        config = new LevelConfig(20.5f, new Vector2(400f, 300f), waves);
+
+        levelConfigs.put("level4", config);
+
+        /* ************** Level 4 ************** */
+        // Wave 1
+        waves = new ArrayList<>();
+        spawnConfigs = new ArrayList<>();
+
+        waves.add(new LevelWaveConfig(100f, -1f, spawnConfigs));
+
+        config = new LevelConfig(20.5f, new Vector2(400f, 300f), waves);
+
+        levelConfigs.put("level5", config);
     }
 
     public LevelConfig get(String type) {
