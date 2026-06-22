@@ -74,6 +74,7 @@ public class SuckerEnemy extends Enemy {
 
     private void chase() {
         isInvincible = false;
+        
         linearVelocity.x = chaseSpeed;
         linearVelocity.y = chaseSpeed;
     }
