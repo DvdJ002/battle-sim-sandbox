@@ -52,11 +52,12 @@ public class EnemyConfig {
     }
     public static class SuckerConfig extends EnemyConfig {
         public final float detectionRange, suckIntensity, forceFieldDuration;
-        public SuckerConfig(float collideDamage, float detectionRange, float suckIntensity, float damage, float maxHealth, float size, float forceFieldDuration) {
+        public SuckerConfig(float collideDamage, float damage, float maxHealth, float size, float detectionRange, float suckIntensity, float forceFieldDuration, float chaseSpeed) {
             super(collideDamage, damage, maxHealth, size);
             this.detectionRange = detectionRange;
             this.suckIntensity = suckIntensity;
             this.forceFieldDuration = forceFieldDuration;
+            this.chaseSpeed = chaseSpeed;
         }
     }
 }

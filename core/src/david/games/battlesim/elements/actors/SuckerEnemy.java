@@ -17,7 +17,7 @@ import david.games.battlesim.util.GameUtil;
 
 public class SuckerEnemy extends Enemy {
     private final EnemyConfig.SuckerConfig suckerConfig;
-    private float detectionRange, suckIntensity, forceFieldDuration;
+    private float detectionRange, suckIntensity, forceFieldDuration, chaseSpeed;
     private float forceFieldTimer = 0f;
 
     public SuckerEnemy(EnemyConfig enemyConfig, float x, float y){
@@ -26,6 +26,7 @@ public class SuckerEnemy extends Enemy {
         this.detectionRange = suckerConfig.detectionRange;
         this.suckIntensity = suckerConfig.suckIntensity;
         this.forceFieldDuration = suckerConfig.forceFieldDuration;
+        this.chaseSpeed = suckerConfig.chaseSpeed;
 
         texture = assetManager.get(AssetPaths.SUCKER, Texture.class);
         steeringBehavior = new Arrive<>(this, target);
@@ -60,19 +61,20 @@ public class SuckerEnemy extends Enemy {
     public void activateForceField(Vector2 playerPosition, ForceFieldSpawner spawner){
         spawner.spawn(position.x + hitbox.width/2, position.y  +  hitbox.height/2, damage, forceFieldDuration, detectionRange, false, true);
         isInvincible = true;
-        steeringState.maxLinearAcceleration = 0f;
-        steeringState.maxAngularAcceleration = 0f;
-        steeringState.maxAngularSpeed = 0f;
-        steeringState.maxLinearSpeed = 0f;
+        // steeringState.maxLinearAcceleration = 0f;
+        // steeringState.maxAngularAcceleration = 0f;
+        // steeringState.maxAngularSpeed = 0f;
+        // steeringState.maxLinearSpeed = 0f;
+
+        linearVelocity.x = chaseSpeed;
+        linearVelocity.y = chaseSpeed;
 
         forceFieldTimer = forceFieldDuration;
     }
 
     private void chase() {
         isInvincible = false;
-        steeringState.maxLinearAcceleration = suckerConfig.steeringState.maxLinearAcceleration;
-        steeringState.maxAngularAcceleration = suckerConfig.steeringState.maxAngularAcceleration;
-        steeringState.maxAngularSpeed = suckerConfig.steeringState.maxAngularSpeed;
-        steeringState.maxLinearSpeed = suckerConfig.steeringState.maxAngularSpeed;
+        linearVelocity.x = chaseSpeed;
+        linearVelocity.y = chaseSpeed;
     }
 }

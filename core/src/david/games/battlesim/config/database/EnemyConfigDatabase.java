@@ -37,13 +37,13 @@ public final class EnemyConfigDatabase {
 
         /* ************** Sucker enemy ************** */
         EnemyConfig.SuckerConfig sucker = new EnemyConfig.SuckerConfig(
-                0f, 80f, 25f, 1f, 200f, GameConfig.DEFAULT_ENEMY_SIZE, 12f
+                0f, 1f, 200f, GameConfig.DEFAULT_ENEMY_SIZE, 80f, 25f, 12f, 50f
         );
         setDefaultAiConfig(sucker);
-        sucker.steeringState.maxLinearAcceleration = 50.0f;
-        sucker.steeringState.maxAngularAcceleration = 50.0f;
-        sucker.steeringState.maxLinearSpeed = 50.0f;
-        sucker.steeringState.maxAngularSpeed = 50.0f;
+        sucker.steeringState.maxLinearAcceleration = sucker.chaseSpeed;
+        sucker.steeringState.maxAngularAcceleration = sucker.chaseSpeed;
+        sucker.steeringState.maxLinearSpeed = sucker.chaseSpeed;
+        sucker.steeringState.maxAngularSpeed = sucker.chaseSpeed;
 
         configs.put("sucker", sucker);
     }
