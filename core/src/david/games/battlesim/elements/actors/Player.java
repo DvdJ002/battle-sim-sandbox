@@ -224,7 +224,6 @@ public class Player {
         if (invincible) { return; }
 
         changeHealth(-damageAct.amount);
-        System.out.println("Player took damage, TYPE: " + damageAct.type);
 
         switch (damageAct.type) {
             case KNOCKBACK:

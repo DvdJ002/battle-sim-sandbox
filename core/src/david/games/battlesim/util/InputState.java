@@ -16,6 +16,7 @@ public class InputState {
         public boolean resetGamePressed;
         public boolean debugSpawnEnemy;
         public boolean debugModePressed;
+        public boolean disableDebugModePressed;
 
         public InputState() {
                 direction = new Vector2();
@@ -33,6 +34,8 @@ public class InputState {
                         ", mousePosition=" + mousePosition +
                         ", resetGamePressed=" + resetGamePressed +
                         ", debugSpawnEnemy=" + debugSpawnEnemy +
+                        ", debugModePressed=" + debugModePressed +
+                        ", disableDebugModePressed=" + disableDebugModePressed +                                                
                         '}';
         }
 }

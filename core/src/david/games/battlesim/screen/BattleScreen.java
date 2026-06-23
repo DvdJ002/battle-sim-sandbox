@@ -123,12 +123,17 @@ public class BattleScreen extends ScreenAdapter {
         inputState.shieldActive = Gdx.input.isButtonPressed(Input.Buttons.RIGHT);
         inputState.shootBulletPressed = Gdx.input.isButtonJustPressed(Input.Buttons.LEFT);
         inputState.forceFieldPressed = Gdx.input.isKeyJustPressed(Input.Keys.Q);
-
+        
         // General input
         inputState.resetGamePressed = Gdx.input.isKeyJustPressed(Input.Keys.R);
         inputState.debugSpawnEnemy = Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE);
 
-        isDebugEnabled = Gdx.input.isKeyPressed(Input.Keys.L);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+            isDebugEnabled = true;
+        }
+        else if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
+            isDebugEnabled = false;
+        }
 
         mousePosition.set(Gdx.input.getX(), Gdx.input.getY(), 0);
         viewport.unproject(mousePosition);
