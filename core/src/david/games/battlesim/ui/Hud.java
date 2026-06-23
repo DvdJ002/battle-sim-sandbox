@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 
 import static david.games.battlesim.BattleGame.assetManager;
 
@@ -14,19 +17,21 @@ import java.util.ArrayList;
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.GameConfig;
 import david.games.battlesim.elements.actors.Enemy;
+import david.games.battlesim.elements.actors.ForceField;
+import david.games.battlesim.elements.actors.Bullet;
 import david.games.battlesim.elements.damage.StatusEffect;
 import david.games.battlesim.world.BattleWorld;
 
 public class Hud {
-    Texture textureIced, textureKnockback, textureSucked, textureSlowed, textureUnknown, textureInvincible;
+    Texture textureIced, textureRooted, textureSlowed, textureUnknown, textureInvincible, textureDisarmed;
     private float padding = 15f;
     public Hud() {
         textureIced = assetManager.get(AssetPaths.EFFECT_ICED, Texture.class);
-        textureKnockback = assetManager.get(AssetPaths.EFFECT_KNOCKBACK, Texture.class);
-        textureSucked = assetManager.get(AssetPaths.EFFECT_SUCKED, Texture.class);
+        textureRooted = assetManager.get(AssetPaths.EFFECT_ROOTED, Texture.class);
         textureSlowed = assetManager.get(AssetPaths.EFFECT_SLOWED, Texture.class);
         textureUnknown = assetManager.get(AssetPaths.EFFECT_UNKNOWN, Texture.class);
         textureInvincible = assetManager.get(AssetPaths.EFFECT_INVINCIBLE, Texture.class);
+        textureDisarmed = assetManager.get(AssetPaths.EFFECT_DISARMED, Texture.class);
     }
 
     // Draw HUD based on worldState, worldState must NOT be modified!
@@ -149,14 +154,40 @@ public class Hud {
         font.draw(batch, (worldState.currentWave) + "/" + worldState.levelConfig.waves.size(), x + 1f, y);
     }
 
+    public void drawDebugOverlay(ShapeRenderer sr, BattleWorld worldState) {
+        // Draw enemy hitboxes
+        sr.setColor(Color.RED);
+        Gdx.gl.glLineWidth(3f);
+
+        for (Enemy enemy : worldState.enemies) {
+            Rectangle hitbox = enemy.hitbox;
+            sr.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
+        }
+
+        // Other actor hitboxes
+        sr.setColor(Color.BLACK);
+
+        for (ForceField field : worldState.forceFields) {
+            sr.circle(field.hitbox.x, field.hitbox.y, field.hitbox.radius);
+        }
+        for (Bullet bullet : worldState.bullets) {
+            sr.circle(bullet.hitbox.x, bullet.hitbox.y, bullet.hitbox.radius);
+        }
+
+        // Draw player circle
+        sr.setColor(Color.GREEN);
+
+        Vector2 playerPos = worldState.player.position;
+        sr.circle(playerPos.x, playerPos.y, worldState.player.hitbox.radius);
+    }
 
     private Texture getEffectTexture(StatusEffect type) {
         switch (type) {
             case ICED: return textureIced;
             case SLOWED: return textureSlowed;
-            case KNOCKBACK: return textureKnockback;
-            case SUCKED: return textureSucked;
+            case ROOTED: return textureRooted;
             case INVINCIBLE: return textureInvincible;
+            case DISARMED: return textureDisarmed;
             default: return textureUnknown;
         }
     }

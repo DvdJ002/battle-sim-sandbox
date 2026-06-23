@@ -36,12 +36,13 @@ public class Player {
     public float phaseCooldownTimer = 0.0f, phaseActiveTimer = 0.0f;
     public float forceFieldCooldownTimer = 0.0f;
     public float shieldRechargeTimer = 0.0f;
-    public float disableMovementTimer = 0.0f;
+    public float rootedTimer = 0.0f;
     public float slowedTimer = 0.0f;
     public float invincibleTimer = 0.0f;
+    public float disarmedTimer = 0.0f;
 
     // Boolean states
-    public boolean shielding = false, invincible = false;
+    public boolean shielding = false, invincible = false, disarmed = false;
 
     public Player(PlayerConfig config, float x, float y){
         texture = assetManager.get(AssetPaths.PLAYER, Texture.class);
@@ -133,12 +134,10 @@ public class Player {
                 phaseActiveTimer = 0f;
             }
         }
-
         // Force field ability cooldown timer
         if (forceFieldCooldownTimer > 0f) {
             forceFieldCooldownTimer -= delta;
         }
-
         // Shield recharge timer
         if (shieldRechargeTimer > 0f) {
             shieldRechargeTimer -= delta;
@@ -147,8 +146,8 @@ public class Player {
             }
         }
         // Disable movement timer
-        if (disableMovementTimer > 0f) {
-            disableMovementTimer -= delta;
+        if (rootedTimer > 0f) {
+            rootedTimer -= delta;
         }
         // Slowed effect timer
         if (slowedTimer > 0f) {
@@ -157,12 +156,20 @@ public class Player {
                 speed = config.baseSpeed;
             }
         }
-        // Slowed effect timer
+        // Invincible timer
         if (invincibleTimer > 0f) {
             invincibleTimer -= delta;
             if (invincibleTimer <= 0f){
                 invincibleTimer = 0.0f;
                 invincible = false;
+            }
+        }
+        // Disarmed timer
+        if (disarmedTimer > 0f) {
+            disarmedTimer -= delta;
+            if (disarmedTimer <= 0f){
+                disarmedTimer = 0.0f;
+                disarmed = false;
             }
         }
     }
@@ -181,7 +188,7 @@ public class Player {
     }
 
     public void shootBullet(BulletSpawner bulletSpawner){
-        if (!shielding){
+        if (!shielding && !disarmed){
             bulletSpawner.spawn(hitbox.x, hitbox.y, faceAngle, config.bulletSpeed, config.bulletDamage,true);
         }
     }
@@ -191,7 +198,8 @@ public class Player {
             forceFieldSpawner.spawn(position.x, position.y, config.forceFieldDamage, config.forceFieldDuration, config.forceFieldSize, true, true);
 
             forceFieldCooldownTimer = config.forceFieldCooldown;
-            disableMovement(config.forceFieldDuration);
+            applyDisarmed(config.forceFieldDuration);
+            applyRooted(config.forceFieldDuration);
             applyInvincible(config.forceFieldDuration);
         }
     }
@@ -207,13 +215,9 @@ public class Player {
         phaseCooldownTimer = 0.01f;
         phaseActiveTimer = 0.01f;
         shieldRechargeTimer = 0.01f;
-        disableMovementTimer = 0.01f;
+        rootedTimer = 0.01f;
         slowedTimer = 0.01f;
         forceFieldCooldownTimer = 0.01f;
-    }
-
-    public void disableMovement(float duration) {
-        disableMovementTimer = duration;
     }
 
     public void takeHit(DamageAction damageAct){
@@ -225,8 +229,6 @@ public class Player {
         switch (damageAct.type) {
             case KNOCKBACK:
                 applyKnockback(damageAct.sourcePosition, damageAct.intensity);
-                break;
-            case PROJECTILE:
                 break;
             case SLOWED:
                 applySlowed(damageAct.intensity, damageAct.duration);
@@ -266,6 +268,11 @@ public class Player {
         shieldHitbox.y = y;
     }
 
+    public void setShieldState(boolean active) {
+        shielding = active && shieldHealth > 0f;
+    }
+
+    /********************* STATUS EFFECTS *********************/
     public void applyKnockback(Vector2 sourcePos, float intensity) {
         float kbAngle = GameUtil.findAngleBetweenPoints(sourcePos.x, sourcePos.y, position.x, position.y);
         velocity.set(
@@ -274,7 +281,7 @@ public class Player {
         ).scl(speed * intensity);
 
         // Briefly disable input with timer, absolute value because intensity can be minus (suck)
-        disableMovement(Math.abs(intensity/100));
+        applyRooted(Math.abs(intensity/100));
     }
 
     public void applySlowed(float intensity, float duration) {
@@ -292,20 +299,25 @@ public class Player {
         }
     }
 
-    public void setShieldState(boolean active) {
-        shielding = active && shieldHealth > 0f;
+    public void applyRooted(float duration) {
+        rootedTimer = duration;
+    }
+
+    public void applyDisarmed(float duration) {
+        disarmed = true;
+        disarmedTimer = duration;
     }
 
     public boolean isMovementDisabled() {
-        return disableMovementTimer > 0f;
+        return rootedTimer > 0f;
     }
 
     public ArrayList<StatusEffect> getActiveEffects() {
         ArrayList<StatusEffect> effects = new ArrayList<>();
-        if (disableMovementTimer > 0f) effects.add(StatusEffect.KNOCKBACK);
+        if (rootedTimer > 0f) effects.add(StatusEffect.ROOTED);
         if (slowedTimer > 0f) effects.add(StatusEffect.SLOWED);
         if (invincible) effects.add(StatusEffect.INVINCIBLE);
-
+        if (disarmed) effects.add(StatusEffect.DISARMED);
         return effects;
     }
 }

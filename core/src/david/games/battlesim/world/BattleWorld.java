@@ -40,9 +40,9 @@ public class BattleWorld {
 
     public Player player;
     public ArrayList<Enemy> enemies;
-    private ArrayList<Bullet> bullets;
+    public ArrayList<Bullet> bullets;
     private Pool<Bullet> bulletPool;
-    private ArrayList<ForceField> forceFields;
+    public ArrayList<ForceField> forceFields;
     EnemyConfigDatabase enemyConfigDatabase;
     public LevelConfig levelConfig;
     public int currentWave = 0;
@@ -169,7 +169,7 @@ public class BattleWorld {
     }
 
     private void updateTimers(float delta) {
-        // Slowed effect timer
+        // Level timer
         if (levelTimer > 0f) {
             levelTimer -= delta;
             if (levelTimer <= 0f){
@@ -245,6 +245,9 @@ public class BattleWorld {
                     break;
                 case "slasher":
                     enemies.add(new SlasherEnemy(enemyConfigDatabase.get(enemySpawn.type), enemySpawn.position.x, enemySpawn.position.y));
+                    break;
+                case "sucker":
+                    enemies.add(new SuckerEnemy(enemyConfigDatabase.get(enemySpawn.type), enemySpawn.position.x, enemySpawn.position.y));
                     break;
                 default: break;
             }

@@ -61,21 +61,13 @@ public class SuckerEnemy extends Enemy {
     public void activateForceField(Vector2 playerPosition, ForceFieldSpawner spawner){
         spawner.spawn(position.x + hitbox.width/2, position.y  +  hitbox.height/2, damage, forceFieldDuration, detectionRange, false, true);
         isInvincible = true;
-        // steeringState.maxLinearAcceleration = 0f;
-        // steeringState.maxAngularAcceleration = 0f;
-        // steeringState.maxAngularSpeed = 0f;
-        // steeringState.maxLinearSpeed = 0f;
-
-        linearVelocity.x = chaseSpeed;
-        linearVelocity.y = chaseSpeed;
+        isStatic = true;
 
         forceFieldTimer = forceFieldDuration;
     }
 
     private void chase() {
         isInvincible = false;
-        
-        linearVelocity.x = chaseSpeed;
-        linearVelocity.y = chaseSpeed;
+        isStatic = false;
     }
 }

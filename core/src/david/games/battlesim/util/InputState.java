@@ -15,6 +15,7 @@ public class InputState {
         public Vector3 mousePosition;
         public boolean resetGamePressed;
         public boolean debugSpawnEnemy;
+        public boolean debugModePressed;
 
         public InputState() {
                 direction = new Vector2();

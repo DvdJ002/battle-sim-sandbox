@@ -59,13 +59,13 @@ public class BattleGame extends Game {
 		assetManager.load(AssetPaths.GAME_BACKGROUND, Texture.class);
 		assetManager.load(AssetPaths.TITLE, Texture.class);
 		assetManager.load(AssetPaths.STAGE_SELECT, Texture.class);
-		assetManager.load(AssetPaths.EFFECT_KNOCKBACK, Texture.class);
+		assetManager.load(AssetPaths.EFFECT_ROOTED, Texture.class);
 		assetManager.load(AssetPaths.EFFECT_SLOWED, Texture.class);
 		assetManager.load(AssetPaths.EFFECT_ICED, Texture.class);
-		assetManager.load(AssetPaths.EFFECT_SUCKED, Texture.class);
 		assetManager.load(AssetPaths.EFFECT_POISONED, Texture.class);
 		assetManager.load(AssetPaths.EFFECT_UNKNOWN, Texture.class);
 		assetManager.load(AssetPaths.EFFECT_INVINCIBLE, Texture.class);
+		assetManager.load(AssetPaths.EFFECT_DISARMED, Texture.class);
 
 		assetManager.finishLoading();
 	}

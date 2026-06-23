@@ -18,13 +18,13 @@ public class AssetPaths {
     public static final String GAME_BACKGROUND = "gameplay/ui/game_background.png";
     public static final String TITLE = "gameplay/ui/title.png";
     public static final String STAGE_SELECT = "gameplay/ui/select_stage.png";
-    public static final String EFFECT_KNOCKBACK = "gameplay/ui/effect_knockback.png";
     public static final String EFFECT_SLOWED = "gameplay/ui/effect_slowed.png";
     public static final String EFFECT_ICED = "gameplay/ui/effect_iced.png";
-    public static final String EFFECT_SUCKED = "gameplay/ui/effect_suck.png";
     public static final String EFFECT_POISONED = "gameplay/ui/effect_poison.png";
     public static final String EFFECT_UNKNOWN = "gameplay/ui/effect_unknown.png";
     public static final String EFFECT_INVINCIBLE = "gameplay/ui/effect_invincible.png";
+    public static final String EFFECT_DISARMED = "gameplay/ui/effect_disarmed.png";
+    public static final String EFFECT_ROOTED = "gameplay/ui/effect_rooted.png";
 
     // SKIN AND FONT
     public static final String UI_SKIN = "ui/flat-earth-ui.json";

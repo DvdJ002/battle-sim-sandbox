@@ -67,8 +67,6 @@ public class ShooterEnemy extends Enemy {
                 reloading = false;
             }
         }
-
-        System.out.println("Reload timer: " + reloadTimer);
     }
 
     public void shootBullet(Vector2 playerPosition, BulletSpawner spawner){

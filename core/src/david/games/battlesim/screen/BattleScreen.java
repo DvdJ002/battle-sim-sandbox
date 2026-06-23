@@ -42,10 +42,12 @@ public class BattleScreen extends ScreenAdapter {
     private Hud hud;
 
     private int currentLevelCode;
+    private boolean isDebugEnabled;
 
     public BattleScreen(BattleGame game, int levelCode) {
         this.game = game;
         this.currentLevelCode = levelCode;
+        this.isDebugEnabled = false;
     }
 
     @Override
@@ -97,6 +99,12 @@ public class BattleScreen extends ScreenAdapter {
         sr.begin(ShapeRenderer.ShapeType.Filled);
         hud.drawBars(sr, world);
         sr.end();
+
+        if (isDebugEnabled) { 
+            sr.begin(ShapeRenderer.ShapeType.Line);
+            hud.drawDebugOverlay(sr, world); 
+            sr.end();
+        }
     }
 
     public void readInput() {
@@ -119,6 +127,8 @@ public class BattleScreen extends ScreenAdapter {
         // General input
         inputState.resetGamePressed = Gdx.input.isKeyJustPressed(Input.Keys.R);
         inputState.debugSpawnEnemy = Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE);
+
+        isDebugEnabled = Gdx.input.isKeyPressed(Input.Keys.L);
 
         mousePosition.set(Gdx.input.getX(), Gdx.input.getY(), 0);
         viewport.unproject(mousePosition);

@@ -51,7 +51,7 @@ public class EnemyConfig {
         }
     }
     public static class SuckerConfig extends EnemyConfig {
-        public final float detectionRange, suckIntensity, forceFieldDuration;
+        public final float detectionRange, suckIntensity, forceFieldDuration, chaseSpeed;
         public SuckerConfig(float collideDamage, float damage, float maxHealth, float size, float detectionRange, float suckIntensity, float forceFieldDuration, float chaseSpeed) {
             super(collideDamage, damage, maxHealth, size);
             this.detectionRange = detectionRange;

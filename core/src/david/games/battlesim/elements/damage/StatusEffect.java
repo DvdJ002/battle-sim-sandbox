@@ -3,12 +3,12 @@ package david.games.battlesim.elements.damage;
 public enum StatusEffect {
     NONE("none"),
     KNOCKBACK ("knockback"), // Intensity: Knockback speed
-    PROJECTILE ("projectile"), // Intensity:
     SLOWED("slowed"), // Intensity: Slow speed
     ICED("iced"), // Intensity: Dampening
     POISONED("poison"), // Intensity: Dmg per tick
-    SUCKED("suck"), // Intensity: Suck speed
-    INVINCIBLE("invincible"); // Intensity: Suck speed
+    INVINCIBLE("invincible"), // Intensity: Suck speed
+    DISARMED("disarmed"), // Intensity: /
+    ROOTED("rooted"); // Intensity: /
 
     public final String label;
 

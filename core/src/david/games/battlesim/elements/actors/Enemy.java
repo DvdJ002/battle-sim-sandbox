@@ -25,7 +25,7 @@ public class Enemy implements Steerable<Vector2> {
     protected Vector2 linearVelocity = new Vector2(1f, 1f), position;
     public EnemySteeringState steeringState;
     public float damage, collideDamage, health, size;
-    public boolean tagged, isAlive = true, isInvincible = false;
+    public boolean tagged, isAlive = true, isInvincible = false, isStatic= false;
     public Enemy(EnemyConfig enemyConfig, float x, float y) {
         hitbox = new Rectangle();
 
@@ -108,6 +108,11 @@ public class Enemy implements Steerable<Vector2> {
 
     /********************* MOVEMENT BEHAVIOR & METHOD OVERRIDES *********************/
     private void applySteering (SteeringAcceleration<Vector2> steering, float delta) {
+        if (isStatic) {
+            linearVelocity.setZero();
+            return;
+        }
+
         linearVelocity.mulAdd(steering.linear, delta).limit(getMaxLinearSpeed());
         position.mulAdd(linearVelocity, delta);
         hitbox.x = position.x;

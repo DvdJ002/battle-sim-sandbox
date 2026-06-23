@@ -28,7 +28,7 @@ public class Bullet implements Pool.Poolable {
     public Bullet(float x, float y, float angle, float speed, float damage, boolean fromPlayer) {
         texture = assetManager.get(AssetPaths.BULLET_BLUE, Texture.class);
         hitbox = new Circle();
-        hitbox.radius = GameConfig.WIDTH/60;
+        hitbox.radius = GameConfig.WIDTH/120;
         hitbox.x = x;
         hitbox.y = y;
         this.angle = angle;
@@ -41,8 +41,9 @@ public class Bullet implements Pool.Poolable {
     }
 
     public void draw(SpriteBatch batch){
+        float diameter = hitbox.radius * 2f;
         batch.draw(
-                texture, hitbox.x, hitbox.y, hitbox.radius, hitbox.radius,
+                texture, hitbox.x - hitbox.radius, hitbox.y - hitbox.radius, hitbox.radius * 2, hitbox.radius * 2,
                 0, 0, texture.getWidth(), texture.getHeight(), false, false
         );
     }
@@ -51,7 +52,7 @@ public class Bullet implements Pool.Poolable {
         for (Enemy enemy : context.enemies) {
             // Checks if bullet hit enemy
             if (isAlive && fromPlayer && overlaps(hitbox, enemy.hitbox)) {
-                DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.PROJECTILE, damage, 0f, 0f);
+                DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.NONE, damage, 0f, 0f);
                 damageAct.sourcePosition = new Vector2(hitbox.x, hitbox.y);
                 enemy.takeHit(damageAct);
                 isAlive = false;
@@ -60,7 +61,7 @@ public class Bullet implements Pool.Poolable {
         // Checks if bullet hit player
         if (isAlive && !fromPlayer) {
             if ((context.player.shielding && overlaps(hitbox, context.player.shieldHitbox)) || (!context.player.shielding && overlaps(hitbox, context.player.hitbox))) {
-                DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.PROJECTILE, damage, 0f, 0f);
+                DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.NONE, damage, 0f, 0f);
                 damageAct.sourcePosition = new Vector2(hitbox.x, hitbox.y);
                 context.player.takeHit(damageAct);
                 isAlive = false;
