@@ -88,13 +88,18 @@ public class LevelsScreen extends ScreenAdapter {
         ));
         buttonTable.add(titleImage).padTop(10).padBottom(100).colspan(5).row();
 
+        // Level buttons
         for (int i = 1; i < 9; i++){
             final int level = i;
 
-            TextButton button = new TextButton("Level " + level, skin);
+            final TextButton button = new TextButton("Level " + level, skin);
             button.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+                    if (button.isDisabled()) {
+                        return;
+                    }
+
                     game.setScreen(new BattleScreen(game, level));
                 }
             });
@@ -104,7 +109,32 @@ public class LevelsScreen extends ScreenAdapter {
             } else {
                 buttonTable.add(button).padBottom(10).expandX().fill();
             }
+
+            if (!game.saveManager.isLevelReached(i)) {
+                button.setDisabled(true);
+            }
         }
+
+        // Boss button
+        final TextButton level9Button = new TextButton("Boss level", skin);
+        level9Button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (level9Button.isDisabled()) {
+                    return;
+                }
+
+                game.setScreen(new BattleScreen(game, 9));
+            }
+        });
+
+        // Span two columns and center it
+        buttonTable.add(); // empty column
+        buttonTable.add(level9Button).colspan(2).padBottom(10).expandX().fill();
+        level9Button.setDisabled(true);
+        buttonTable.add(); // empty column
+        buttonTable.row();
+
 
         TextButton menuButton = new TextButton("Menu" , skin);
         menuButton.addListener(new ClickListener() {

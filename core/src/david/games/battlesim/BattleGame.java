@@ -12,17 +12,21 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import david.games.battlesim.assets.AssetDescriptors;
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.screen.MenuScreen;
+import david.games.battlesim.util.SaveManager;
 
 public class BattleGame extends Game {
 	SpriteBatch batch;
 	ShapeRenderer sr;
 	public static AssetManager assetManager;
 	private Screen currentScreen;
-	
+	public SaveManager saveManager;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		sr = new ShapeRenderer();
+		saveManager = new SaveManager();
+		saveManager.load();
 
 		loadAssetManager();
 
@@ -79,6 +83,8 @@ public class BattleGame extends Game {
 	public ShapeRenderer getShapeRenderer() {
 		return sr;
 	}
+
+
 
 	@Override
 	public void dispose () {

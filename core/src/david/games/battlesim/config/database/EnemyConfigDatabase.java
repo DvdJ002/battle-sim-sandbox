@@ -21,7 +21,7 @@ public final class EnemyConfigDatabase {
 
         /* ************** Shooter enemy ************** */
         EnemyConfig.ShooterConfig shooter = new EnemyConfig.ShooterConfig(
-                2f, 20f, 100f, GameConfig.DEFAULT_ENEMY_SIZE, 2f, 300f, 600f, 400f, 1000f, 13.3f
+                2f, 20f, 100f, GameConfig.DEFAULT_ENEMY_SIZE, 2f, 300f, 600f, 400f, 1000f, 6.7f
         );
         setDefaultAiConfig(shooter);
 
@@ -37,7 +37,7 @@ public final class EnemyConfigDatabase {
 
         /* ************** Sucker enemy ************** */
         EnemyConfig.SuckerConfig sucker = new EnemyConfig.SuckerConfig(
-                0f, 1f, 250f, GameConfig.DEFAULT_ENEMY_SIZE*1.4f, 100f, 20f, 12f, 35f
+                0f, 1f, 250f, GameConfig.DEFAULT_ENEMY_SIZE*1.4f, 100f, 20f, 12f, 45f
         );
         setDefaultAiConfig(sucker);
         sucker.steeringState.maxLinearAcceleration = sucker.chaseSpeed;

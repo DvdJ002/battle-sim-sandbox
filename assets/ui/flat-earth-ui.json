@@ -40,6 +40,12 @@ com.badlogic.gdx.graphics.Color: {
 		g: 0.6
 		b: 0.33313715
 		a: 1
+	},
+	disabled: {
+		r: 0.8
+		g: 0.8
+		b: 0.8
+		a: 0.8
 	}
 	selection: {
 		r: 0.22745098
@@ -76,6 +82,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	button-h: {
 		name: button
 		color: highlight
+	},
+	button-disabled: {
+		name: button
+		color: disabled
 	}
 	checkbox-c: {
 		name: checkbox
@@ -411,6 +421,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		overFontColor: gray
 		up: button-c
 		down: button-p
+		disabled: button-disabled
 		over: button-h
 	}
 }
