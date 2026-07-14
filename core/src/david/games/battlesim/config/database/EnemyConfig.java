@@ -26,16 +26,17 @@ public class EnemyConfig {
         }
     }
     public static class ShooterConfig extends EnemyConfig {
-        public final float reloadDuration, bulletSpeed;
+        public final float reloadDuration, bulletSpeed, bulletSize;
         public final float evadeRange;
         public final float speedEvade, speedChase;
-        public ShooterConfig(float collideDamage, float damage, float maxHealth, float size, float reloadDuration, float evadeRange, float speedEvade, float speedChase, float bulletSpeed) {
+        public ShooterConfig(float collideDamage, float damage, float maxHealth, float size, float reloadDuration, float evadeRange, float speedEvade, float speedChase, float bulletSpeed, float bulletSize) {
             super(collideDamage, damage, maxHealth, size);
             this.reloadDuration = reloadDuration;
             this.evadeRange = evadeRange;
             this.speedEvade = speedEvade;
             this.speedChase = speedChase;
             this.bulletSpeed = bulletSpeed;
+            this.bulletSize = bulletSize;
         }
     }
     public static class SlasherConfig extends EnemyConfig {

@@ -21,7 +21,7 @@ public final class EnemyConfigDatabase {
 
         /* ************** Shooter enemy ************** */
         EnemyConfig.ShooterConfig shooter = new EnemyConfig.ShooterConfig(
-                2f, 20f, 100f, GameConfig.DEFAULT_ENEMY_SIZE, 2f, 300f, 600f, 400f, 1000f
+                2f, 20f, 100f, GameConfig.DEFAULT_ENEMY_SIZE, 2f, 300f, 600f, 400f, 1000f, 13.3f
         );
         setDefaultAiConfig(shooter);
 

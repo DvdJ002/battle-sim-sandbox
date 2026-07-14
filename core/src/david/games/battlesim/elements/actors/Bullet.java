@@ -22,22 +22,23 @@ import david.games.battlesim.util.GameUtil;
 public class Bullet implements Pool.Poolable {
     public Circle hitbox;
     Texture texture;
-    public float angle, speed, damage;
+    public float angle, speed, damage, size;
     public boolean isAlive = true, fromPlayer;
 
-    public Bullet(float x, float y, float angle, float speed, float damage, boolean fromPlayer) {
+    public Bullet(float x, float y, float angle, float speed, float damage, float size, boolean fromPlayer) {
         texture = assetManager.get(AssetPaths.BULLET_BLUE, Texture.class);
         hitbox = new Circle();
-        hitbox.radius = GameConfig.WIDTH/120;
+        hitbox.radius = size;
         hitbox.x = x;
         hitbox.y = y;
         this.angle = angle;
         this.speed = speed;
         this.damage = damage;
+        this.size = size;
         this.fromPlayer = fromPlayer;
     }
     public Bullet(){
-        this(0f, 0f, 90f, 20f, 20f, true);
+        this(0f, 0f, 90f, 20f, 20f, 30f, true);
     }
 
     public void draw(SpriteBatch batch){
@@ -81,12 +82,15 @@ public class Bullet implements Pool.Poolable {
         }
     }
 
-    public void initFromPool(float x, float y, float angle, float speed, float damage, boolean fromPlayer){
+    public void initFromPool(float x, float y, float angle, float speed, float damage, float size, boolean fromPlayer){
         hitbox.x = x;
         hitbox.y = y;
+        hitbox.radius = size;
+
         this.angle = angle;
         this.speed = speed;
         this.damage = damage;
+        this.size = size;
         this.fromPlayer = fromPlayer;
     }
 

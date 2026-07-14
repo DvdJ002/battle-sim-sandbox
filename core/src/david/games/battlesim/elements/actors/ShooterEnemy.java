@@ -20,7 +20,7 @@ import david.games.battlesim.util.GameUtil;
 
 public class ShooterEnemy extends Enemy {
     private final EnemyConfig.ShooterConfig shooterConfig;
-    private float  reloadDuration, bulletSpeed, evadeRange;
+    private float  reloadDuration, bulletSpeed, evadeRange, bulletSize;
     private float speedEvade, speedChase;
     public boolean evading = true, reloading = true;
     private float reloadTimer = 0f;
@@ -33,6 +33,7 @@ public class ShooterEnemy extends Enemy {
         this.speedEvade = shooterConfig.speedEvade;
         this.speedChase = shooterConfig.speedChase;
         this.bulletSpeed = shooterConfig.bulletSpeed;
+        this.bulletSize = shooterConfig.bulletSize;
 
         texture = assetManager.get(AssetPaths.SHOOTER, Texture.class);
         steeringBehavior = new Evade<>(this, target);
@@ -71,7 +72,7 @@ public class ShooterEnemy extends Enemy {
 
     public void shootBullet(Vector2 playerPosition, BulletSpawner spawner){
         float angle = findAngleBetweenPoints(hitbox.x + (hitbox.width/2), hitbox.y + (hitbox.height/2), playerPosition.x, playerPosition.y);
-        spawner.spawn(hitbox.x + (hitbox.width/2), hitbox.y + (hitbox.height/2), angle, bulletSpeed, damage, false);
+        spawner.spawn(hitbox.x + (hitbox.width/2), hitbox.y + (hitbox.height/2), angle, bulletSpeed, damage, bulletSize, false);
         reloadTimer = reloadDuration;
         reloading = true;
     }

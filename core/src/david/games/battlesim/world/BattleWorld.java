@@ -69,9 +69,9 @@ public class BattleWorld {
         /// Bullets (they are pooled)
         context.bulletSpawner = new BulletSpawner() {
             @Override
-            public void spawn(float x, float y, float angle, float speed, float damage, boolean fromPlayer) {
+            public void spawn(float x, float y, float angle, float speed, float damage, float size, boolean fromPlayer) {
                 Bullet bullet = bulletPool.obtain();
-                bullet.initFromPool(x, y, angle, speed, damage, fromPlayer);
+                bullet.initFromPool(x, y, angle, speed, damage, size, fromPlayer);
                 bullets.add(bullet);
             }
         };

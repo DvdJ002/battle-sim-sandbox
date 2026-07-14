@@ -189,7 +189,7 @@ public class Player {
 
     public void shootBullet(BulletSpawner bulletSpawner){
         if (!shielding && !disarmed){
-            bulletSpawner.spawn(hitbox.x, hitbox.y, faceAngle, config.bulletSpeed, config.bulletDamage,true);
+            bulletSpawner.spawn(hitbox.x, hitbox.y, faceAngle, config.bulletSpeed, config.bulletDamage, config.bulletSize,true);
         }
     }
 

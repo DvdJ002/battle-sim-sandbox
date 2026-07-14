@@ -14,7 +14,8 @@ public class PlayerConfigDatabase {
                 1.25f,
                 9f,
                 1000f,
-                10f, //150F
+                10f,
+                13.3f,
                 9f,
                 2.3f,
                 110f,
