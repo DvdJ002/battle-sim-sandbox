@@ -125,7 +125,7 @@ public final class LevelConfigDatabase {
 
         waves.add(new LevelWaveConfig(5f, -1f, spawnConfigs));
 
-        config = new LevelConfig(101f, new Vector2(400f, 300f), waves);
+        config = new LevelConfig(8f, new Vector2(400f, 300f), waves);
 
         levelConfigs.put("level5", config);
 
