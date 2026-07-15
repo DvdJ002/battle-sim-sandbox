@@ -143,12 +143,22 @@ public class BattleScreen extends ScreenAdapter {
     private void handleWorldState() {
         switch (world.state) {
             case WON:
+                saveLevelProgress(currentLevelCode + 1);
+                endScreen();
+                return;
             case LOST:
             case STOPPED:
             case EXIT_REQUESTED:
                 endScreen();
                 return;
             case RUNNING: break;
+        }
+    }
+
+    public void saveLevelProgress(int levelCode) {
+        // If the level is unlocked anyways don't do anything
+        if (!game.isLevelReached(levelCode)) {
+            game.saveProgress(levelCode);
         }
     }
 

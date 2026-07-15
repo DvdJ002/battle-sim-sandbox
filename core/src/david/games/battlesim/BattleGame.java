@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import david.games.battlesim.assets.AssetDescriptors;
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.screen.MenuScreen;
+import david.games.battlesim.util.SaveData;
 import david.games.battlesim.util.SaveManager;
 
 public class BattleGame extends Game {
@@ -26,7 +27,6 @@ public class BattleGame extends Game {
 		batch = new SpriteBatch();
 		sr = new ShapeRenderer();
 		saveManager = new SaveManager();
-		saveManager.load();
 
 		loadAssetManager();
 
@@ -84,7 +84,14 @@ public class BattleGame extends Game {
 		return sr;
 	}
 
+	public void saveProgress(int levelReached) {
+		saveManager.save(levelReached);
+	}
 
+	public boolean isLevelReached(int levelCode) {
+		SaveData data = saveManager.getSaveData();
+		return data.levelReached >= levelCode;
+	}
 
 	@Override
 	public void dispose () {

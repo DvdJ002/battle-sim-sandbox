@@ -110,7 +110,7 @@ public class LevelsScreen extends ScreenAdapter {
                 buttonTable.add(button).padBottom(10).expandX().fill();
             }
 
-            if (!game.saveManager.isLevelReached(i)) {
+            if (!game.isLevelReached(i)) {
                 button.setDisabled(true);
             }
         }
