@@ -98,7 +98,7 @@ public class BattleWorld {
         mousePosition = inputState.mousePosition;
 
         if (inputState.debugSpawnEnemy) {
-            //enemies.add(new ShooterEnemy(enemyConfigDatabase.get("shooter"), mousePosition.x, mousePosition.y));
+            enemies.add(new ShooterEnemy(enemyConfigDatabase.get("shooter"), mousePosition.x, mousePosition.y));
             //enemies.add(new KamikazeEnemy(enemyConfigDatabase.get("kamikaze"),mousePosition.x, mousePosition.y));
             //enemies.add(new SlasherEnemy(enemyConfigDatabase.get("slasher"), mousePosition.x, mousePosition.y));
             //enemies.add(new SuckerEnemy(enemyConfigDatabase.get("sucker"), mousePosition.x, mousePosition.y));

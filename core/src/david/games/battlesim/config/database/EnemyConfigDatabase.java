@@ -49,7 +49,7 @@ public final class EnemyConfigDatabase {
 
         /* ************** Healer enemy ************** */
         EnemyConfig.HealerConfig healer = new EnemyConfig.HealerConfig(
-                0f, 1f, 50f, GameConfig.DEFAULT_ENEMY_SIZE, 200f, 0.3f, 120f, 210f, 10f
+                0f, 1f, 40f, GameConfig.DEFAULT_ENEMY_SIZE, 200f, 0.3f, 120f, 210f, 10f, 4f
         );
         setDefaultAiConfig(healer);
         healer.steeringState.maxLinearAcceleration = healer.roamSpeed;

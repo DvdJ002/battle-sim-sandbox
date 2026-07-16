@@ -1,6 +1,7 @@
 package david.games.battlesim.elements.actors;
 
 import static david.games.battlesim.BattleGame.assetManager;
+import static david.games.battlesim.util.GameUtil.findAngleBetweenPoints;
 import static david.games.battlesim.util.GameUtil.isNear;
 
 import com.badlogic.gdx.ai.steer.behaviors.Arrive;
@@ -18,11 +19,12 @@ import david.games.battlesim.elements.damage.StatusEffect;
 import david.games.battlesim.util.GameUtil;
 
 public class HealerEnemy extends Enemy {
+    private Texture beamTexture;
     private final EnemyConfig.HealerConfig healerConfig;
     private Enemy healedEnemy;
-    private float detectionRange, healAmount, roamSpeed, chaseSpeed;
+    private float detectionRange, healAmount, roamSpeed, chaseSpeed, beamWidth;
     private boolean isHealing = false;
-    private float roamLocationTimer = 0f, roamPeriod;
+    private float roamLocationTimer, roamPeriod;
 
     public HealerEnemy(EnemyConfig enemyConfig, float x, float y){
         super(enemyConfig, x, y);
@@ -32,8 +34,10 @@ public class HealerEnemy extends Enemy {
         this.roamSpeed = healerConfig.roamSpeed;
         this.chaseSpeed = healerConfig.chaseSpeed;
         this.roamPeriod = healerConfig.roamLocationPeriod;
+        this.beamWidth = healerConfig.beamWidth;
 
         texture = assetManager.get(AssetPaths.HEALER, Texture.class);
+        beamTexture = assetManager.get(AssetPaths.HEALER_BEAM, Texture.class);
         steeringBehavior = new Arrive<>(this, target);
 
         roamLocationTimer = roamPeriod;
@@ -42,22 +46,32 @@ public class HealerEnemy extends Enemy {
 
     @Override
     public void draw(SpriteBatch batch) {
-        // Draw the stick here
+        if (canHealEnemy()) {
+            // Draw the healing beam before the healer itself
+            float angle = findAngleBetweenPoints(position.x, position.y, healedEnemy.position.x, healedEnemy.position.y);
+            float height = Vector2.dst(position.x, position.y, healedEnemy.position.x, healedEnemy.position.y);
+            batch.draw(
+                    beamTexture, position.x + healedEnemy.hitbox.width/2, position.y + healedEnemy.hitbox.height/2, beamWidth / 2f, 0f, beamWidth, height,
+                    1, 1, angle - 90f, 0, 0, texture.getWidth(), texture.getHeight(), false, false
+            );
+        }
+
         super.draw(batch);
     }
 
     @Override
     public void update(float delta, GameContext context){
+        // If the healer is not currently locked on, seek for enemies to heal
         if (!isHealing) {
             // Detect enemies within range for healing lock-on. First statement filters the healer itself
             for (Enemy enemy : context.enemies) {
-                if (enemy != this &&  isNear(hitbox.x, hitbox.y, enemy.hitbox.x, enemy.hitbox.y, detectionRange)){
-                    System.out.println("LOCKED TO ENEMY: " + enemy.hitbox.x + ", " + enemy.hitbox.y);
+                if (enemy != this &&  isNear(position.x, position.y, enemy.position.x, enemy.position.y, detectionRange)){
                     lockToEnemy(enemy);
                 }
             }
         }
 
+        // After seeking, if the target has been found, heal it. Otherwise continue the roam new location timer
         if (isHealing) { healEnemy(); }
         else {
             if (roamLocationTimer > 0f) {
@@ -72,12 +86,10 @@ public class HealerEnemy extends Enemy {
         super.update(delta, context);
     }
 
-    // Spawn the force field at the location, make the enemy invincible and stationary
+    // Lock to enemy and become faster
     public void lockToEnemy(Enemy targetEnemy){
         healedEnemy = targetEnemy;
         isHealing = true;
-
-        updateSteeringTarget(healedEnemy.hitbox.x, healedEnemy.hitbox.y);
 
         steeringState.maxLinearAcceleration = chaseSpeed;
         steeringState.maxAngularAcceleration = chaseSpeed;
@@ -87,19 +99,30 @@ public class HealerEnemy extends Enemy {
 
     // Heal enemy and update target position
     public void healEnemy() {
-        // Healer dies if the target enemy dies
+        // If the target enemy dies:
+        // The healer dies if it was actively healing it, but switches back to roam if it was not healing it
         if (!healedEnemy.isAlive) {
+            if (!canHealEnemy()) {
+                stopHealing();
+                return;
+            }
+
             isAlive = false;
         }
-        // Only heal if within detection range in the first place
-        if (isNear(hitbox.x, hitbox.y, healedEnemy.hitbox.x, healedEnemy.hitbox.y, detectionRange)){
+
+        // Only heal if within detection range
+        if (canHealEnemy()){
             DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.NONE, -healAmount, 0f, 0f);
-            damageAct.sourcePosition = new Vector2(hitbox.x, hitbox.y);
+            damageAct.sourcePosition = new Vector2(position.x, position.y);
             healedEnemy.takeHit(damageAct);
         }
 
+        updateSteeringTarget(healedEnemy.position.x + 60f, healedEnemy.position.y + 60f);
+    }
 
-        updateSteeringTarget(healedEnemy.hitbox.x, healedEnemy.hitbox.y);
+    // Returns true if healer is both locked onto an enemy AND within detection range
+    public boolean canHealEnemy() {
+        return isHealing && isNear(position.x, position.y, healedEnemy.position.x, healedEnemy.position.y, detectionRange);
     }
 
     public void roam() {
@@ -107,5 +130,18 @@ public class HealerEnemy extends Enemy {
         float y = MathUtils.random(GameConfig.HEIGHT/4f,GameConfig.HEIGHT/4f * 3);
 
         updateSteeringTarget(x, y);
+    }
+
+    // Only if the locked enemy did not die while it was being healed
+    public void stopHealing(){
+        healedEnemy = null;
+        isHealing = false;
+
+        steeringState.maxLinearAcceleration = roamSpeed;
+        steeringState.maxAngularAcceleration = roamSpeed;
+        steeringState.maxLinearSpeed = roamSpeed;
+        steeringState.maxAngularSpeed = roamSpeed;
+
+        roamLocationTimer = roamPeriod;
     }
 }
