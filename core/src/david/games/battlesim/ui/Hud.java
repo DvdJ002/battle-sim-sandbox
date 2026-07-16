@@ -205,7 +205,7 @@ public class Hud {
                 break;
             case 3:
                 font.draw(batch, "This is an exploding enemy called kamikaze", x - 75f, y);
-                font.draw(batch, "You probably just got exploded", x - 60f, y - linePadding);
+                font.draw(batch, "You probably just got exploded, if not congrats", x - 100f, y - linePadding);
                 break;
             case 4:
                 font.draw(batch, "This is a slow, tanky, AOE enemy called sucker", x - 90f, y);
@@ -214,7 +214,13 @@ public class Hud {
             case 5:
                 font.draw(batch, "Finally, a healing enemy called healer", x - 60f, y);
                 font.draw(batch, "It locks onto an enemy to heal it. ", x - 50f, y - linePadding);
-                font.draw(batch, "If you kill the enemy it is actively healing, it will also die ", x - 180f, y - 2*linePadding);
+                font.draw(batch, "If you kill the enemy it is actively healing, it will also die", x - 180f, y - 2*linePadding);
+                break;
+            case 6:
+                font.draw(batch, "Tutorial over. The game has 8 levels + final boss", x - 150f, y);
+                font.draw(batch, "Don't forget to use your ult (Q), and dash when needed", x - 180f, y - 2*linePadding);
+                font.draw(batch, "New waves are based either on time or enemies killed", x - 178f, y - 3*linePadding);
+                font.draw(batch, "R - reset | Esc - Exit level", x + 50f, y - 4*linePadding);
                 break;
         }
     }

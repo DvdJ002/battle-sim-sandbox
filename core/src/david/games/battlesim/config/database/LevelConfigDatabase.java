@@ -177,7 +177,8 @@ public final class LevelConfigDatabase {
         // Wave 3
         spawnConfigs = new ArrayList<>();
 
-        spawnConfigs.add(new EnemySpawnConfig("kamikaze", new Vector2(400f, 450f)));
+        spawnConfigs.add(new EnemySpawnConfig("kamikaze", new Vector2(500f, 500f)));
+        spawnConfigs.add(new EnemySpawnConfig("kamikaze", new Vector2(100f, 100f)));
 
         waves.add(new LevelWaveConfig(-1f, 0f, spawnConfigs));
 
@@ -196,7 +197,14 @@ public final class LevelConfigDatabase {
 
         waves.add(new LevelWaveConfig(-1f, 0f, spawnConfigs));
 
-        config = new LevelConfig(308f, new Vector2(400f, 300f), waves);
+        // Wave 6
+        spawnConfigs = new ArrayList<>();
+
+        spawnConfigs.add(new EnemySpawnConfig("healer", new Vector2(380f, 450f)));
+
+        waves.add(new LevelWaveConfig(-1f, 0f, spawnConfigs));
+
+        config = new LevelConfig(312f, new Vector2(400f, 300f), waves);
 
         levelConfigs.put("level0", config);
     }
