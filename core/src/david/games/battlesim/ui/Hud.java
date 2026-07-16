@@ -141,6 +141,10 @@ public class Hud {
         font.draw(batch, String.format("Left: %.1f", time) , x, y);
         font.draw(batch, String.format("Left: %.1f", time) , x + 1f, y);
 
+        if (worldState.tutorialMode)
+        {
+            drawTutorialText(batch, font, worldState.currentWave);
+        }
 
         // Stage hasn't started yet
         if (worldState.currentWave < 1) {
@@ -179,6 +183,40 @@ public class Hud {
 
         Vector2 playerPos = worldState.player.position;
         sr.circle(playerPos.x, playerPos.y, worldState.player.hitbox.radius);
+    }
+
+    public void drawTutorialText(SpriteBatch batch, BitmapFont font, int wave) {
+        float x =  GameConfig.WIDTH - GameConfig.WIDTH/4f*3;
+        float y =  GameConfig.HEIGHT - GameConfig.HEIGHT/7f;
+        float linePadding = 33f;
+        switch (wave) {
+            case 0:
+                font.draw(batch, "Welcome to the game", x + 50f, y);
+                font.draw(batch, "Shoot: LMB | Move: WASD | Dash: Space | Shield: RMB | Ult: Q ", x - 193f, y - linePadding);
+                font.draw(batch, "Shortly you will be shown every enemy type", x - 80f, y - linePadding*3);
+                break;
+            case 1:
+                font.draw(batch, "This is an aggressive enemy called slasher", x - 75f, y);
+                font.draw(batch, "It will dash at you when close and slow you.", x - 75f, y - linePadding);
+                break;
+            case 2:
+                font.draw(batch, "This is a careful enemy called shooter", x - 60f, y);
+                font.draw(batch, "It will shoot at you, and evade if you get too close", x - 110f, y - linePadding);
+                break;
+            case 3:
+                font.draw(batch, "This is an exploding enemy called kamikaze", x - 75f, y);
+                font.draw(batch, "You probably just got exploded", x - 60f, y - linePadding);
+                break;
+            case 4:
+                font.draw(batch, "This is a slow, tanky, AOE enemy called sucker", x - 90f, y);
+                font.draw(batch, "It will suck you into a force field if you get too close", x - 135f, y - linePadding);
+                break;
+            case 5:
+                font.draw(batch, "Finally, a healing enemy called healer", x - 60f, y);
+                font.draw(batch, "It locks onto an enemy to heal it. ", x - 50f, y - linePadding);
+                font.draw(batch, "If you kill the enemy it is actively healing, it will also die ", x - 180f, y - 2*linePadding);
+                break;
+        }
     }
 
     private Texture getEffectTexture(StatusEffect type) {

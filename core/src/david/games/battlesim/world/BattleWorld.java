@@ -48,6 +48,7 @@ public class BattleWorld {
     public LevelConfig levelConfig;
     public int currentWave = 0;
     public float levelTimer = 0f;
+    public boolean tutorialMode = false;
 
     public BattleWorld() {
         state = WorldState.STOPPED;
@@ -234,6 +235,11 @@ public class BattleWorld {
         {
             spawnEnemiesFromConfig(nextWave.spawns);
             currentWave++;
+
+            if (tutorialMode) {
+                player.changeHealth(300f);
+
+            }
         }
     }
 
@@ -253,6 +259,9 @@ public class BattleWorld {
                 case "sucker":
                     enemies.add(new SuckerEnemy(enemyConfigDatabase.get(enemySpawn.type), enemySpawn.position.x, enemySpawn.position.y));
                     break;
+                case "healer":
+                    enemies.add(new HealerEnemy(enemyConfigDatabase.get(enemySpawn.type), enemySpawn.position.x, enemySpawn.position.y));
+                    break;
                 default: break;
             }
         }
@@ -267,6 +276,9 @@ public class BattleWorld {
         return currentWave < levelConfig.waves.size();
     }
 
+    public void setTutorial(boolean isTutorial) {
+        tutorialMode = isTutorial;
+    }
 
     /********************* WORLD OPERATIONS *********************/
     public void reset() {

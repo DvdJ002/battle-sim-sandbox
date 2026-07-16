@@ -16,6 +16,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import static david.games.battlesim.BattleGame.assetManager;
 
+import java.awt.Menu;
+
 import david.games.battlesim.BattleGame;
 import david.games.battlesim.assets.AssetDescriptors;
 import david.games.battlesim.config.GameConfig;
@@ -42,12 +44,13 @@ public class BattleScreen extends ScreenAdapter {
     private Hud hud;
 
     private int currentLevelCode;
-    private boolean isDebugEnabled;
+    private boolean isDebugEnabled, isTutorialMode;
 
     public BattleScreen(BattleGame game, int levelCode) {
         this.game = game;
         this.currentLevelCode = levelCode;
         this.isDebugEnabled = false;
+        this.isTutorialMode = (levelCode == 0);
     }
 
     @Override
@@ -62,6 +65,7 @@ public class BattleScreen extends ScreenAdapter {
         camera = new OrthographicCamera();
         viewport = new FitViewport(GameConfig.WIDTH, GameConfig.HEIGHT, camera);
         world = new BattleWorld();
+        world.setTutorial(isTutorialMode);
         levelConfigDatabase = new LevelConfigDatabase();
 
         hudCamera = new OrthographicCamera();
@@ -163,7 +167,8 @@ public class BattleScreen extends ScreenAdapter {
     }
 
     public void endScreen() {
-        game.setScreen(new LevelsScreen(game));
+        if (isTutorialMode) { game.setScreen(new MenuScreen(game)); }
+        else { game.setScreen(new LevelsScreen(game)); }
     }
 
     @Override

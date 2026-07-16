@@ -91,7 +91,7 @@ public class MenuScreen extends ScreenAdapter {
         leaderboardButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //game.setScreen(new TutorialScreen(game));
+                game.setScreen(new BattleScreen(game, 0));
             }
         });
 

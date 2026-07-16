@@ -243,7 +243,9 @@ public class Player {
                 shieldHealth = 0f;
                 rechargeShield();
             }
-        } else {
+            else if (shieldHealth > config.maxShieldHealth) { shieldHealth = config.maxShieldHealth; }
+        }
+        else {
             health += change;
             if (health <= 0f){
                 health = 0f;
