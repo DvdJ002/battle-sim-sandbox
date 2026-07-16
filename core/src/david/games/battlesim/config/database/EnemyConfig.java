@@ -61,6 +61,18 @@ public class EnemyConfig {
             this.chaseSpeed = chaseSpeed;
         }
     }
+
+    public static class HealerConfig extends EnemyConfig {
+        public final float detectionRange, healAmount, roamSpeed, chaseSpeed, roamLocationPeriod;
+        public HealerConfig(float collideDamage, float damage, float maxHealth, float size, float detectionRange, float healAmount, float roamSpeed, float chaseSpeed, float roamLocationPeriod) {
+            super(collideDamage, damage, maxHealth, size);
+            this.detectionRange = detectionRange;
+            this.healAmount = healAmount;
+            this.roamSpeed = roamSpeed;
+            this.chaseSpeed = chaseSpeed;
+            this.roamLocationPeriod = roamLocationPeriod;
+        }
+    }
 }
 
 

@@ -41,6 +41,8 @@ public class SlasherEnemy extends Enemy {
     public void update(float delta, GameContext context){
         Player player = context.player;
         Vector2 playerPosition = player.position;
+        updateSteeringTarget(playerPosition.x, playerPosition.y);
+
         super.update(delta, context);
 
         // Damage player if touching

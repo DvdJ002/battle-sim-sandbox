@@ -46,6 +46,18 @@ public final class EnemyConfigDatabase {
         sucker.steeringState.maxAngularSpeed = sucker.chaseSpeed;
 
         configs.put("sucker", sucker);
+
+        /* ************** Healer enemy ************** */
+        EnemyConfig.HealerConfig healer = new EnemyConfig.HealerConfig(
+                0f, 1f, 50f, GameConfig.DEFAULT_ENEMY_SIZE, 200f, 0.3f, 120f, 210f, 10f
+        );
+        setDefaultAiConfig(healer);
+        healer.steeringState.maxLinearAcceleration = healer.roamSpeed;
+        healer.steeringState.maxAngularAcceleration = healer.roamSpeed;
+        healer.steeringState.maxLinearSpeed = healer.roamSpeed;
+        healer.steeringState.maxAngularSpeed = healer.roamSpeed;
+
+        configs.put("healer", healer);
     }
 
     private void setDefaultAiConfig(EnemyConfig instance) {

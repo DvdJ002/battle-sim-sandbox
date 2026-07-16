@@ -23,6 +23,7 @@ import david.games.battlesim.elements.GameContext;
 import david.games.battlesim.elements.actors.Bullet;
 import david.games.battlesim.elements.actors.Enemy;
 import david.games.battlesim.elements.actors.ForceField;
+import david.games.battlesim.elements.actors.HealerEnemy;
 import david.games.battlesim.elements.actors.KamikazeEnemy;
 import david.games.battlesim.elements.actors.Player;
 import david.games.battlesim.elements.actors.ShooterEnemy;
@@ -100,7 +101,9 @@ public class BattleWorld {
             //enemies.add(new ShooterEnemy(enemyConfigDatabase.get("shooter"), mousePosition.x, mousePosition.y));
             //enemies.add(new KamikazeEnemy(enemyConfigDatabase.get("kamikaze"),mousePosition.x, mousePosition.y));
             //enemies.add(new SlasherEnemy(enemyConfigDatabase.get("slasher"), mousePosition.x, mousePosition.y));
-            enemies.add(new SuckerEnemy(enemyConfigDatabase.get("sucker"), mousePosition.x, mousePosition.y));
+            //enemies.add(new SuckerEnemy(enemyConfigDatabase.get("sucker"), mousePosition.x, mousePosition.y));
+            enemies.add(new HealerEnemy(enemyConfigDatabase.get("healer"), mousePosition.x, mousePosition.y));
+
         }
         if (inputState.resetGamePressed) {
             reset();
@@ -235,6 +238,7 @@ public class BattleWorld {
     }
 
     private void spawnEnemiesFromConfig(ArrayList<EnemySpawnConfig> spawns) {
+        System.out.println("Spawning enemy from config!");
         for (EnemySpawnConfig enemySpawn : spawns) {
             switch (enemySpawn.type) {
                 case "kamikaze":

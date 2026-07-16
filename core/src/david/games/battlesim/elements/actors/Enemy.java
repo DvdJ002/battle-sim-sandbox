@@ -53,10 +53,7 @@ public class Enemy implements Steerable<Vector2> {
     }
 
     public void update(float delta, GameContext context){
-        Player player = context.player;
-        Vector2 playerPosition = player.position;
         if (steeringBehavior != null){
-            target.updatePosition(playerPosition.x, playerPosition.y);
             steeringBehavior.calculateSteering(steeringOutput);
             applySteering(steeringOutput, delta);
             applyBounds();
@@ -100,6 +97,10 @@ public class Enemy implements Steerable<Vector2> {
         else if (health > enemyConfig.maxHealth) { health = enemyConfig.maxHealth; }
 
         // Effects, particles etc.
+    }
+
+    public void updateSteeringTarget(float x, float y) {
+        target.updatePosition(x, y);
     }
 
     public float getHealthPercentage() {

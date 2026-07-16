@@ -123,9 +123,9 @@ public final class LevelConfigDatabase {
 
         spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(760f, 400f)));
 
-        waves.add(new LevelWaveConfig(5f, -1f, spawnConfigs));
+        waves.add(new LevelWaveConfig(20f, -1f, spawnConfigs));
 
-        config = new LevelConfig(8f, new Vector2(400f, 300f), waves);
+        config = new LevelConfig(100f, new Vector2(400f, 300f), waves);
 
         levelConfigs.put("level5", config);
 

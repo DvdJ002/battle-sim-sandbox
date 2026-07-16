@@ -31,10 +31,11 @@ public class KamikazeEnemy extends Enemy {
 
     @Override
     public void update(float delta, GameContext context){
-        super.update(delta, context);
-
         Player player = context.player;
         Vector2 playerPosition = player.position;
+        updateSteeringTarget(playerPosition.x, playerPosition.y);
+
+        super.update(delta, context);
 
         // Kamikaze reached necessary distance from player and exploded
         if (isNear(hitbox.x, hitbox.y, playerPosition.x, playerPosition.y, explodingRange)){

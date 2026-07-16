@@ -43,10 +43,11 @@ public class ShooterEnemy extends Enemy {
 
     @Override
     public void update(float delta, GameContext context){
-        super.update(delta, context);
-
         Player player = context.player;
         Vector2 playerPosition = context.player.position;
+        updateSteeringTarget(playerPosition.x, playerPosition.y);
+
+        super.update(delta, context);
 
         if (!reloading){
             shootBullet(player.position, context.bulletSpawner);
