@@ -36,6 +36,8 @@ public class AssetPaths {
     public static final String PLAYER_ULTIMATE_SOUND = "gameplay/sounds/player_ultimate.wav";
     public static final String HEALER_BEAM_SOUND = "gameplay/sounds/healer_beam.mp3";
     public static final String KAMIKAZE_EXPLOSION_SOUND = "gameplay/sounds/kamikaze_explosion.wav";
+    public static final String ENEMY_INVINCIBLE_SOUND = "gameplay/sounds/enemy_invincible.mp3";
+
     private AssetPaths() {
     }
 }

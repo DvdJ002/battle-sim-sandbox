@@ -39,6 +39,7 @@ public class Player {
     public float faceAngle;
 
     // Timers
+    public float fireRateTimer = 0.0f;
     public float phaseCooldownTimer = 0.0f, phaseActiveTimer = 0.0f;
     public float forceFieldCooldownTimer = 0.0f;
     public float shieldRechargeTimer = 0.0f;
@@ -126,9 +127,18 @@ public class Player {
         inputDirection.set(0, 0);
 
         updateTimers(delta);
+        System.out.println("Fire rate timer: " + fireRateTimer);
     }
 
     private void updateTimers(float delta){
+        // Fire rate timer
+        if (fireRateTimer > 0f) {
+            fireRateTimer -= delta;
+            if (fireRateTimer <= 0f) {
+                fireRateTimer = 0f;
+            }
+        }
+
         // Phase cooldown timer, only if not shielding
         if (phaseCooldownTimer > 0f && !shielding) {
             phaseCooldownTimer -= delta;
@@ -198,8 +208,10 @@ public class Player {
     }
 
     public void shootBullet(BulletSpawner bulletSpawner){
-        if (!shielding && !disarmed){
+        // Only shoot if the player is not shielding, the fire rate timer is not active, and the player is not disarmed
+        if (!shielding && fireRateTimer <= 0f && !disarmed){
             bulletSpawner.spawn(hitbox.x, hitbox.y, faceAngle, config.bulletSpeed, config.bulletDamage, config.bulletSize,true);
+            fireRateTimer = config.fireRate;
             shootSound.play(GLOBAL_VOLUME);
         }
     }

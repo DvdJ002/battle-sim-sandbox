@@ -15,4 +15,6 @@ public class AssetDescriptors {
     public static final AssetDescriptor<Sound> PLAYER_ULTIMATE_SOUND = new AssetDescriptor<Sound>(AssetPaths.PLAYER_ULTIMATE_SOUND, Sound.class);
     public static final AssetDescriptor<Sound> HEALER_BEAM_SOUND = new AssetDescriptor<Sound>(AssetPaths.HEALER_BEAM_SOUND, Sound.class);
     public static final AssetDescriptor<Sound> KAMIKAZE_EXPLOSION_SOUND = new AssetDescriptor<Sound>(AssetPaths.KAMIKAZE_EXPLOSION_SOUND, Sound.class);
+    public static final AssetDescriptor<Sound> ENEMY_INVINCIBLE_SOUND = new AssetDescriptor<Sound>(AssetPaths.ENEMY_INVINCIBLE_SOUND, Sound.class);
+
 }

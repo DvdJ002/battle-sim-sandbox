@@ -1,14 +1,18 @@
 package david.games.battlesim.elements.actors;
 
+import static david.games.battlesim.BattleGame.assetManager;
+
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.ai.utils.Location;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import david.games.battlesim.assets.AssetDescriptors;
 import david.games.battlesim.config.database.EnemyConfig;
 import david.games.battlesim.config.EnemySteeringState;
 import david.games.battlesim.config.GameConfig;
@@ -18,6 +22,7 @@ import david.games.battlesim.elements.GameContext;
 public class Enemy implements Steerable<Vector2> {
     public Rectangle hitbox;
     Texture texture;
+    Sound invincibleSound;
     SteerableTargetObj target;
     EnemyConfig enemyConfig;
     protected static final SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<>(new Vector2());
@@ -28,6 +33,7 @@ public class Enemy implements Steerable<Vector2> {
     public boolean tagged, isAlive = true, isInvincible = false, isStatic= false;
     public Enemy(EnemyConfig enemyConfig, float x, float y) {
         hitbox = new Rectangle();
+        invincibleSound = assetManager.get(AssetDescriptors.ENEMY_INVINCIBLE_SOUND);
 
         this.enemyConfig = enemyConfig;
         this.collideDamage = enemyConfig.collideDamage;
@@ -88,6 +94,7 @@ public class Enemy implements Steerable<Vector2> {
 
     public void takeHit(DamageAction damageAct){
         if (isInvincible) {
+            invincibleSound.play(GameConfig.GLOBAL_VOLUME);
             return;
         }
 
