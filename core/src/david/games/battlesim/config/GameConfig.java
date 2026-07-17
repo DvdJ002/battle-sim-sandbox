@@ -16,6 +16,7 @@ public class GameConfig {
 
     public static final float EFFECT_ICON_SIZE = 40f;
 
+    public static final float GLOBAL_VOLUME = 0.2f;
 
     private GameConfig() {
     }

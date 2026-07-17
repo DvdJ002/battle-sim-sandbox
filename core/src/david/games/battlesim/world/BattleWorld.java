@@ -13,6 +13,7 @@ import static david.games.battlesim.BattleGame.assetManager;
 
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.GameConfig;
+import david.games.battlesim.config.database.EnemyConfig;
 import david.games.battlesim.config.database.EnemyConfigDatabase;
 
 import david.games.battlesim.config.database.EnemySpawnConfig;

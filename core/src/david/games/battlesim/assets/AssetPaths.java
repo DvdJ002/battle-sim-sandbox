@@ -28,10 +28,14 @@ public class AssetPaths {
     public static final String EFFECT_DISARMED = "gameplay/ui/effect_disarmed.png";
     public static final String EFFECT_ROOTED = "gameplay/ui/effect_rooted.png";
 
-    // SKIN AND FONT
+    // SKIN, FONT, SOUND
     public static final String UI_SKIN = "ui/flat-earth-ui.json";
     public static final String UI_FONT = "ui/arial-32.fnt";
-
+    public static final String PLAYER_DAMAGE_SOUND = "gameplay/sounds/player_damaged.mp3";
+    public static final String GLOBAL_SHOOT_SOUND = "gameplay/sounds/global_shoot.wav";
+    public static final String PLAYER_ULTIMATE_SOUND = "gameplay/sounds/player_ultimate.wav";
+    public static final String HEALER_BEAM_SOUND = "gameplay/sounds/healer_beam.mp3";
+    public static final String KAMIKAZE_EXPLOSION_SOUND = "gameplay/sounds/kamikaze_explosion.wav";
     private AssetPaths() {
     }
 }

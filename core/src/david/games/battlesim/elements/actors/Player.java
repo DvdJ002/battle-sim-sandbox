@@ -1,7 +1,10 @@
 package david.games.battlesim.elements.actors;
 
+import static david.games.battlesim.config.GameConfig.GLOBAL_VOLUME;
 import static david.games.battlesim.util.GameUtil.findAngleBetweenPoints;
 
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
@@ -12,6 +15,7 @@ import static david.games.battlesim.BattleGame.assetManager;
 
 import java.util.ArrayList;
 
+import david.games.battlesim.assets.AssetDescriptors;
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.GameConfig;
 import david.games.battlesim.config.database.PlayerConfig;
@@ -26,6 +30,8 @@ public class Player {
     public Circle hitbox, shieldHitbox;
     Texture texture, shieldTexture;
     public final PlayerConfig config;
+    private final Sound damagedSound, shootSound, ultimateSound;
+
 
     // Game parameters
     public Vector2 velocity, position, inputDirection;
@@ -47,6 +53,10 @@ public class Player {
     public Player(PlayerConfig config, float x, float y){
         texture = assetManager.get(AssetPaths.PLAYER, Texture.class);
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+        damagedSound = assetManager.get(AssetDescriptors.PLAYER_DAMAGE_SOUND);
+        shootSound = assetManager.get(AssetDescriptors.GLOBAL_SHOOT_SOUND);
+        ultimateSound = assetManager.get(AssetDescriptors.PLAYER_ULTIMATE_SOUND);
 
         hitbox = new Circle();
         hitbox.radius = GameConfig.DEFAULT_PLAYER_SIZE;
@@ -190,6 +200,7 @@ public class Player {
     public void shootBullet(BulletSpawner bulletSpawner){
         if (!shielding && !disarmed){
             bulletSpawner.spawn(hitbox.x, hitbox.y, faceAngle, config.bulletSpeed, config.bulletDamage, config.bulletSize,true);
+            shootSound.play(GLOBAL_VOLUME);
         }
     }
 
@@ -201,6 +212,8 @@ public class Player {
             applyDisarmed(config.forceFieldDuration);
             applyRooted(config.forceFieldDuration);
             applyInvincible(config.forceFieldDuration);
+
+            ultimateSound.play(GameConfig.GLOBAL_VOLUME);
         }
     }
 
@@ -233,7 +246,8 @@ public class Player {
                 applySlowed(damageAct.intensity, damageAct.duration);
                 break;
         }
-        // Particle effects/animations
+
+        damagedSound.play(GameConfig.GLOBAL_VOLUME);
     }
 
     public void changeHealth(float change){

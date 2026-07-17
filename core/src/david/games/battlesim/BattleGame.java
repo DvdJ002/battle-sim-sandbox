@@ -47,6 +47,11 @@ public class BattleGame extends Game {
 		assetManager = new AssetManager();
 		assetManager.load(AssetDescriptors.UI_SKIN);
 		assetManager.load(AssetDescriptors.UI_FONT);
+		assetManager.load(AssetDescriptors.PLAYER_DAMAGE_SOUND);
+		assetManager.load(AssetDescriptors.GLOBAL_SHOOT_SOUND);
+		assetManager.load(AssetDescriptors.PLAYER_ULTIMATE_SOUND);
+		assetManager.load(AssetDescriptors.HEALER_BEAM_SOUND);
+		assetManager.load(AssetDescriptors.KAMIKAZE_EXPLOSION_SOUND);
 
 		assetManager.load(AssetPaths.SLASHER, Texture.class);
 		assetManager.load(AssetPaths.SLASHER_ATTACK, Texture.class);
