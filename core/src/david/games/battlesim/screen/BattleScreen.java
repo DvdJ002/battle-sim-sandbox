@@ -3,6 +3,7 @@ package david.games.battlesim.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,8 +16,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import static david.games.battlesim.BattleGame.assetManager;
-
-import java.awt.Menu;
 
 import david.games.battlesim.BattleGame;
 import david.games.battlesim.assets.AssetDescriptors;
@@ -42,6 +41,7 @@ public class BattleScreen extends ScreenAdapter {
     OrthographicCamera hudCamera;
     private Viewport hudViewport;
     private Hud hud;
+    private Sound winSound, loseSound;
 
     private int currentLevelCode;
     private boolean isDebugEnabled, isTutorialMode;
@@ -72,7 +72,9 @@ public class BattleScreen extends ScreenAdapter {
         hudViewport = new FitViewport(GameConfig.WIDTH, GameConfig.HEIGHT, hudCamera);
         hud = new Hud();
 
-        System.out.println("Starting stage " + this.currentLevelCode);
+        winSound = assetManager.get(AssetDescriptors.GAME_WIN_SOUND);
+        loseSound = assetManager.get(AssetDescriptors.GAME_LOSE_SOUND_1);
+
         world.startLevel(levelConfigDatabase.get("level" + this.currentLevelCode));
     }
 
@@ -92,7 +94,7 @@ public class BattleScreen extends ScreenAdapter {
         world.draw(batch);
         batch.setProjectionMatrix(hudCamera.combined);
         hud.drawIcons(batch, world);
-        hud.drawText(batch, font, world);
+        hud.drawText(batch, font, world, currentLevelCode);
         batch.end();
 
         // Shape rendering (hud)
@@ -148,11 +150,13 @@ public class BattleScreen extends ScreenAdapter {
         switch (world.state) {
             case WON:
                 saveLevelProgress(currentLevelCode + 1);
+                winSound.play(GameConfig.VOLUME_LOUD);
                 endScreen();
                 return;
             case LOST:
             case STOPPED:
             case EXIT_REQUESTED:
+                loseSound.play(GameConfig.VOLUME_LOUD);
                 endScreen();
                 return;
             case RUNNING: break;

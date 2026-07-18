@@ -100,11 +100,15 @@ public class BattleWorld {
         mousePosition = inputState.mousePosition;
 
         if (inputState.debugSpawnEnemy) {
-            enemies.add(new ShooterEnemy(enemyConfigDatabase.get("shooter"), mousePosition.x, mousePosition.y));
+            //enemies.add(new ShooterEnemy(enemyConfigDatabase.get("shooter"), mousePosition.x, mousePosition.y));
             //enemies.add(new KamikazeEnemy(enemyConfigDatabase.get("kamikaze"),mousePosition.x, mousePosition.y));
             //enemies.add(new SlasherEnemy(enemyConfigDatabase.get("slasher"), mousePosition.x, mousePosition.y));
             //enemies.add(new SuckerEnemy(enemyConfigDatabase.get("sucker"), mousePosition.x, mousePosition.y));
-            enemies.add(new HealerEnemy(enemyConfigDatabase.get("healer"), mousePosition.x, mousePosition.y));
+            //enemies.add(new HealerEnemy(enemyConfigDatabase.get("healer"), mousePosition.x, mousePosition.y));
+
+            //enemies.add(new ShooterEnemy(enemyConfigDatabase.get("shooter_large"), mousePosition.x, mousePosition.y));
+            //enemies.add(new SlasherEnemy(enemyConfigDatabase.get("slasher_large"), mousePosition.x, mousePosition.y));
+            enemies.add(new KamikazeEnemy(enemyConfigDatabase.get("kamikaze_large"),mousePosition.x, mousePosition.y));
 
         }
         if (inputState.resetGamePressed) {
@@ -245,22 +249,26 @@ public class BattleWorld {
     }
 
     private void spawnEnemiesFromConfig(ArrayList<EnemySpawnConfig> spawns) {
-        System.out.println("Spawning enemy from config!");
         for (EnemySpawnConfig enemySpawn : spawns) {
             switch (enemySpawn.type) {
                 case "kamikaze":
+                case "kamikaze_large":
                     enemies.add(new KamikazeEnemy(enemyConfigDatabase.get(enemySpawn.type), enemySpawn.position.x, enemySpawn.position.y));
                     break;
                 case "shooter":
+                case "shooter_large":
                     enemies.add(new ShooterEnemy(enemyConfigDatabase.get(enemySpawn.type), enemySpawn.position.x, enemySpawn.position.y));
                     break;
                 case "slasher":
+                case "slasher_large":
                     enemies.add(new SlasherEnemy(enemyConfigDatabase.get(enemySpawn.type), enemySpawn.position.x, enemySpawn.position.y));
                     break;
                 case "sucker":
+                case "sucker_large":
                     enemies.add(new SuckerEnemy(enemyConfigDatabase.get(enemySpawn.type), enemySpawn.position.x, enemySpawn.position.y));
                     break;
                 case "healer":
+                case "healer_special":
                     enemies.add(new HealerEnemy(enemyConfigDatabase.get(enemySpawn.type), enemySpawn.position.x, enemySpawn.position.y));
                     break;
                 default: break;

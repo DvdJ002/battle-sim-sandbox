@@ -29,7 +29,7 @@ public final class GameUtil {
 
     // Returns a point on the circle based on the angle from the center (centerX, centerY)
     public static Vector2 angleToCirclePoints(float centerX, float centerY, float radius, float angle){
-        float angleRadians = MathUtils.degreesToRadians * (angle + 90);
+        float angleRadians = MathUtils.degreesToRadians * (angle);
         float x = centerX + radius * MathUtils.cos(angleRadians);
         float y = centerY + radius * MathUtils.sin(angleRadians);
         return new Vector2(x, y);

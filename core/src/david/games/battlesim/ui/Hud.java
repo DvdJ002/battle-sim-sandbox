@@ -131,7 +131,7 @@ public class Hud {
         }
     }
 
-    public void drawText(SpriteBatch batch, BitmapFont font, BattleWorld worldState) {
+    public void drawText(SpriteBatch batch, BitmapFont font, BattleWorld worldState, int levelCode) {
         float x =  GameConfig.WIDTH - padding - 140f;
         float y =  GameConfig.HEIGHT - padding;
         float time = worldState.levelTimer;
@@ -148,6 +148,7 @@ public class Hud {
 
         // Stage hasn't started yet
         if (worldState.currentWave < 1) {
+            drawLevelTitle(batch, font, levelCode);
             return;
         }
 
@@ -192,8 +193,10 @@ public class Hud {
         switch (wave) {
             case 0:
                 font.draw(batch, "Welcome to the game", x + 50f, y);
-                font.draw(batch, "Shoot: LMB | Move: WASD | Dash: Space | Shield: RMB | Ult: Q ", x - 193f, y - linePadding);
-                font.draw(batch, "Shortly you will be shown every enemy type", x - 80f, y - linePadding*3);
+                font.getData().setScale(0.87f);
+                font.draw(batch, "Shoot: LMB | Move: WASD | Dash: Space | Shield: RMB | Ult: Q ", x - 193f, y - linePadding*1.2f);
+                font.getData().setScale(1f);
+                font.draw(batch, "Shortly you will be shown every enemy type", x - 80f, y - linePadding*3f);
                 break;
             case 1:
                 font.draw(batch, "This is an aggressive enemy called slasher", x - 75f, y);
@@ -219,10 +222,48 @@ public class Hud {
             case 6:
                 font.draw(batch, "Tutorial over. The game has 8 levels + final boss", x - 150f, y);
                 font.draw(batch, "Don't forget to use your ult (Q), and dash when needed", x - 180f, y - 2*linePadding);
-                font.draw(batch, "New waves are based either on time or enemies killed", x - 178f, y - 3*linePadding);
-                font.draw(batch, "R - reset | Esc - Exit level", x + 50f, y - 4*linePadding);
+                font.draw(batch, "You'll also fight special versions of those enemies", x - 178f, y - 3*linePadding);
+                font.draw(batch, "New waves are based either on time or enemies killed", x - 178f, y - 4*linePadding);
+                font.draw(batch, "R - reset | Esc - Exit level", x + 50f, y - 5*linePadding);
                 break;
         }
+    }
+
+    public void drawLevelTitle(SpriteBatch batch, BitmapFont font, int levelCode) {
+        // Large text
+        font.getData().setScale(1.3f);
+        float x =  GameConfig.WIDTH - GameConfig.WIDTH/4f*3;
+        float y =  GameConfig.HEIGHT - GameConfig.HEIGHT/7f;
+        switch (levelCode) {
+            case 1:
+                font.draw(batch, "Level 1: Entourage", x + 50f, y);
+                break;
+            case 2:
+                font.draw(batch, "Level 2: War on two fronts", x - 30f, y);
+                break;
+            case 3:
+                font.draw(batch, "Level 3: Spontaneous explosion", x - 85f, y);
+                break;
+            case 4:
+                font.draw(batch, "Level 4: Vacuum cleaned", x - 25f, y);
+                break;
+            case 5:
+                font.draw(batch, "Level 5: Front line", x + 40f, y);
+                break;
+            case 6:
+                font.draw(batch, "Level 6: The Chosen One", x - 35f, y);
+                break;
+            case 7:
+                font.draw(batch, "Level 7:", x + 50f, y);
+                break;
+            case 8:
+                font.draw(batch, "Level 8:", x + 50f, y);
+                break;
+            default:
+                break;
+        }
+        // Restore
+        font.getData().setScale(1f);
     }
 
     private Texture getEffectTexture(StatusEffect type) {

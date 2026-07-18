@@ -9,6 +9,10 @@ import david.games.battlesim.config.GameConfig;
 public final class EnemyConfigDatabase {
     private Map<String, EnemyConfig> configs = new HashMap<>();
     public EnemyConfigDatabase() {
+        /* ------------------------------------------------------------ */
+        /* ----------------------- BASE ENEMIES ----------------------- */
+        /* ------------------------------------------------------------ */
+
         /* ************** Kamikaze enemy ************** */
         EnemyConfig.KamikazeConfig kamikaze = new EnemyConfig.KamikazeConfig(
             2f, 75f, 80f, GameConfig.DEFAULT_ENEMY_SIZE, 120f, 25f
@@ -49,7 +53,7 @@ public final class EnemyConfigDatabase {
 
         /* ************** Healer enemy ************** */
         EnemyConfig.HealerConfig healer = new EnemyConfig.HealerConfig(
-                0f, 1f, 40f, GameConfig.DEFAULT_ENEMY_SIZE, 200f, 0.5f, 120f, 210f, 10f, 4f
+                0f, 1f, 40f, GameConfig.DEFAULT_ENEMY_SIZE, 200f, 0.5f, 120f, 240f, 10f, 4f
         );
         setDefaultAiConfig(healer);
         healer.steeringState.maxLinearAcceleration = healer.roamSpeed;
@@ -58,6 +62,49 @@ public final class EnemyConfigDatabase {
         healer.steeringState.maxAngularSpeed = healer.roamSpeed;
 
         configs.put("healer", healer);
+
+
+        /* --------------------------------------------------------------- */
+        /* ----------------------- SPECIAL ENEMIES ----------------------- */
+        /* --------------------------------------------------------------- */
+
+        /* ************** Large shooter enemy ************** */
+        EnemyConfig.ShooterConfig shooterLarge = new EnemyConfig.ShooterConfig(
+                2f, 35f, 250f, GameConfig.DEFAULT_ENEMY_SIZE * 1.4f, 2f, 300f, 500f, 300f, 1300f, 11f
+        );
+        setDefaultAiConfig(shooterLarge);
+
+        configs.put("shooter_large", shooterLarge);
+
+        /* ************** Large slasher enemy ************** */
+        EnemyConfig.SlasherConfig slasherLarge = new EnemyConfig.SlasherConfig(
+                4f, 20f, 240f, GameConfig.DEFAULT_ENEMY_SIZE * 1.4f, 1.8f, 400f, 230f, 1f, 280f
+        );
+        setDefaultAiConfig(slasherLarge);
+
+        configs.put("slasher_large", slasherLarge);
+
+        /* ************** Large kamikaze enemy ************** */
+        EnemyConfig.KamikazeConfig kamikazeLarge = new EnemyConfig.KamikazeConfig(
+                2f, 190f, 180f, GameConfig.DEFAULT_ENEMY_SIZE * 1.4f, 150f, 25f
+        );
+        setDefaultAiConfig(kamikazeLarge);
+        kamikazeLarge.steeringState.maxLinearAcceleration = 550.0f;
+        kamikazeLarge.steeringState.maxAngularAcceleration = 550.0f;
+
+        configs.put("kamikaze_large", kamikazeLarge);
+
+        /* ************** Special healer enemy ************** */
+        EnemyConfig.HealerConfig healerSpecial = new EnemyConfig.HealerConfig(
+                0f, 1f, 40f, GameConfig.DEFAULT_ENEMY_SIZE, 500f, 7f, 120f, 300f, 10f, 4f
+        );
+        setDefaultAiConfig(healerSpecial);
+        healerSpecial.steeringState.maxLinearAcceleration = healerSpecial.roamSpeed;
+        healerSpecial.steeringState.maxAngularAcceleration = healerSpecial.roamSpeed;
+        healerSpecial.steeringState.maxLinearSpeed = healerSpecial.roamSpeed;
+        healerSpecial.steeringState.maxAngularSpeed = healerSpecial.roamSpeed;
+
+        configs.put("healer_special", healerSpecial);
     }
 
     private void setDefaultAiConfig(EnemyConfig instance) {

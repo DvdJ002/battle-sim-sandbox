@@ -63,16 +63,20 @@ public class HealerEnemy extends Enemy {
     public void update(float delta, GameContext context){
         // If the healer is not currently locked on, seek for enemies to heal
         if (!isHealing) {
-            // Detect enemies within range for healing lock-on. First statement filters the healer itself
+            // Detect enemies within range for healing lock-on. Ignore the healer itself and other healers
             for (Enemy enemy : context.enemies) {
-                if (enemy != this &&  isNear(position.x, position.y, enemy.position.x, enemy.position.y, detectionRange)){
+                if (enemy instanceof HealerEnemy) {
+                    continue;
+                }
+
+                if (isNear(position.x, position.y, enemy.position.x, enemy.position.y, detectionRange)){
                     lockToEnemy(enemy);
                 }
             }
         }
 
         // After seeking, if the target has been found, heal it. Otherwise continue the roam new location timer
-        if (isHealing) { healEnemy(); }
+        if (isHealing) { healEnemy(context); }
         else {
             if (roamLocationTimer > 0f) {
                 roamLocationTimer -= delta;
@@ -98,7 +102,7 @@ public class HealerEnemy extends Enemy {
     }
 
     // Heal enemy and update target position
-    public void healEnemy() {
+    public void healEnemy(GameContext context) {
         // If the target enemy dies:
         // The healer dies if it was actively healing it, but switches back to roam if it was not healing it
         if (!healedEnemy.isAlive) {
@@ -117,7 +121,10 @@ public class HealerEnemy extends Enemy {
             healedEnemy.takeHit(damageAct);
         }
 
-        updateSteeringTarget(healedEnemy.position.x + 60f, healedEnemy.position.y + 60f);
+        // Healer "hides" behind the enemy, achieve that by calculating angle from player to enemy and adding an offset
+        float anglePlayerToEnemy = GameUtil.findAngleBetweenPoints(context.player.position.x, context.player.position.y, healedEnemy.position.x, healedEnemy.position.y);
+        Vector2 targetPosition = GameUtil.angleToCirclePoints(healedEnemy.position.x, healedEnemy.position.y, healedEnemy.hitbox.width * 0.8f, anglePlayerToEnemy);
+        updateSteeringTarget(targetPosition.x, targetPosition.y);
     }
 
     // Returns true if healer is both locked onto an enemy AND within detection range

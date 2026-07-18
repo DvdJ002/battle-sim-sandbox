@@ -93,8 +93,9 @@ public class Enemy implements Steerable<Vector2> {
     }
 
     public void takeHit(DamageAction damageAct){
-        if (isInvincible) {
-            invincibleSound.play(GameConfig.GLOBAL_VOLUME);
+        // Invincible status only blocks damage, the enemy can still be healed
+        if (isInvincible && damageAct.amount >= 0f) {
+            invincibleSound.play(GameConfig.VOLUME_DEFAULT);
             return;
         }
 
@@ -102,8 +103,6 @@ public class Enemy implements Steerable<Vector2> {
         // Check if health went over 100 or under 0
         if (health <= 0f){ isAlive = false; }
         else if (health > enemyConfig.maxHealth) { health = enemyConfig.maxHealth; }
-
-        // Effects, particles etc.
     }
 
     public void updateSteeringTarget(float x, float y) {

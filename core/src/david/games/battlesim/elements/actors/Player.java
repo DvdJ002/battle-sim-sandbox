@@ -1,9 +1,8 @@
 package david.games.battlesim.elements.actors;
 
-import static david.games.battlesim.config.GameConfig.GLOBAL_VOLUME;
+import static david.games.battlesim.config.GameConfig.VOLUME_DEFAULT;
 import static david.games.battlesim.util.GameUtil.findAngleBetweenPoints;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -26,7 +25,7 @@ import david.games.battlesim.elements.spawners.ForceFieldSpawner;
 import david.games.battlesim.util.GameUtil;
 
 public class Player {
-    // Sprites, textures, config
+    // Sprites, textures, config, sound
     public Circle hitbox, shieldHitbox;
     Texture texture, shieldTexture;
     public final PlayerConfig config;
@@ -127,7 +126,6 @@ public class Player {
         inputDirection.set(0, 0);
 
         updateTimers(delta);
-        System.out.println("Fire rate timer: " + fireRateTimer);
     }
 
     private void updateTimers(float delta){
@@ -212,7 +210,7 @@ public class Player {
         if (!shielding && fireRateTimer <= 0f && !disarmed){
             bulletSpawner.spawn(hitbox.x, hitbox.y, faceAngle, config.bulletSpeed, config.bulletDamage, config.bulletSize,true);
             fireRateTimer = config.fireRate;
-            shootSound.play(GLOBAL_VOLUME);
+            shootSound.play(GameConfig.VOLUME_DEFAULT);
         }
     }
 
@@ -223,9 +221,9 @@ public class Player {
             forceFieldCooldownTimer = config.forceFieldCooldown;
             applyDisarmed(config.forceFieldDuration);
             applyRooted(config.forceFieldDuration);
-            applyInvincible(config.forceFieldDuration);
+            applyInvincible(config.forceFieldDuration + config.forceFieldGracePeriod);
 
-            ultimateSound.play(GameConfig.GLOBAL_VOLUME);
+            ultimateSound.play(GameConfig.VOLUME_LOUD);
         }
     }
 
@@ -243,6 +241,12 @@ public class Player {
         rootedTimer = 0.01f;
         slowedTimer = 0.01f;
         forceFieldCooldownTimer = 0.01f;
+        disarmedTimer = 0.01f;
+        invincibleTimer = 0.01f;
+
+        // Reset boolean states
+        invincible = false;
+        disarmed = false;
     }
 
     public void takeHit(DamageAction damageAct){
@@ -259,25 +263,26 @@ public class Player {
                 break;
         }
 
-        damagedSound.play(GameConfig.GLOBAL_VOLUME);
+        damagedSound.play(GameConfig.VOLUME_DEFAULT);
     }
 
     public void changeHealth(float change){
-        if (shielding){
+        if (shielding && change < 0f){
             shieldHealth += change;
             if (shieldHealth <= 0f){
+                health += shieldHealth;
                 shieldHealth = 0f;
                 rechargeShield();
             }
-            else if (shieldHealth > config.maxShieldHealth) { shieldHealth = config.maxShieldHealth; }
         }
         else {
             health += change;
-            if (health <= 0f){
-                health = 0f;
-            }
-            else if (health > config.maxHealth) { health = config.maxHealth; }
         }
+
+        if (health <= 0f) { health = 0f; }
+        else if (health > config.maxHealth) { health = config.maxHealth; }
+
+        if (shieldHealth > config.maxShieldHealth) { shieldHealth = config.maxShieldHealth; }
     }
 
     // Applies bounds, sets new position, hitbox, and shield position
@@ -308,7 +313,7 @@ public class Player {
         ).scl(speed * intensity);
 
         // Briefly disable input with timer, absolute value because intensity can be minus (suck)
-        applyRooted(Math.abs(intensity/100));
+        applyRooted(Math.abs(intensity/90));
     }
 
     public void applySlowed(float intensity, float duration) {

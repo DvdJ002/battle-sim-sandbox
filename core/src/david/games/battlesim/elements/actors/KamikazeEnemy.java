@@ -48,7 +48,7 @@ public class KamikazeEnemy extends Enemy {
             player.takeHit(damageAct);
             isAlive = false;
 
-            explosionSound.play(GameConfig.GLOBAL_VOLUME);
+            explosionSound.play(GameConfig.VOLUME_DEFAULT);
         }
     }
 }
