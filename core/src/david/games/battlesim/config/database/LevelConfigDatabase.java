@@ -262,16 +262,60 @@ public final class LevelConfigDatabase {
         waves = new ArrayList<>();
         spawnConfigs = new ArrayList<>();
 
-        // Top row
-        spawnConfigs.add(new EnemySpawnConfig("healer_special", new Vector2(350f, 550f)));
-        spawnConfigs.add(new EnemySpawnConfig("healer_special", new Vector2(400f, 550f)));
-        spawnConfigs.add(new EnemySpawnConfig("healer_special", new Vector2(450f, 550f)));
+        spawnConfigs.add(new EnemySpawnConfig("slasher", new Vector2(100f, 100f)));
+        spawnConfigs.add(new EnemySpawnConfig("slasher", new Vector2(100f, 300f)));
+        spawnConfigs.add(new EnemySpawnConfig("slasher", new Vector2(100f, 500f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(700f, 100f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(700f, 300f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(700f, 500f)));
 
-        spawnConfigs.add(new EnemySpawnConfig("slasher_large", new Vector2(400f, 500f)));
+        spawnConfigs.add(new EnemySpawnConfig("healer", new Vector2(100f, 100f)));
+        spawnConfigs.add(new EnemySpawnConfig("healer", new Vector2(100f, 500f)));
+        spawnConfigs.add(new EnemySpawnConfig("healer", new Vector2(700f, 100f)));
+        spawnConfigs.add(new EnemySpawnConfig("healer", new Vector2(700f, 500f)));
 
-        waves.add(new LevelWaveConfig(55f, -1f, spawnConfigs));
+        waves.add(new LevelWaveConfig(85f, -1f, spawnConfigs));
 
-        config = new LevelConfig(58f, new Vector2(400f, 300f), waves);
+        // Wave 2
+        spawnConfigs = new ArrayList<>();
+
+        spawnConfigs.add(new EnemySpawnConfig("healer", new Vector2(100f, 500f)));
+        spawnConfigs.add(new EnemySpawnConfig("healer", new Vector2(700f, 50f)));
+        spawnConfigs.add(new EnemySpawnConfig("healer", new Vector2(100f, 50f)));
+        spawnConfigs.add(new EnemySpawnConfig("healer", new Vector2(700f, 500f)));
+        spawnConfigs.add(new EnemySpawnConfig("sucker", new Vector2(100f, 500f)));
+        spawnConfigs.add(new EnemySpawnConfig("sucker", new Vector2(700f, 50f)));
+        spawnConfigs.add(new EnemySpawnConfig("sucker", new Vector2(100f, 50f)));
+        spawnConfigs.add(new EnemySpawnConfig("sucker", new Vector2(700f, 500f)));
+
+        spawnConfigs.add(new EnemySpawnConfig("slasher", new Vector2(100f, 100f)));
+        spawnConfigs.add(new EnemySpawnConfig("slasher", new Vector2(100f, 500f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(700f, 100f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(700f, 500f)));
+
+        waves.add(new LevelWaveConfig(-1f, 0f, spawnConfigs));
+
+        // Wave 3
+        spawnConfigs = new ArrayList<>();
+
+        spawnConfigs.add(new EnemySpawnConfig("slasher", new Vector2(100f, 100f)));
+        spawnConfigs.add(new EnemySpawnConfig("slasher", new Vector2(100f, 500f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(700f, 100f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(700f, 500f)));
+
+        waves.add(new LevelWaveConfig(35f, -1f, spawnConfigs));
+
+        // Wave 4
+        spawnConfigs = new ArrayList<>();
+
+        spawnConfigs.add(new EnemySpawnConfig("slasher", new Vector2(100f, 100f)));
+        spawnConfigs.add(new EnemySpawnConfig("slasher", new Vector2(100f, 500f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(700f, 100f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(700f, 500f)));
+
+        waves.add(new LevelWaveConfig(15f, -1f, spawnConfigs));
+
+        config = new LevelConfig(88f, new Vector2(400f, 300f), waves);
 
         levelConfigs.put("level7", config);
 
