@@ -254,10 +254,10 @@ public class Hud {
                 font.draw(batch, "Level 6: The Chosen One", x - 35f, y);
                 break;
             case 7:
-                font.draw(batch, "Level 7: Well-rounded attack", x - 55f, y);
+                font.draw(batch, "Level 7: Hornet's Nest", x, y);
                 break;
             case 8:
-                font.draw(batch, "Level 8:", x + 50f, y);
+                font.draw(batch, "Level 8: Well-rounded attack", x - 55f, y);
                 break;
             default:
                 break;

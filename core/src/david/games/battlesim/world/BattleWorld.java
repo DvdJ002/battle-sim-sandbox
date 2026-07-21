@@ -104,11 +104,11 @@ public class BattleWorld {
             //enemies.add(new KamikazeEnemy(enemyConfigDatabase.get("kamikaze"),mousePosition.x, mousePosition.y));
             //enemies.add(new SlasherEnemy(enemyConfigDatabase.get("slasher"), mousePosition.x, mousePosition.y));
             //enemies.add(new SuckerEnemy(enemyConfigDatabase.get("sucker"), mousePosition.x, mousePosition.y));
-            //enemies.add(new HealerEnemy(enemyConfigDatabase.get("healer"), mousePosition.x, mousePosition.y));
+            enemies.add(new HealerEnemy(enemyConfigDatabase.get("healer"), mousePosition.x, mousePosition.y));
 
             //enemies.add(new ShooterEnemy(enemyConfigDatabase.get("shooter_large"), mousePosition.x, mousePosition.y));
             //enemies.add(new SlasherEnemy(enemyConfigDatabase.get("slasher_large"), mousePosition.x, mousePosition.y));
-            enemies.add(new KamikazeEnemy(enemyConfigDatabase.get("kamikaze_large"),mousePosition.x, mousePosition.y));
+            //enemies.add(new KamikazeEnemy(enemyConfigDatabase.get("kamikaze_large"),mousePosition.x, mousePosition.y));
 
         }
         if (inputState.resetGamePressed) {

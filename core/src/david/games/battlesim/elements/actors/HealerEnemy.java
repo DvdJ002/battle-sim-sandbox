@@ -41,6 +41,7 @@ public class HealerEnemy extends Enemy {
         steeringBehavior = new Arrive<>(this, target);
 
         roamLocationTimer = roamPeriod;
+        roam();
     }
 
 
@@ -135,6 +136,8 @@ public class HealerEnemy extends Enemy {
     public void roam() {
         float x = MathUtils.random(GameConfig.WIDTH/4f,GameConfig.WIDTH/4f * 3);
         float y = MathUtils.random(GameConfig.HEIGHT/4f,GameConfig.HEIGHT/4f * 3);
+
+        System.out.println("Next healer location: " + x + ", " + y);
 
         updateSteeringTarget(x, y);
     }

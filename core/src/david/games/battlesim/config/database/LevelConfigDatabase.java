@@ -238,7 +238,7 @@ public final class LevelConfigDatabase {
 
         waves.add(new LevelWaveConfig(55f, -1f, spawnConfigs));
 
-        // Wave 2 - Keep spawning healers every 1.5 seconds, alternating top and bottom
+        // Wave 2-X - Keep spawning healers every 1.5 seconds, alternating top and bottom
         for (int i = 1; i < 28; i++) {
             spawnConfigs = new ArrayList<>();
 
@@ -258,6 +258,35 @@ public final class LevelConfigDatabase {
         levelConfigs.put("level6", config);
 
         /* ************** Level 7 ************** */
+        // Wave 1
+        waves = new ArrayList<>();
+        spawnConfigs = new ArrayList<>();
+
+        spawnConfigs.add(new EnemySpawnConfig("healer", new Vector2(400f, 530f)));
+
+        waves.add(new LevelWaveConfig(55f, -1f, spawnConfigs));
+
+        // Wave 2
+        spawnConfigs = new ArrayList<>();
+
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(400f, 530f)));
+
+        waves.add(new LevelWaveConfig(-1f, 0f, spawnConfigs));
+
+        // Wave 3-X - Keep spawning enemies every 1.5 seconds, all from top
+        for (int i = 1; i < 25; i++) {
+            spawnConfigs = new ArrayList<>();
+
+            spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(400f, 530f)));
+
+            waves.add(new LevelWaveConfig(55f - 1.5f*i, -1f, spawnConfigs));
+        }
+
+        config = new LevelConfig(58f, new Vector2(400f, 300f), waves);
+
+        levelConfigs.put("level7", config);
+
+        /* ************** Level 8 ************** */
         // Wave 1
         waves = new ArrayList<>();
         spawnConfigs = new ArrayList<>();
@@ -317,7 +346,7 @@ public final class LevelConfigDatabase {
 
         config = new LevelConfig(88f, new Vector2(400f, 300f), waves);
 
-        levelConfigs.put("level7", config);
+        levelConfigs.put("level8", config);
 
         /* ************** Level 0 / Tutorial ************** */
         // Wave 1
