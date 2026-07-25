@@ -2,6 +2,7 @@ package david.games.battlesim.elements;
 
 import java.util.ArrayList;
 
+import david.games.battlesim.config.database.EnemyConfigDatabase;
 import david.games.battlesim.elements.actors.Enemy;
 import david.games.battlesim.elements.actors.Player;
 import david.games.battlesim.elements.spawners.BulletSpawner;
@@ -12,5 +13,6 @@ public class GameContext {
     public ArrayList<Enemy> enemies;
     public BulletSpawner bulletSpawner;
     public ForceFieldSpawner forceFieldSpawner;
+    public EnemyConfigDatabase enemyConfigDatabase;
 
 }

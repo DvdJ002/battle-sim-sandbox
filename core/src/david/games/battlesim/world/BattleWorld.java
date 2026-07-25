@@ -21,6 +21,7 @@ import david.games.battlesim.config.database.LevelConfig;
 import david.games.battlesim.config.database.PlayerConfigDatabase;
 import david.games.battlesim.config.database.LevelWaveConfig;
 import david.games.battlesim.elements.GameContext;
+import david.games.battlesim.elements.actors.Boss;
 import david.games.battlesim.elements.actors.Bullet;
 import david.games.battlesim.elements.actors.Enemy;
 import david.games.battlesim.elements.actors.ForceField;
@@ -68,6 +69,7 @@ public class BattleWorld {
         context = new GameContext();
         context.enemies = enemies;
         context.player = player;
+        context.enemyConfigDatabase = enemyConfigDatabase;
 
         /// Bullets (they are pooled)
         context.bulletSpawner = new BulletSpawner() {
@@ -144,10 +146,19 @@ public class BattleWorld {
         }
     }
     private void updateEnemies(float delta){
-        for (Iterator<Enemy> it_e = enemies.iterator(); it_e.hasNext();) {
+        /*for (Iterator<Enemy> it_e = enemies.iterator(); it_e.hasNext();) {
             Enemy enemy = it_e.next();
             enemy.update(delta, context);
             if (!enemy.isAlive) { it_e.remove(); }
+        }*/
+
+        for (int i = 0; i < enemies.size(); i++) {
+            Enemy enemy = enemies.get(i);
+            enemy.update(delta, context);
+            if (!enemy.isAlive) {
+                enemies.remove(i);
+                i--;
+            }
         }
 
         if (!isWavesLeft() && enemies.isEmpty()) {
@@ -243,7 +254,6 @@ public class BattleWorld {
 
             if (tutorialMode) {
                 player.changeHealth(300f);
-
             }
         }
     }
@@ -270,6 +280,9 @@ public class BattleWorld {
                 case "healer":
                 case "healer_special":
                     enemies.add(new HealerEnemy(enemyConfigDatabase.get(enemySpawn.type), enemySpawn.position.x, enemySpawn.position.y));
+                    break;
+                case "boss":
+                    enemies.add(new Boss(enemyConfigDatabase.get(enemySpawn.type), enemySpawn.position.x, enemySpawn.position.y));
                     break;
                 default: break;
             }

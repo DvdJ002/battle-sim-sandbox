@@ -48,7 +48,7 @@ public class HealerEnemy extends Enemy {
     @Override
     public void draw(SpriteBatch batch) {
         if (canHealEnemy()) {
-            // Draw the healing beam before the healer itself
+            // Draw the healing beam before the healer
             float angle = findAngleBetweenPoints(position.x, position.y, healedEnemy.position.x, healedEnemy.position.y);
             float height = Vector2.dst(position.x, position.y, healedEnemy.position.x, healedEnemy.position.y);
             batch.draw(
@@ -57,6 +57,7 @@ public class HealerEnemy extends Enemy {
             );
         }
 
+        // Draws the healer itself
         super.draw(batch);
     }
 
@@ -136,9 +137,6 @@ public class HealerEnemy extends Enemy {
     public void roam() {
         float x = MathUtils.random(GameConfig.WIDTH/4f,GameConfig.WIDTH/4f * 3);
         float y = MathUtils.random(GameConfig.HEIGHT/4f,GameConfig.HEIGHT/4f * 3);
-
-        System.out.println("Next healer location: " + x + ", " + y);
-
         updateSteeringTarget(x, y);
     }
 

@@ -46,7 +46,7 @@ public class SuckerEnemy extends Enemy {
             damageAct.sourcePosition = new Vector2(hitbox.x, hitbox.y);
             player.takeHit(damageAct);
 
-            activateForceField(playerPosition, context.forceFieldSpawner);
+            activateForceField(context.forceFieldSpawner);
         }
 
         if (forceFieldTimer > 0f) {
@@ -59,7 +59,7 @@ public class SuckerEnemy extends Enemy {
     }
 
     // Spawn the force field at the location, make the enemy invincible and stationary
-    public void activateForceField(Vector2 playerPosition, ForceFieldSpawner spawner){
+    public void activateForceField(ForceFieldSpawner spawner){
         spawner.spawn(position.x + hitbox.width/2, position.y  +  hitbox.height/2, damage, forceFieldDuration, detectionRange, false, true);
         isInvincible = true;
         isStatic = true;

@@ -131,7 +131,9 @@ public class LevelsScreen extends ScreenAdapter {
         // Span two columns and center it
         buttonTable.add(); // empty column
         buttonTable.add(level9Button).colspan(2).padBottom(10).expandX().fill();
-        level9Button.setDisabled(true);
+        if (!game.isLevelReached(9)) {
+            level9Button.setDisabled(true);
+        }
         buttonTable.add(); // empty column
         buttonTable.row();
 

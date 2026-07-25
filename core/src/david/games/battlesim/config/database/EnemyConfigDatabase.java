@@ -105,6 +105,37 @@ public final class EnemyConfigDatabase {
         healerSpecial.steeringState.maxAngularSpeed = healerSpecial.roamSpeed;
 
         configs.put("healer_special", healerSpecial);
+
+        /* --------------------------------------------------------------- */
+        /* -------------------------- BOSS ENEMY ------------------------- */
+        /* --------------------------------------------------------------- */
+        EnemyConfig.BossConfig boss = new EnemyConfig.BossConfig(
+                1f,
+                1f,
+                2000f,
+                 GameConfig.BOSS_SIZE,
+                55f,
+                2.5f,
+                240f,
+                1000f,
+                20f,
+                9f,
+                1f,
+                1f,
+                5f,
+                160f,
+                600f,
+                1200f,
+                4,
+                1.2f,
+                0.9f,
+                50f
+        );
+        setDefaultAiConfig(boss);
+        boss.steeringState.maxLinearSpeed = boss.baseSpeed;
+        boss.steeringState.maxAngularSpeed = boss.baseSpeed;
+
+        configs.put("boss", boss);
     }
 
     private void setDefaultAiConfig(EnemyConfig instance) {

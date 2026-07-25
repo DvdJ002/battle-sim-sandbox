@@ -397,6 +397,19 @@ public final class LevelConfigDatabase {
         config = new LevelConfig(312f, new Vector2(400f, 300f), waves);
 
         levelConfigs.put("level0", config);
+
+        /* ***************** Boss level ***************** */
+        // Wave 1
+        waves = new ArrayList<>();
+        spawnConfigs = new ArrayList<>();
+
+        spawnConfigs.add(new EnemySpawnConfig("boss", new Vector2(400f, 450f)));
+
+        waves.add(new LevelWaveConfig(0f, 0f, spawnConfigs));
+
+        config = new LevelConfig(0f, new Vector2(400f, 300f), waves);
+
+        levelConfigs.put("level9", config);
     }
 
     public LevelConfig get(String type) {

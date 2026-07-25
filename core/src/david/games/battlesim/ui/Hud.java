@@ -138,6 +138,10 @@ public class Hud {
         if (time <= 3f) {
             font.setColor(Color.RED);
         }
+        if (time <= 0f) {
+            return;
+        }
+
         font.draw(batch, String.format("Left: %.1f", time) , x, y);
         font.draw(batch, String.format("Left: %.1f", time) , x + 1f, y);
 

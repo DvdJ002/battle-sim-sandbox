@@ -25,6 +25,7 @@ public class EnemyConfig {
             this.knockbackIntensity = knockbackIntensity;
         }
     }
+
     public static class ShooterConfig extends EnemyConfig {
         public final float reloadDuration, bulletSpeed, bulletSize;
         public final float evadeRange;
@@ -39,6 +40,7 @@ public class EnemyConfig {
             this.bulletSize = bulletSize;
         }
     }
+
     public static class SlasherConfig extends EnemyConfig {
         public final float dashCooldown, dashIntensity, detectionRadius;
         public final float slowIntensity, slowDuration;
@@ -51,6 +53,7 @@ public class EnemyConfig {
             this.detectionRadius = detectionRadius;
         }
     }
+
     public static class SuckerConfig extends EnemyConfig {
         public final float detectionRange, suckIntensity, forceFieldDuration, chaseSpeed;
         public SuckerConfig(float collideDamage, float damage, float maxHealth, float size, float detectionRange, float suckIntensity, float forceFieldDuration, float chaseSpeed) {
@@ -72,6 +75,44 @@ public class EnemyConfig {
             this.chaseSpeed = chaseSpeed;
             this.roamLocationPeriod = roamLocationPeriod;
             this.beamWidth = beamWidth;
+        }
+    }
+
+    public static class BossConfig extends EnemyConfig {
+        public float baseSpeed, idleDuration, closeDetectionRange;
+        // Attack: Bullet barrage
+        public float bulletSpeed, bulletDamage, bulletSize, fireRate;
+        // Attack: Slam/force field
+        public float forceFieldDamage, forceFieldDuration, forceFieldSize;
+        // Attack: Dash sequence
+        public float dashIntensity, dashLastIntensity;
+        public int dashCount;
+        public float dashBaseCooldown, dashLastCooldown;
+        // Attack: Kamikaze assault. Spawns 2 kamikaze in front of the boss
+        public float kamikazeSpawnDistance;
+
+        public BossConfig(
+                float collideDamage, float damage, float maxHealth, float size, float baseSpeed, float idleDuration, float closeDetectionRange,
+                float bulletSpeed, float bulletDamage, float bulletSize, float fireRate, float forceFieldDamage, float forceFieldDuration, float forceFieldSize,
+                float dashIntensity, float dashLastIntensity, int dashCount, float dashBaseCooldown, float dashLastCooldown, float kamikazeSpawnDistance
+        ) {
+            super(collideDamage, damage, maxHealth, size);
+            this.baseSpeed = baseSpeed;
+            this.idleDuration = idleDuration;
+            this.closeDetectionRange = closeDetectionRange;
+            this.bulletSpeed = bulletSpeed;
+            this.bulletDamage = bulletDamage;
+            this.bulletSize = bulletSize;
+            this.fireRate = fireRate;
+            this.forceFieldDamage = forceFieldDamage;
+            this.forceFieldDuration = forceFieldDuration;
+            this.forceFieldSize = forceFieldSize;
+            this.dashIntensity = dashIntensity;
+            this.dashLastIntensity = dashLastIntensity;
+            this.dashCount = dashCount;
+            this.dashBaseCooldown = dashBaseCooldown;
+            this.dashLastCooldown = dashLastCooldown;
+            this.kamikazeSpawnDistance = kamikazeSpawnDistance;
         }
     }
 }
