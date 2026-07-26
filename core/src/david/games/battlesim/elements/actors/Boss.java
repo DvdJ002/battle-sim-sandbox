@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import david.games.battlesim.assets.AssetDescriptors;
 import david.games.battlesim.assets.AssetPaths;
+import david.games.battlesim.config.GameConfig;
 import david.games.battlesim.config.database.EnemyConfig;
 import david.games.battlesim.elements.GameContext;
 import david.games.battlesim.elements.damage.BossAttack;
@@ -26,17 +27,19 @@ import david.games.battlesim.util.GameUtil;
 public class Boss extends Enemy {
 
     public final EnemyConfig.BossConfig config;
-    private final Sound sound;
+    private final Sound explosionSound, slamSound;
 
     // State enums
-    BossState state;
-    BossPhase phase;
+    public BossState state;
+    public BossPhase phase;
     BossAttack currentAttack;
 
     // Timers
     public float idleTimer = 0.0f;
     public float nextDashTimer = 0.0f;
     public float slamTimer = 0.0f;
+    public float bulletTimer = 0.0f, reloadTimer = 0.0f;
+    public float explosionGraceTimer = 0.0f, explosionSeekTimer = 0.0f;
 
     // Boolean and integer states
     public int dashesLeft = 0;
@@ -45,28 +48,25 @@ public class Boss extends Enemy {
         super(bossConfig, x, y);
         this.config = (EnemyConfig.BossConfig) bossConfig;
 
-        texture = assetManager.get(AssetPaths.BOSS, Texture.class);
-        sound = assetManager.get(AssetDescriptors.KAMIKAZE_EXPLOSION_SOUND);
+        texture = assetManager.get(AssetPaths.BOSS_1, Texture.class);
+        explosionSound = assetManager.get(AssetDescriptors.KAMIKAZE_EXPLOSION_SOUND);
+        slamSound = assetManager.get(AssetDescriptors.PLAYER_ULTIMATE_SOUND);
 
-        // Start boss in idle state
+        // Start boss in phase 1 idle state
+        phase = BossPhase.PHASE_1;
         finishAttacking();
 
         steeringBehavior = new Arrive<>(this, target);
     }
 
     @Override
-    public void draw(SpriteBatch batch) {
-        // Draws the boss itself
-        super.draw(batch);
-    }
-
-    @Override
     public void update(float delta, GameContext context){
-        Player player = context.player;
-        Vector2 playerPosition = player.position;
-        updateSteeringTarget(playerPosition.x, playerPosition.y);
-
         super.update(delta, context);
+
+        checkPhaseChange();
+
+        Player player = context.player;
+        updateTracking(player.position);
 
         // Damage player if touching
         if ((player.shielding && overlaps(player.shieldHitbox, hitbox)) || (!player.shielding && overlaps(player.hitbox, hitbox))) {
@@ -75,6 +75,7 @@ public class Boss extends Enemy {
             player.takeHit(damageAct);
         }
 
+        // Target location might be updated here!
         if (state == BossState.ATTACKING) {
             updateAttack(delta, context);
         }
@@ -90,11 +91,52 @@ public class Boss extends Enemy {
                 idleTimer = 0f;
                 chooseAttack(context.player.position);
                 initializeAttack(context);
+                idleTimer = phase == BossPhase.PHASE_1 ? config.baseIdleDuration : config.enragedIdleDuration;
             }
         }
     }
 
-    /********************* ATTACK GENERAL *********************/
+    private void updateTracking(Vector2 playerPosition) {
+        if (phase == BossPhase.PHASE_1) {
+            updateMirroringTargetLocation(playerPosition);
+        }
+        else {
+            updateSteeringTarget(playerPosition.x, playerPosition.y);
+        }
+    }
+
+    private void checkPhaseChange() {
+        if (health <= config.maxHealth * config.enragedHealthThreshold && phase == BossPhase.PHASE_1) {
+            phase = BossPhase.PHASE_2;
+            texture = assetManager.get(AssetPaths.BOSS_2, Texture.class);
+
+            steeringState.maxLinearSpeed = config.enragedSpeed;
+            steeringState.maxAngularSpeed = config.enragedSpeed;
+            steeringState.maxLinearAcceleration = config.enragedAcceleration;
+            steeringState.maxAngularAcceleration = config.enragedAcceleration;
+
+            System.out.println("Changed phase to phase 2");
+        }
+    }
+    // Boss tries to mirror the player across the center of the arena
+    private void updateMirroringTargetLocation(Vector2 playerPosition) {
+        float anglePlayerToCenter = GameUtil.findAngleBetweenPoints(playerPosition.x, playerPosition.y, GameConfig.WIDTH/2f, GameConfig.HEIGHT/2f);
+        float distancePlayerToCenter = Vector2.dst(playerPosition.x, playerPosition.y, GameConfig.WIDTH/2f, GameConfig.HEIGHT/2f);
+        // Apply bounds
+        Vector2 mirroredLocation = GameUtil.angleToCirclePoints(GameConfig.WIDTH/2f, GameConfig.HEIGHT/2f,  distancePlayerToCenter, anglePlayerToCenter);
+        if (mirroredLocation.x > GameConfig.WIDTH * 0.8f) {
+            mirroredLocation.x = GameConfig.WIDTH * 0.8f;
+        }
+        if (mirroredLocation.y > GameConfig.HEIGHT * 0.8f) {
+            mirroredLocation.y = GameConfig.HEIGHT * 0.8f;
+        }
+        updateSteeringTarget(mirroredLocation.x, mirroredLocation.y);
+    }
+
+
+    /*******************************************************************************/
+    /******************************** ATTACK GENERAL *******************************/
+    /*******************************************************************************/
     // Called only once after idle timer runs out, chooses the new attack that is later to be initialized
     private void chooseAttack(Vector2 playerPosition) {
         // Close range vs long range attacks (TODO)
@@ -114,23 +156,31 @@ public class Boss extends Enemy {
         int attackCount = BossAttack.values().length;
         float attackRnd = MathUtils.random(1f, attackCount);
         currentAttack = BossAttack.values()[(int) attackRnd];
-        if (currentAttack == BossAttack.BULLETS) {
-            currentAttack = BossAttack.DASH;
-        }
+
+        //currentAttack = BossAttack.SUMMON_OFFENSIVES;
 
         state = BossState.ATTACKING;
         System.out.println("Chose attack: " + currentAttack.name());
     }
 
     private void initializeAttack(GameContext context) {
+        texture = (phase == BossPhase.PHASE_1) ? assetManager.get(AssetPaths.BOSS_1_ATTACK, Texture.class) : assetManager.get(AssetPaths.BOSS_2_ATTACK, Texture.class);
+
         switch (currentAttack) {
             case DASH:
                 initializeDash();
                 break;
+            case BULLETS:
+                initializeBullets();
+                break;
             case SLAM:
                 initializeSlam(context);
                 break;
-            case SUMMON:
+            case EXPLOSION:
+                initializeExplosion();
+                break;
+            case SUMMON_OFFENSIVES:
+            case SUMMON_HEALERS:
             default:
                 break;
         }
@@ -138,14 +188,23 @@ public class Boss extends Enemy {
 
     private void updateAttack(float delta, GameContext context) {
         switch (currentAttack) {
-            case SUMMON:
-                updateSummon(context);
-                break;
             case DASH:
                 updateDash(delta, context);
                 break;
+            case BULLETS:
+                updateBullets(delta, context);
+                break;
+            case SUMMON_OFFENSIVES:
+                updateSummonOffensives(context);
+                break;
+            case SUMMON_HEALERS:
+                updateSummonHealers(context);
+                break;
             case SLAM:
                 updateSlam(delta);
+                break;
+            case EXPLOSION:
+                updateExplosion(delta, context);
                 break;
             default:
                 break;
@@ -154,32 +213,17 @@ public class Boss extends Enemy {
     private void finishAttacking() {
         state = BossState.IDLE;
         currentAttack = BossAttack.NONE;
-        idleTimer = config.idleDuration;
+        idleTimer = config.baseIdleDuration;
 
+        texture = (phase == BossPhase.PHASE_1) ? assetManager.get(AssetPaths.BOSS_1, Texture.class) : assetManager.get(AssetPaths.BOSS_2, Texture.class);
         System.out.println("Finished attack");
     }
 
-    /********************* ATTACK SPECIFIC *********************/
-    private void initializeSlam(GameContext context) {
-        slam(context);
-        slamTimer = config.forceFieldDuration;
-    }
-    private void updateSlam(float delta) {
-        slamTimer -= delta;
-        if (slamTimer <= 0f) {
-            slamTimer = 0f;
-            isInvincible = false;
-            isStatic = false;
-            finishAttacking();
-        }
-    }
 
-    private void slam(GameContext context) {
-        context.forceFieldSpawner.spawn(position.x + hitbox.width/2f, position.y + hitbox.height/2f, config.forceFieldDamage, config.forceFieldDuration, config.forceFieldSize, false, true);
-        isInvincible = true;
-        isStatic = true;
-    }
-
+    /*******************************************************************************/
+    /******************************* ATTACK SPECIFIC *******************************/
+    /*******************************************************************************/
+    /* -------------------------- DASH ------------------------- */
     private void initializeDash() {
         // First dash will happen immediately
         nextDashTimer = 0.0f;
@@ -206,7 +250,6 @@ public class Boss extends Enemy {
             }
         }
     }
-
     private void dash(Vector2 playerPosition, float intensity) {
         // Uncap the speed
         steeringState.maxLinearSpeed = config.dashLastIntensity;
@@ -219,20 +262,149 @@ public class Boss extends Enemy {
         System.out.println("Dashing");
     }
 
-    private void updateSummon(GameContext context) {
-        summon(context);
-        finishAttacking();
+    /* -------------------------- BULLET HAUL ------------------------- */
+    private void initializeBullets() {
+        bulletTimer = config.bulletAttackDuration;
+        reloadTimer = config.bulletFireRate;
+    }
+    private void updateBullets(float delta, GameContext context) {
+        reloadTimer -= delta;
+        if (reloadTimer <= 0f) {
+            shootBulletSet(context);
+            reloadTimer = config.bulletFireRate;
+        }
+
+        bulletTimer -= delta;
+        if (bulletTimer <= 0f) {
+            bulletTimer = 0f;
+            reloadTimer = 0f;
+            finishAttacking();
+        }
     }
 
-    private void summon(GameContext context) {
-        float angleToPlayer = GameUtil.findAngleBetweenPoints(position.x, position.y, context.player.position.x, context.player.position.y);
+    // First find angle of enemy to player and left and right spawn points, then shoot bullets from those spawn points
+    private void shootBulletSet(GameContext context) {
+        Vector2 bossCenter = new Vector2(position.x + hitbox.width/2f, position.y + hitbox.height/2f);
+        float angleEnemyCenterToPlayer = GameUtil.findAngleBetweenPoints(bossCenter.x, bossCenter.y, context.player.position.x, context.player.position.y);
 
-        Vector2 spawnPointLeft = GameUtil.angleToCirclePoints(position.x, position.y, config.kamikazeSpawnDistance, angleToPlayer + 90f);
-        Vector2 spawnPointRight = GameUtil.angleToCirclePoints(position.x, position.y, config.kamikazeSpawnDistance, angleToPlayer - 90f);
-        Vector2 spawnPointMiddle = GameUtil.angleToCirclePoints(position.x, position.y, config.kamikazeSpawnDistance, angleToPlayer);
+        Vector2 spawnPointLeft = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, 30f, angleEnemyCenterToPlayer + 90f);
+        float angleLeftPointToPlayer = GameUtil.findAngleBetweenPoints(spawnPointLeft.x, spawnPointLeft.y, context.player.position.x, context.player.position.y);
+        Vector2 spawnPointRight = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, 30f, angleEnemyCenterToPlayer - 90f);
+        float angleRightPointToPlayer = GameUtil.findAngleBetweenPoints(spawnPointRight.x, spawnPointRight.y, context.player.position.x, context.player.position.y);
+
+        context.bulletSpawner.spawn(spawnPointLeft.x, spawnPointLeft.y, angleLeftPointToPlayer, config.bulletSpeed, config.bulletDamage, config.bulletSize,false);
+        context.bulletSpawner.spawn(spawnPointRight.x, spawnPointRight.y, angleRightPointToPlayer, config.bulletSpeed, config.bulletDamage, config.bulletSize,false);
+    }
+
+    /* -------------------------- SUMMON ATTACK - OFFENSIVES ------------------------- */
+    private void updateSummonOffensives(GameContext context) {
+        summonOffensives(context);
+        finishAttacking();
+    }
+    private void summonOffensives(GameContext context) {
+        Vector2 bossCenter = new Vector2(position.x + hitbox.width/2f, position.y + hitbox.height/2f);
+        float angleToPlayer = GameUtil.findAngleBetweenPoints(bossCenter.x, bossCenter.y, context.player.position.x, context.player.position.y);
+
+        Vector2 spawnPointLeft = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer + 90f);
+        Vector2 spawnPointRight = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer - 90f);
+        Vector2 spawnPointMiddle = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer);
 
         context.enemies.add(new SlasherEnemy(context.enemyConfigDatabase.get("slasher"), spawnPointLeft.x, spawnPointLeft.y));
         context.enemies.add(new ShooterEnemy(context.enemyConfigDatabase.get("shooter"), spawnPointRight.x, spawnPointRight.y));
         context.enemies.add(new KamikazeEnemy(context.enemyConfigDatabase.get("kamikaze"), spawnPointMiddle.x, spawnPointMiddle.y));
     }
+
+    /* -------------------------- SUMMON ATTACK - HEALERS ------------------------- */
+    private void updateSummonHealers(GameContext context) {
+        summonHealers(context);
+        finishAttacking();
+    }
+    private void summonHealers(GameContext context) {
+        Vector2 bossCenter = new Vector2(position.x + hitbox.width/2f, position.y + hitbox.height/2f);
+        float angleToPlayer = GameUtil.findAngleBetweenPoints(bossCenter.x, bossCenter.y, context.player.position.x, context.player.position.y);
+
+        Vector2 spawnPointLeft = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer + 150f);
+        Vector2 spawnPointRight = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer + 210f);
+        Vector2 spawnPointBehind = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer + 180f);
+
+        context.enemies.add(new HealerEnemy(context.enemyConfigDatabase.get("healer"), spawnPointLeft.x, spawnPointLeft.y));
+        context.enemies.add(new HealerEnemy(context.enemyConfigDatabase.get("healer"), spawnPointRight.x, spawnPointRight.y));
+        context.enemies.add(new HealerEnemy(context.enemyConfigDatabase.get("healer"), spawnPointBehind.x, spawnPointBehind.y));
+    }
+
+    /* -------------------------- SLAM ATTACK ------------------------- */
+    private void initializeSlam(GameContext context) {
+        slam(context);
+        slamTimer = config.forceFieldDuration;
+    }
+    private void updateSlam(float delta) {
+        slamTimer -= delta;
+        if (slamTimer <= 0f) {
+            slamTimer = 0f;
+            isInvincible = false;
+            isStatic = false;
+            finishAttacking();
+        }
+    }
+    private void slam(GameContext context) {
+        context.forceFieldSpawner.spawn(position.x + hitbox.width/2f, position.y + hitbox.height/2f, config.forceFieldDamage, config.forceFieldDuration, config.forceFieldSize, false, true);
+        isInvincible = true;
+        isStatic = true;
+
+        slamSound.play(GameConfig.VOLUME_LOUD);
+    }
+
+    /* -------------------------- EXPLOSION ATTACK ------------------------- */
+    private void initializeExplosion() {
+        steeringState.maxLinearSpeed = config.explosionSeekSpeed;
+        steeringState.maxAngularSpeed = config.explosionSeekSpeed;
+        steeringState.maxLinearAcceleration = config.explosionSeekAccel;
+        steeringState.maxAngularAcceleration = config.explosionSeekAccel;
+
+        explosionGraceTimer = config.explosionGraceDuration;
+        explosionSeekTimer = config.explosionSeekDuration;
+        isStatic = true;
+    }
+    private void updateExplosion(float delta, GameContext context) {
+        // In the grace period boss stands still (telemarked attack)
+        if (explosionGraceTimer > 0.0f) {
+            explosionGraceTimer -= delta;
+            if (explosionGraceTimer <= 0f) {
+                explosionGraceTimer = 0f;
+                isStatic = false;
+            }
+        }
+
+        if (!isStatic) {
+            // Finish attack if timer ran out
+            explosionSeekTimer -= delta;
+            if (explosionSeekTimer <= 0f) {
+                finishExplodeAttack();
+            }
+
+            // Boss starts moving towards the player and explodes if in range
+            updateSteeringTarget(context.player.position.x, context.player.position.y);
+            if (isNear(hitbox.x, hitbox.y, context.player.position.x, context.player.position.y, config.explosionDetectionRange)) {
+                explode(context);
+                finishExplodeAttack();
+            }
+        }
+    }
+    private void explode(GameContext context) {
+        DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.KNOCKBACK, config.explosionDamage, config.explosionKbIntensity, 0f);
+        damageAct.sourcePosition = new Vector2(position.x, position.y);
+        context.player.takeHit(damageAct);
+
+        explosionSound.play(GameConfig.VOLUME_DEFAULT);
+    }
+
+    private void finishExplodeAttack() {
+        steeringState.maxLinearSpeed = config.baseSpeed;
+        steeringState.maxAngularSpeed = config.baseSpeed;
+        steeringState.maxLinearAcceleration = GameConfig.DEFAULT_ACCEL;
+        steeringState.maxAngularAcceleration = GameConfig.DEFAULT_ACCEL;
+        finishAttacking();
+    }
+
+
 }

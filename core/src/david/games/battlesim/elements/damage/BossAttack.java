@@ -4,7 +4,8 @@ public enum BossAttack {
     NONE,
     DASH,
     BULLETS,
-    SUMMON,
-    SLAM
-
+    SUMMON_OFFENSIVES,
+    SUMMON_HEALERS,
+    SLAM,
+    EXPLOSION
 }

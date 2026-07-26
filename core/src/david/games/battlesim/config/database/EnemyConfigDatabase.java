@@ -1,5 +1,7 @@
 package david.games.battlesim.config.database;
 
+import com.badlogic.gdx.Game;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -110,26 +112,38 @@ public final class EnemyConfigDatabase {
         /* -------------------------- BOSS ENEMY ------------------------- */
         /* --------------------------------------------------------------- */
         EnemyConfig.BossConfig boss = new EnemyConfig.BossConfig(
+                1.5f,
                 1f,
-                1f,
-                2000f,
+                6000f,
                  GameConfig.BOSS_SIZE,
-                55f,
-                2.5f,
+                125f,
+                1.8f,
                 240f,
-                1000f,
+                800f,
+                450f,
+                0.8f,
+                0.7f,
+                1100f,
                 20f,
-                9f,
-                1f,
-                1f,
+                10f,
                 5f,
+                0.4f,
+                1.5f,
+                3.5f,
                 160f,
                 600f,
                 1200f,
                 4,
                 1.2f,
                 0.9f,
-                50f
+                50f,
+                3f,
+                1100f,
+                700f,
+                10f,
+                30f,
+                135f,
+                150f
         );
         setDefaultAiConfig(boss);
         boss.steeringState.maxLinearSpeed = boss.baseSpeed;
@@ -142,9 +156,9 @@ public final class EnemyConfigDatabase {
         EnemySteeringState steeringState = new EnemySteeringState();
 
         steeringState.maxLinearSpeed = 1500.0f;
-        steeringState.maxLinearAcceleration = 200.0f;
+        steeringState.maxLinearAcceleration = GameConfig.DEFAULT_ACCEL;
         steeringState.maxAngularSpeed = 1500.0f;
-        steeringState.maxAngularAcceleration = 200.0f;
+        steeringState.maxAngularAcceleration = GameConfig.DEFAULT_ACCEL;
         steeringState.orientation = 5f; steeringState.angularVelocity = 5f; steeringState.zeroLinearSpeedThreshold = 5f;
 
         instance.steeringState = steeringState;

@@ -51,6 +51,7 @@ public class BattleWorld {
     public int currentWave = 0;
     public float levelTimer = 0f;
     public boolean tutorialMode = false;
+    public boolean bossFight = false;
 
     public BattleWorld() {
         state = WorldState.STOPPED;
@@ -146,12 +147,6 @@ public class BattleWorld {
         }
     }
     private void updateEnemies(float delta){
-        /*for (Iterator<Enemy> it_e = enemies.iterator(); it_e.hasNext();) {
-            Enemy enemy = it_e.next();
-            enemy.update(delta, context);
-            if (!enemy.isAlive) { it_e.remove(); }
-        }*/
-
         for (int i = 0; i < enemies.size(); i++) {
             Enemy enemy = enemies.get(i);
             enemy.update(delta, context);
@@ -283,6 +278,7 @@ public class BattleWorld {
                     break;
                 case "boss":
                     enemies.add(new Boss(enemyConfigDatabase.get(enemySpawn.type), enemySpawn.position.x, enemySpawn.position.y));
+                    bossFight = true;
                     break;
                 default: break;
             }

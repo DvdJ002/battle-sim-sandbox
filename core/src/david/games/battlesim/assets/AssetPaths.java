@@ -14,8 +14,10 @@ public class AssetPaths {
     public static final String BULLET_BLUE = "gameplay/actors/bullet_blue.png";
     public static final String FORCE_FIELD_BLUE = "gameplay/actors/force_field_blue.png";
     public static final String FORCE_FIELD_DARK = "gameplay/actors/force_field_dark.png";
-    public static final String BOSS = "gameplay/actors/boss.png";
-
+    public static final String BOSS_1 = "gameplay/actors/boss_1.png";
+    public static final String BOSS_1_ATTACK = "gameplay/actors/boss_1_attack.png";
+    public static final String BOSS_2 = "gameplay/actors/boss_2.png";
+    public static final String BOSS_2_ATTACK = "gameplay/actors/boss_2_attack.png";
     // UI
     public static final String MENU_BACKGROUND = "gameplay/ui/menu_background.jpg";
     public static final String GAME_BACKGROUND = "gameplay/ui/game_background.png";

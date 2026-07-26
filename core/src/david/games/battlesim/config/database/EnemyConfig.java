@@ -79,31 +79,45 @@ public class EnemyConfig {
     }
 
     public static class BossConfig extends EnemyConfig {
-        public float baseSpeed, idleDuration, closeDetectionRange;
+        // General (phase 1 and 2)
+        public float baseSpeed, baseIdleDuration, closeDetectionRange;
+        public float enragedSpeed, enragedAcceleration, enragedIdleDuration, enragedHealthThreshold;
+
         // Attack: Bullet barrage
-        public float bulletSpeed, bulletDamage, bulletSize, fireRate;
+        public float bulletSpeed, bulletDamage, bulletSize, bulletFireRate, bulletAttackDuration;
         // Attack: Slam/force field
         public float forceFieldDamage, forceFieldDuration, forceFieldSize;
         // Attack: Dash sequence
         public float dashIntensity, dashLastIntensity;
         public int dashCount;
         public float dashBaseCooldown, dashLastCooldown;
-        // Attack: Kamikaze assault. Spawns 2 kamikaze in front of the boss
+        // Attack: Summon offensives/healers
         public float kamikazeSpawnDistance;
+        // Attack: Explosion
+        public float explosionGraceDuration, explosionSeekSpeed, explosionSeekAccel, explosionSeekDuration, explosionKbIntensity, explosionDetectionRange, explosionDamage;
+
 
         public BossConfig(
-                float collideDamage, float damage, float maxHealth, float size, float baseSpeed, float idleDuration, float closeDetectionRange,
-                float bulletSpeed, float bulletDamage, float bulletSize, float fireRate, float forceFieldDamage, float forceFieldDuration, float forceFieldSize,
-                float dashIntensity, float dashLastIntensity, int dashCount, float dashBaseCooldown, float dashLastCooldown, float kamikazeSpawnDistance
+                float collideDamage, float damage, float maxHealth, float size, float baseSpeed, float baseIdleDuration, float closeDetectionRange,
+                float enragedSpeed, float enragedAcceleration, float enragedIdleDuration, float enragedHealthThreshold,
+                float bulletSpeed, float bulletDamage, float bulletSize, float bulletAttackDuration, float bulletFireRate, float forceFieldDamage, float forceFieldDuration, float forceFieldSize,
+                float dashIntensity, float dashLastIntensity, int dashCount, float dashBaseCooldown, float dashLastCooldown, float kamikazeSpawnDistance,
+                float explosionGraceDuration, float explosionSeekSpeed, float explosionSeekAccel, float explosionSeekDuration, float explosionKbIntensity, float explosionDetectionRange,
+                float explosionDamage
         ) {
             super(collideDamage, damage, maxHealth, size);
             this.baseSpeed = baseSpeed;
-            this.idleDuration = idleDuration;
+            this.baseIdleDuration = baseIdleDuration;
             this.closeDetectionRange = closeDetectionRange;
+            this.enragedSpeed = enragedSpeed;
+            this.enragedAcceleration = enragedAcceleration;
+            this.enragedIdleDuration = enragedIdleDuration;
+            this.enragedHealthThreshold = enragedHealthThreshold;
             this.bulletSpeed = bulletSpeed;
             this.bulletDamage = bulletDamage;
             this.bulletSize = bulletSize;
-            this.fireRate = fireRate;
+            this.bulletAttackDuration = bulletAttackDuration;
+            this.bulletFireRate = bulletFireRate;
             this.forceFieldDamage = forceFieldDamage;
             this.forceFieldDuration = forceFieldDuration;
             this.forceFieldSize = forceFieldSize;
@@ -113,6 +127,13 @@ public class EnemyConfig {
             this.dashBaseCooldown = dashBaseCooldown;
             this.dashLastCooldown = dashLastCooldown;
             this.kamikazeSpawnDistance = kamikazeSpawnDistance;
+            this.explosionGraceDuration = explosionGraceDuration;
+            this.explosionSeekSpeed = explosionSeekSpeed;
+            this.explosionSeekAccel = explosionSeekAccel;
+            this.explosionSeekDuration = explosionSeekDuration;
+            this.explosionKbIntensity = explosionKbIntensity;
+            this.explosionDetectionRange = explosionDetectionRange;
+            this.explosionDamage = explosionDamage;
         }
     }
 }

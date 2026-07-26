@@ -19,6 +19,8 @@ public class GameConfig {
     public static final float VOLUME_DEFAULT = 0.2f;
     public static final float VOLUME_LOUD = 0.7f;
 
+    public static final float DEFAULT_ACCEL = 200f;
+
     private GameConfig() {
     }
 }

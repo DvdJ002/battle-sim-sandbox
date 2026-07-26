@@ -69,7 +69,10 @@ public class BattleGame extends Game {
 		assetManager.load(AssetPaths.BULLET_BLUE, Texture.class);
 		assetManager.load(AssetPaths.FORCE_FIELD_BLUE, Texture.class);
 		assetManager.load(AssetPaths.FORCE_FIELD_DARK, Texture.class);
-		assetManager.load(AssetPaths.BOSS, Texture.class);
+		assetManager.load(AssetPaths.BOSS_1, Texture.class);
+		assetManager.load(AssetPaths.BOSS_1_ATTACK, Texture.class);
+		assetManager.load(AssetPaths.BOSS_2, Texture.class);
+		assetManager.load(AssetPaths.BOSS_2_ATTACK, Texture.class);
 
 		assetManager.load(AssetPaths.MENU_BACKGROUND, Texture.class);
 		assetManager.load(AssetPaths.GAME_BACKGROUND, Texture.class);

@@ -16,9 +16,11 @@ import java.util.ArrayList;
 
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.GameConfig;
+import david.games.battlesim.elements.actors.Boss;
 import david.games.battlesim.elements.actors.Enemy;
 import david.games.battlesim.elements.actors.ForceField;
 import david.games.battlesim.elements.actors.Bullet;
+import david.games.battlesim.elements.damage.BossState;
 import david.games.battlesim.elements.damage.StatusEffect;
 import david.games.battlesim.world.BattleWorld;
 
@@ -37,8 +39,11 @@ public class Hud {
     // Draw HUD based on worldState, worldState must NOT be modified!
     public void drawBars(ShapeRenderer sr, BattleWorld worldState) {
         /**************** ENEMIES *****************/
-        for (Enemy enemy: worldState.enemies){
+        // Don't draw health of the boss
+        for (int i = (worldState.bossFight) ? 1 : 0; i < worldState.enemies.size(); i++) {
+            Enemy enemy = worldState.enemies.get(i);
             Vector2 position = enemy.getPosition();
+
             float x = position.x;
             float y = position.y + enemy.hitbox.height * 1.1f;
             float barHeight = 8f;
@@ -108,7 +113,24 @@ public class Hud {
         sr.setColor(Color.BLUE);
         sr.rect(x + rectSize + padding, y  + padding/2, barWidth * dashRechargePercentage, barHeight);
 
+        /**************** BOSS *****************/
+        if (worldState.bossFight) {
+            Boss bossEnemy = (Boss) worldState.enemies.get(0);
 
+            x = 150f;
+            y = padding;
+            barHeight = 14f;
+            barWidth = 500f;
+            float transparency = bossEnemy.state == BossState.IDLE ? 1f : 0.6f;
+
+            // Full bar
+            sr.setColor(59/255f, 58/255f, 58/255f, transparency);
+            sr.rect(x, y, barWidth, barHeight);
+
+            // Fill
+            sr.setColor(1f, 0f, 0f, transparency);
+            sr.rect(x, y, bossEnemy.getHealthPercentage() * barWidth, barHeight);
+        }
     }
 
     // Draw HUD based on worldState, worldState must NOT be modified!
