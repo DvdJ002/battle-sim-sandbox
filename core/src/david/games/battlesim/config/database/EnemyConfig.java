@@ -1,5 +1,7 @@
 package david.games.battlesim.config.database;
 
+import java.util.List;
+
 import david.games.battlesim.config.EnemySteeringState;
 
 public class EnemyConfig {
@@ -95,7 +97,7 @@ public class EnemyConfig {
         public float kamikazeSpawnDistance;
         // Attack: Explosion
         public float explosionGraceDuration, explosionSeekSpeed, explosionSeekAccel, explosionSeekDuration, explosionKbIntensity, explosionDetectionRange, explosionDamage;
-
+        public List<Integer> closeRangeAttackPool, longRangeAttackPool, enragedAttackPool;
 
         public BossConfig(
                 float collideDamage, float damage, float maxHealth, float size, float baseSpeed, float baseIdleDuration, float closeDetectionRange,
@@ -103,7 +105,7 @@ public class EnemyConfig {
                 float bulletSpeed, float bulletDamage, float bulletSize, float bulletAttackDuration, float bulletFireRate, float forceFieldDamage, float forceFieldDuration, float forceFieldSize,
                 float dashIntensity, float dashLastIntensity, int dashCount, float dashBaseCooldown, float dashLastCooldown, float kamikazeSpawnDistance,
                 float explosionGraceDuration, float explosionSeekSpeed, float explosionSeekAccel, float explosionSeekDuration, float explosionKbIntensity, float explosionDetectionRange,
-                float explosionDamage
+                float explosionDamage, List<Integer> closeRangeAttackPool, List<Integer> longRangeAttackPool, List<Integer> enragedAttackPool
         ) {
             super(collideDamage, damage, maxHealth, size);
             this.baseSpeed = baseSpeed;
@@ -134,6 +136,9 @@ public class EnemyConfig {
             this.explosionKbIntensity = explosionKbIntensity;
             this.explosionDetectionRange = explosionDetectionRange;
             this.explosionDamage = explosionDamage;
+            this.closeRangeAttackPool = closeRangeAttackPool;
+            this.longRangeAttackPool = longRangeAttackPool;
+            this.enragedAttackPool = enragedAttackPool;
         }
     }
 }

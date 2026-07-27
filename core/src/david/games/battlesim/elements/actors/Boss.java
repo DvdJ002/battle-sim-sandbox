@@ -89,7 +89,7 @@ public class Boss extends Enemy {
             idleTimer -= delta;
             if (idleTimer <= 0f) {
                 idleTimer = 0f;
-                chooseAttack(context.player.position);
+                chooseAttack(context);
                 initializeAttack(context);
                 idleTimer = phase == BossPhase.PHASE_1 ? config.baseIdleDuration : config.enragedIdleDuration;
             }
@@ -138,24 +138,23 @@ public class Boss extends Enemy {
     /******************************** ATTACK GENERAL *******************************/
     /*******************************************************************************/
     // Called only once after idle timer runs out, chooses the new attack that is later to be initialized
-    private void chooseAttack(Vector2 playerPosition) {
-        // Close range vs long range attacks (TODO)
-        /*if (isNear(position.x, position.y, playerPosition.x, playerPosition.y, config.closeDetectionRange)) {
-            int attackCount = BossAttack.values().length;
-            float attackRnd = MathUtils.random(0f, attackCount);
-            currentAttack = BossAttack.values()[(int) attackRnd];
-            if (currentAttack == BossAttack.BULLETS) {
-                currentAttack = BossAttack.DASH;
-            }
+    private void chooseAttack(GameContext context) {
+        // Get random attack out of attack pools based on phase
+        if (phase == BossPhase.PHASE_1) {
+            // If close range, choose from closeRangeAttackPool, otherwise from longRangeAttackPool
+            currentAttack = isNear(position.x, position.y, context.player.position.x, context.player.position.y, config.closeDetectionRange)
+                    ? BossAttack.values()[config.closeRangeAttackPool.get(MathUtils.random(config.closeRangeAttackPool.size() - 1))]
+                    : BossAttack.values()[config.longRangeAttackPool.get(MathUtils.random(config.longRangeAttackPool.size() - 1))];
         }
         else {
-            currentAttack = BossAttack.SUMMON;
-        */
+            currentAttack = BossAttack.values()[config.enragedAttackPool.get(MathUtils.random(config.enragedAttackPool.size() - 1))];
+        }
 
-        // Pick from 1...length because 0 is NONE
-        int attackCount = BossAttack.values().length;
-        float attackRnd = MathUtils.random(1f, attackCount);
-        currentAttack = BossAttack.values()[(int) attackRnd];
+        // Applying possible attack rules, limitations, etc. here
+        if (currentAttack == BossAttack.SUMMON_OFFENSIVES && context.enemies.size() > 1) {
+            // Don't summon new attackers if enemies are already present as RNG can get too overwhelming, summon healers instead
+            currentAttack = BossAttack.SUMMON_HEALERS;
+        }
 
         //currentAttack = BossAttack.SUMMON_OFFENSIVES;
 
@@ -307,11 +306,11 @@ public class Boss extends Enemy {
 
         Vector2 spawnPointLeft = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer + 90f);
         Vector2 spawnPointRight = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer - 90f);
-        Vector2 spawnPointMiddle = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer);
+        //Vector2 spawnPointMiddle = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer);
 
         context.enemies.add(new SlasherEnemy(context.enemyConfigDatabase.get("slasher"), spawnPointLeft.x, spawnPointLeft.y));
         context.enemies.add(new ShooterEnemy(context.enemyConfigDatabase.get("shooter"), spawnPointRight.x, spawnPointRight.y));
-        context.enemies.add(new KamikazeEnemy(context.enemyConfigDatabase.get("kamikaze"), spawnPointMiddle.x, spawnPointMiddle.y));
+        //context.enemies.add(new KamikazeEnemy(context.enemyConfigDatabase.get("kamikaze"), spawnPointMiddle.x, spawnPointMiddle.y));
     }
 
     /* -------------------------- SUMMON ATTACK - HEALERS ------------------------- */
@@ -323,12 +322,12 @@ public class Boss extends Enemy {
         Vector2 bossCenter = new Vector2(position.x + hitbox.width/2f, position.y + hitbox.height/2f);
         float angleToPlayer = GameUtil.findAngleBetweenPoints(bossCenter.x, bossCenter.y, context.player.position.x, context.player.position.y);
 
-        Vector2 spawnPointLeft = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer + 150f);
-        Vector2 spawnPointRight = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer + 210f);
+        //Vector2 spawnPointLeft = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer + 150f);
+        //Vector2 spawnPointRight = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer + 210f);
         Vector2 spawnPointBehind = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer + 180f);
 
-        context.enemies.add(new HealerEnemy(context.enemyConfigDatabase.get("healer"), spawnPointLeft.x, spawnPointLeft.y));
-        context.enemies.add(new HealerEnemy(context.enemyConfigDatabase.get("healer"), spawnPointRight.x, spawnPointRight.y));
+        //context.enemies.add(new HealerEnemy(context.enemyConfigDatabase.get("healer"), spawnPointLeft.x, spawnPointLeft.y));
+        //context.enemies.add(new HealerEnemy(context.enemyConfigDatabase.get("healer"), spawnPointRight.x, spawnPointRight.y));
         context.enemies.add(new HealerEnemy(context.enemyConfigDatabase.get("healer"), spawnPointBehind.x, spawnPointBehind.y));
     }
 

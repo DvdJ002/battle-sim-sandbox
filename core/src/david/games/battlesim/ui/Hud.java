@@ -248,7 +248,7 @@ public class Hud {
             case 6:
                 font.draw(batch, "Tutorial over. The game has 8 levels + final boss", x - 150f, y);
                 font.draw(batch, "Don't forget to use your ult (Q), and dash when needed", x - 180f, y - 2*linePadding);
-                font.draw(batch, "You'll also fight special versions of those enemies", x - 178f, y - 3*linePadding);
+                font.draw(batch, "You'll also fight special versions of these enemies", x - 178f, y - 3*linePadding);
                 font.draw(batch, "New waves are based either on time or enemies killed", x - 178f, y - 4*linePadding);
                 font.draw(batch, "R - reset | Esc - Exit level", x + 50f, y - 5*linePadding);
                 break;

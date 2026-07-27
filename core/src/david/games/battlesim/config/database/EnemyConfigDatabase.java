@@ -2,7 +2,10 @@ package david.games.battlesim.config.database;
 
 import com.badlogic.gdx.Game;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import david.games.battlesim.config.EnemySteeringState;
@@ -114,15 +117,15 @@ public final class EnemyConfigDatabase {
         EnemyConfig.BossConfig boss = new EnemyConfig.BossConfig(
                 1.5f,
                 1f,
-                6000f,
-                 GameConfig.BOSS_SIZE,
+                7000f,
+                GameConfig.BOSS_SIZE,
                 125f,
                 1.8f,
                 240f,
                 800f,
                 450f,
                 0.8f,
-                0.7f,
+                0.3f,
                 1100f,
                 20f,
                 10f,
@@ -132,10 +135,10 @@ public final class EnemyConfigDatabase {
                 3.5f,
                 160f,
                 600f,
-                1200f,
+                1350f,
                 4,
                 1.2f,
-                0.9f,
+                1f,
                 50f,
                 3f,
                 1100f,
@@ -143,8 +146,19 @@ public final class EnemyConfigDatabase {
                 10f,
                 30f,
                 135f,
-                150f
+                150f,
+                new ArrayList<Integer>(),
+                new ArrayList<Integer>(),
+                new ArrayList<Integer>()
         );
+
+        // 0 - NONE, 1 - DASH (Both), 2 - BULLETS (Long), 3 - SUMMON_OFFENSIVES (Long), 4 - SUMMON_HEALERS (Both), 5 - SLAM (Close), 6 - EXPLOSION (Both)
+        // 7 8 - ENRAGED_1, ENRAGED_2
+        boss.closeRangeAttackPool = Arrays.asList(1, 1, 4, 5, 5, 6);
+        boss.longRangeAttackPool = Arrays.asList(1, 1, 2, 2, 3, 3, 3, 3, 4, 6);
+        boss.enragedAttackPool = Arrays.asList(1, 2, 3, 4, 5, 6); // Plus final is hardcoded
+        //boss.enragedAttackPool = Arrays.asList(7, 8); // Plus final is hardcoded
+
         setDefaultAiConfig(boss);
         boss.steeringState.maxLinearSpeed = boss.baseSpeed;
         boss.steeringState.maxAngularSpeed = boss.baseSpeed;
