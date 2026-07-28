@@ -42,7 +42,6 @@ public class Bullet implements Pool.Poolable {
     }
 
     public void draw(SpriteBatch batch){
-        float diameter = hitbox.radius * 2f;
         batch.draw(
                 texture, hitbox.x - hitbox.radius, hitbox.y - hitbox.radius, hitbox.radius * 2, hitbox.radius * 2,
                 0, 0, texture.getWidth(), texture.getHeight(), false, false

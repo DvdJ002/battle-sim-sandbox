@@ -43,6 +43,7 @@ public class AssetPaths {
     public static final String GAME_WIN_SOUND = "gameplay/sounds/game_win.wav";
     public static final String GAME_LOSE_SOUND_1 = "gameplay/sounds/game_lose_1.wav";
     public static final String GAME_LOSE_SOUND_2 = "gameplay/sounds/game_lose_2.wav";
+    public static final String ENEMY_SPAWN_SOUND = "gameplay/sounds/enemy_spawn.wav";
 
     private AssetPaths() {
     }

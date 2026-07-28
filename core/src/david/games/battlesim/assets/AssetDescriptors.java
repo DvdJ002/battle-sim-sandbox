@@ -19,4 +19,6 @@ public class AssetDescriptors {
     public static final AssetDescriptor<Sound> GAME_WIN_SOUND = new AssetDescriptor<Sound>(AssetPaths.GAME_WIN_SOUND, Sound.class);
     public static final AssetDescriptor<Sound> GAME_LOSE_SOUND_1 = new AssetDescriptor<Sound>(AssetPaths.GAME_LOSE_SOUND_1, Sound.class);
     public static final AssetDescriptor<Sound> GAME_LOSE_SOUND_2 = new AssetDescriptor<Sound>(AssetPaths.GAME_LOSE_SOUND_2, Sound.class);
+    public static final AssetDescriptor<Sound> ENEMY_SPAWN_SOUND = new AssetDescriptor<Sound>(AssetPaths.ENEMY_SPAWN_SOUND, Sound.class);
+
 }

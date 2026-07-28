@@ -8,7 +8,6 @@ import static david.games.battlesim.util.GameUtil.isNear;
 import com.badlogic.gdx.ai.steer.behaviors.Arrive;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -27,7 +26,7 @@ import david.games.battlesim.util.GameUtil;
 public class Boss extends Enemy {
 
     public final EnemyConfig.BossConfig config;
-    private final Sound explosionSound, slamSound;
+    private final Sound explosionSound, slamSound, spawnSound;
 
     // State enums
     public BossState state;
@@ -40,6 +39,9 @@ public class Boss extends Enemy {
     public float slamTimer = 0.0f;
     public float bulletTimer = 0.0f, reloadTimer = 0.0f;
     public float explosionGraceTimer = 0.0f, explosionSeekTimer = 0.0f;
+    public float cannonTimer = 0.0f, cannonReloadTimer = 0.0f;
+    public float kamikazeDurationTimer = 0.0f, kamikazeSpawnTimer = 0.0f;
+    public float pursuitTimer = 0.0f;
 
     // Boolean and integer states
     public int dashesLeft = 0;
@@ -51,6 +53,7 @@ public class Boss extends Enemy {
         texture = assetManager.get(AssetPaths.BOSS_1, Texture.class);
         explosionSound = assetManager.get(AssetDescriptors.KAMIKAZE_EXPLOSION_SOUND);
         slamSound = assetManager.get(AssetDescriptors.PLAYER_ULTIMATE_SOUND);
+        spawnSound = assetManager.get(AssetDescriptors.ENEMY_SPAWN_SOUND);
 
         // Start boss in phase 1 idle state
         phase = BossPhase.PHASE_1;
@@ -114,8 +117,6 @@ public class Boss extends Enemy {
             steeringState.maxAngularSpeed = config.enragedSpeed;
             steeringState.maxLinearAcceleration = config.enragedAcceleration;
             steeringState.maxAngularAcceleration = config.enragedAcceleration;
-
-            System.out.println("Changed phase to phase 2");
         }
     }
     // Boss tries to mirror the player across the center of the arena
@@ -139,27 +140,33 @@ public class Boss extends Enemy {
     /*******************************************************************************/
     // Called only once after idle timer runs out, chooses the new attack that is later to be initialized
     private void chooseAttack(GameContext context) {
-        // Get random attack out of attack pools based on phase
+        int enemyCount = context.enemies.size();
+
+        // Choose attacks based on phase
         if (phase == BossPhase.PHASE_1) {
             // If close range, choose from closeRangeAttackPool, otherwise from longRangeAttackPool
             currentAttack = isNear(position.x, position.y, context.player.position.x, context.player.position.y, config.closeDetectionRange)
                     ? BossAttack.values()[config.closeRangeAttackPool.get(MathUtils.random(config.closeRangeAttackPool.size() - 1))]
                     : BossAttack.values()[config.longRangeAttackPool.get(MathUtils.random(config.longRangeAttackPool.size() - 1))];
+
+            //------------ Applying possible attack rules, limitations, etc. here ------------//
+            if (currentAttack == BossAttack.SUMMON_OFFENSIVES && enemyCount > 1) {
+                // Don't summon new attackers if enemies are already present as RNG can get too overwhelming, summon healers instead
+                currentAttack = BossAttack.SUMMON_HEALERS;
+            }
+            if (currentAttack == BossAttack.SUMMON_HEALERS && enemyCount > 4) {
+                // Don't spawn healers if there are already more than 3 enemies spawned
+                currentAttack = BossAttack.DASH;
+            }
         }
         else {
-            currentAttack = BossAttack.values()[config.enragedAttackPool.get(MathUtils.random(config.enragedAttackPool.size() - 1))];
+            // Summon enemies in phase 2 before starting pursuit. Only start pursuit if existing kamikazes
+            currentAttack = (enemyCount > 1) ? BossAttack.PURSUIT : BossAttack.SUMMON_KAMIKAZES;
         }
 
-        // Applying possible attack rules, limitations, etc. here
-        if (currentAttack == BossAttack.SUMMON_OFFENSIVES && context.enemies.size() > 1) {
-            // Don't summon new attackers if enemies are already present as RNG can get too overwhelming, summon healers instead
-            currentAttack = BossAttack.SUMMON_HEALERS;
-        }
-
-        //currentAttack = BossAttack.SUMMON_OFFENSIVES;
+        //currentAttack = BossAttack.PURSUIT;
 
         state = BossState.ATTACKING;
-        System.out.println("Chose attack: " + currentAttack.name());
     }
 
     private void initializeAttack(GameContext context) {
@@ -178,6 +185,16 @@ public class Boss extends Enemy {
             case EXPLOSION:
                 initializeExplosion();
                 break;
+            case CANNONBALLS:
+                initializeCannonballs(context);
+                break;
+            case SUMMON_KAMIKAZES:
+                initializeSummonKamikazes(context);
+                break;
+            case PURSUIT:
+                initializePursuit();
+                break;
+                // Those two need no initialization because they're finished in one iteration
             case SUMMON_OFFENSIVES:
             case SUMMON_HEALERS:
             default:
@@ -205,6 +222,15 @@ public class Boss extends Enemy {
             case EXPLOSION:
                 updateExplosion(delta, context);
                 break;
+            case CANNONBALLS:
+                updateCannonballs(delta, context);
+                break;
+            case SUMMON_KAMIKAZES:
+                updateSummonKamikazes(delta, context);
+                break;
+            case PURSUIT:
+                updatePursuit(delta);
+                break;
             default:
                 break;
         }
@@ -215,7 +241,6 @@ public class Boss extends Enemy {
         idleTimer = config.baseIdleDuration;
 
         texture = (phase == BossPhase.PHASE_1) ? assetManager.get(AssetPaths.BOSS_1, Texture.class) : assetManager.get(AssetPaths.BOSS_2, Texture.class);
-        System.out.println("Finished attack");
     }
 
 
@@ -257,8 +282,6 @@ public class Boss extends Enemy {
         Vector2 movementVec = findNearestPathToPoint(position.x, position.y, playerPosition.x, playerPosition.y);
         linearVelocity.x += movementVec.x * intensity;
         linearVelocity.y += movementVec.y * intensity;
-
-        System.out.println("Dashing");
     }
 
     /* -------------------------- BULLET HAUL ------------------------- */
@@ -304,13 +327,13 @@ public class Boss extends Enemy {
         Vector2 bossCenter = new Vector2(position.x + hitbox.width/2f, position.y + hitbox.height/2f);
         float angleToPlayer = GameUtil.findAngleBetweenPoints(bossCenter.x, bossCenter.y, context.player.position.x, context.player.position.y);
 
-        Vector2 spawnPointLeft = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer + 90f);
-        Vector2 spawnPointRight = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer - 90f);
-        //Vector2 spawnPointMiddle = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer);
+        Vector2 spawnPointLeft = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.enemySpawnDistance, angleToPlayer + 90f);
+        Vector2 spawnPointRight = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.enemySpawnDistance, angleToPlayer - 90f);
 
         context.enemies.add(new SlasherEnemy(context.enemyConfigDatabase.get("slasher"), spawnPointLeft.x, spawnPointLeft.y));
         context.enemies.add(new ShooterEnemy(context.enemyConfigDatabase.get("shooter"), spawnPointRight.x, spawnPointRight.y));
-        //context.enemies.add(new KamikazeEnemy(context.enemyConfigDatabase.get("kamikaze"), spawnPointMiddle.x, spawnPointMiddle.y));
+
+        spawnSound.play(GameConfig.VOLUME_DEFAULT);
     }
 
     /* -------------------------- SUMMON ATTACK - HEALERS ------------------------- */
@@ -324,11 +347,11 @@ public class Boss extends Enemy {
 
         //Vector2 spawnPointLeft = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer + 150f);
         //Vector2 spawnPointRight = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer + 210f);
-        Vector2 spawnPointBehind = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer + 180f);
+        Vector2 spawnPointBehind = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.enemySpawnDistance, angleToPlayer + 180f);
 
-        //context.enemies.add(new HealerEnemy(context.enemyConfigDatabase.get("healer"), spawnPointLeft.x, spawnPointLeft.y));
-        //context.enemies.add(new HealerEnemy(context.enemyConfigDatabase.get("healer"), spawnPointRight.x, spawnPointRight.y));
         context.enemies.add(new HealerEnemy(context.enemyConfigDatabase.get("healer"), spawnPointBehind.x, spawnPointBehind.y));
+
+        spawnSound.play(GameConfig.VOLUME_DEFAULT);
     }
 
     /* -------------------------- SLAM ATTACK ------------------------- */
@@ -405,5 +428,85 @@ public class Boss extends Enemy {
         finishAttacking();
     }
 
+    /* -------------------------- CANNONBALL ATTACK ------------------------- */
+    private void initializeCannonballs(GameContext context) {
+        cannonTimer = config.cannonDuration;
+        cannonReloadTimer = config.cannonFireRate;
+        shootCannonballs(context);
+    }
+    private void updateCannonballs(float delta, GameContext context) {
+        cannonReloadTimer -= delta;
+        if (cannonReloadTimer <= 0f) {
+            shootCannonballs(context);
+            cannonReloadTimer = config.cannonFireRate;
+        }
 
+        cannonTimer -= delta;
+        if (cannonTimer <= 0f) {
+            cannonTimer = 0f;
+            cannonReloadTimer = 0f;
+            finishAttacking();
+        }
+    }
+    private void shootCannonballs(GameContext context) {
+        Vector2 bossCenter = new Vector2(position.x + hitbox.width/2f, position.y + hitbox.height/2f);
+        float angleEnemyCenterToPlayer = GameUtil.findAngleBetweenPoints(bossCenter.x, bossCenter.y, context.player.position.x, context.player.position.y);
+
+        context.bulletSpawner.spawn(bossCenter.x, bossCenter.y, angleEnemyCenterToPlayer, config.cannonSpeed, config.cannonDamage, config.cannonSize,false);
+    }
+
+    /* -------------------------- SUMMON KAMIKAZES ------------------------- */
+    private void initializeSummonKamikazes(GameContext context) {
+        kamikazeDurationTimer = config.kamikazeAttackDuration;
+        kamikazeSpawnTimer = config.kamikazeSpawnPeriod;
+        summonKamikaze(context);
+    }
+    private void updateSummonKamikazes(float delta, GameContext context) {
+        kamikazeSpawnTimer -= delta;
+        if (kamikazeSpawnTimer <= 0f) {
+            summonKamikaze(context);
+            kamikazeSpawnTimer = config.kamikazeSpawnPeriod;
+        }
+
+        kamikazeDurationTimer -= delta;
+        if (kamikazeDurationTimer <= 0f) {
+            kamikazeDurationTimer = 0f;
+            kamikazeSpawnTimer = 0f;
+            finishAttacking();
+        }
+    }
+    private void summonKamikaze(GameContext context) {
+        Vector2 bossCenter = new Vector2(position.x + hitbox.width/2f, position.y + hitbox.height/2f);
+        float angleToPlayer = GameUtil.findAngleBetweenPoints(bossCenter.x, bossCenter.y, context.player.position.x, context.player.position.y);
+        Vector2 spawnPointFront = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.enemySpawnDistance, angleToPlayer);
+
+        context.enemies.add(new KamikazeEnemy(context.enemyConfigDatabase.get("kamikaze"), spawnPointFront.x, spawnPointFront.y));
+
+        spawnSound.play(GameConfig.VOLUME_DEFAULT);
+    }
+
+    /* -------------------------- PURSUIT ATTACK ------------------------- */
+    private void initializePursuit() {
+        pursuitTimer = config.pursuitDuration;
+        isInvincible = true;
+        collideDamage = config.pursuitCollideDamage;
+
+        steeringState.maxLinearSpeed = config.pursuitSpeed;
+        steeringState.maxAngularSpeed = config.pursuitSpeed;
+        steeringState.maxLinearAcceleration = config.pursuitAccel;
+        steeringState.maxAngularAcceleration = config.pursuitAccel;
+    }
+    private void updatePursuit(float delta) {
+        pursuitTimer -= delta;
+        if (pursuitTimer <= 0f) {
+            isInvincible = false;
+            collideDamage = config.collideDamage;
+
+            steeringState.maxLinearSpeed = config.enragedSpeed;
+            steeringState.maxAngularSpeed = config.enragedSpeed;
+            steeringState.maxLinearAcceleration = config.enragedAcceleration;
+            steeringState.maxAngularAcceleration = config.enragedAcceleration;
+            finishAttacking();
+        }
+    }
 }

@@ -122,10 +122,10 @@ public final class EnemyConfigDatabase {
                 125f,
                 1.8f,
                 240f,
-                800f,
-                450f,
-                0.8f,
-                0.3f,
+                850f,
+                430f,
+                0.7f,
+                0.99f,
                 1100f,
                 20f,
                 10f,
@@ -147,17 +147,28 @@ public final class EnemyConfigDatabase {
                 30f,
                 135f,
                 150f,
+                4f,
+                0.8f,
+                95f,
+                450f,
+                30f,
+                2.5f,
+                0.5f,
+                10f,
+                1500f,
+                900f,
+                2f,
                 new ArrayList<Integer>(),
                 new ArrayList<Integer>(),
                 new ArrayList<Integer>()
         );
 
-        // 0 - NONE, 1 - DASH (Both), 2 - BULLETS (Long), 3 - SUMMON_OFFENSIVES (Long), 4 - SUMMON_HEALERS (Both), 5 - SLAM (Close), 6 - EXPLOSION (Both)
-        // 7 8 - ENRAGED_1, ENRAGED_2
+        // 0 - NONE, 1 - DASH (Both), 2 - BULLETS (Long), 3 - SUMMON_OFFENSIVES (Long), 4 - SUMMON_HEALERS (Both),
+        // 5 - SLAM (Close), 6 - EXPLOSION (Both), 7 - CANNONBALLS (Long), 8 - SUMMON_KAMIKAZES, 9 - PURSUIT
         boss.closeRangeAttackPool = Arrays.asList(1, 1, 4, 5, 5, 6);
-        boss.longRangeAttackPool = Arrays.asList(1, 1, 2, 2, 3, 3, 3, 3, 4, 6);
-        boss.enragedAttackPool = Arrays.asList(1, 2, 3, 4, 5, 6); // Plus final is hardcoded
-        //boss.enragedAttackPool = Arrays.asList(7, 8); // Plus final is hardcoded
+        boss.longRangeAttackPool = Arrays.asList(1, 1, 2, 2, 3, 3, 3, 3, 4, 6, 7);
+        //boss.enragedAttackPool = Arrays.asList(1, 2, 3, 4, 5, 6); // Plus final is hardcoded
+        //boss.enragedAttackPool = Arrays.asList(8, 9); // Plus final is hardcoded
 
         setDefaultAiConfig(boss);
         boss.steeringState.maxLinearSpeed = boss.baseSpeed;

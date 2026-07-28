@@ -56,6 +56,7 @@ public class BattleGame extends Game {
 		assetManager.load(AssetDescriptors.GAME_WIN_SOUND);
 		assetManager.load(AssetDescriptors.GAME_LOSE_SOUND_1);
 		assetManager.load(AssetDescriptors.GAME_LOSE_SOUND_2);
+		assetManager.load(AssetDescriptors.ENEMY_SPAWN_SOUND);
 
 		assetManager.load(AssetPaths.SLASHER, Texture.class);
 		assetManager.load(AssetPaths.SLASHER_ATTACK, Texture.class);

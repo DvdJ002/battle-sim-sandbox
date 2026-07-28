@@ -7,13 +7,11 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import static david.games.battlesim.BattleGame.assetManager;
 
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.GameConfig;
-import david.games.battlesim.config.database.EnemyConfig;
 import david.games.battlesim.config.database.EnemyConfigDatabase;
 
 import david.games.battlesim.config.database.EnemySpawnConfig;
@@ -112,7 +110,6 @@ public class BattleWorld {
             //enemies.add(new ShooterEnemy(enemyConfigDatabase.get("shooter_large"), mousePosition.x, mousePosition.y));
             //enemies.add(new SlasherEnemy(enemyConfigDatabase.get("slasher_large"), mousePosition.x, mousePosition.y));
             //enemies.add(new KamikazeEnemy(enemyConfigDatabase.get("kamikaze_large"),mousePosition.x, mousePosition.y));
-
         }
         if (inputState.resetGamePressed) {
             reset();
@@ -222,10 +219,8 @@ public class BattleWorld {
     public void startLevel(LevelConfig levelConfig) {
         this.levelConfig = levelConfig;
 
-        if (state == WorldState.RUNNING) {
-            System.out.println("World already running, skipped start stage");
-            return;
-        }
+        // World already running, skip start stage
+        if (state == WorldState.RUNNING) { return; }
 
         // Process config and set up stage
         player.setPosition(levelConfig.playerStart.x, levelConfig.playerStart.y);
@@ -287,7 +282,6 @@ public class BattleWorld {
 
     public void stopStage(WorldState state) {
         this.state = state;
-        // Lose, win screen etc.
     }
 
     private boolean isWavesLeft() {

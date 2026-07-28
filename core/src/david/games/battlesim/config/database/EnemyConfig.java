@@ -94,18 +94,27 @@ public class EnemyConfig {
         public int dashCount;
         public float dashBaseCooldown, dashLastCooldown;
         // Attack: Summon offensives/healers
-        public float kamikazeSpawnDistance;
+        public float enemySpawnDistance;
         // Attack: Explosion
         public float explosionGraceDuration, explosionSeekSpeed, explosionSeekAccel, explosionSeekDuration, explosionKbIntensity, explosionDetectionRange, explosionDamage;
+        // Attack: Cannon balls
+        public float cannonDuration, cannonFireRate, cannonDamage, cannonSpeed, cannonSize;
+        // Attack: Summon kamikaze
+        public float kamikazeAttackDuration, kamikazeSpawnPeriod;
+        // Attack: Pursuit
+        public float pursuitDuration, pursuitSpeed, pursuitAccel, pursuitCollideDamage;
+        // Attack pools
         public List<Integer> closeRangeAttackPool, longRangeAttackPool, enragedAttackPool;
 
         public BossConfig(
                 float collideDamage, float damage, float maxHealth, float size, float baseSpeed, float baseIdleDuration, float closeDetectionRange,
                 float enragedSpeed, float enragedAcceleration, float enragedIdleDuration, float enragedHealthThreshold,
                 float bulletSpeed, float bulletDamage, float bulletSize, float bulletAttackDuration, float bulletFireRate, float forceFieldDamage, float forceFieldDuration, float forceFieldSize,
-                float dashIntensity, float dashLastIntensity, int dashCount, float dashBaseCooldown, float dashLastCooldown, float kamikazeSpawnDistance,
-                float explosionGraceDuration, float explosionSeekSpeed, float explosionSeekAccel, float explosionSeekDuration, float explosionKbIntensity, float explosionDetectionRange,
-                float explosionDamage, List<Integer> closeRangeAttackPool, List<Integer> longRangeAttackPool, List<Integer> enragedAttackPool
+                float dashIntensity, float dashLastIntensity, int dashCount, float dashBaseCooldown, float dashLastCooldown, float enemySpawnDistance,
+                float explosionGraceDuration, float explosionSeekSpeed, float explosionSeekAccel, float explosionSeekDuration, float explosionKbIntensity, float explosionDetectionRange, float explosionDamage,
+                float cannonDuration, float cannonFireRate, float cannonDamage, float cannonSpeed, float cannonSize, float kamikazeAttackDuration, float kamikazeSpawnPeriod,
+                float pursuitDuration, float pursuitSpeed, float pursuitAccel, float pursuitCollideDamage,
+                List<Integer> closeRangeAttackPool, List<Integer> longRangeAttackPool, List<Integer> enragedAttackPool
         ) {
             super(collideDamage, damage, maxHealth, size);
             this.baseSpeed = baseSpeed;
@@ -128,7 +137,7 @@ public class EnemyConfig {
             this.dashCount = dashCount;
             this.dashBaseCooldown = dashBaseCooldown;
             this.dashLastCooldown = dashLastCooldown;
-            this.kamikazeSpawnDistance = kamikazeSpawnDistance;
+            this.enemySpawnDistance = enemySpawnDistance;
             this.explosionGraceDuration = explosionGraceDuration;
             this.explosionSeekSpeed = explosionSeekSpeed;
             this.explosionSeekAccel = explosionSeekAccel;
@@ -136,6 +145,17 @@ public class EnemyConfig {
             this.explosionKbIntensity = explosionKbIntensity;
             this.explosionDetectionRange = explosionDetectionRange;
             this.explosionDamage = explosionDamage;
+            this.cannonDuration = cannonDuration;
+            this.cannonFireRate = cannonFireRate;
+            this.cannonDamage = cannonDamage;
+            this.kamikazeAttackDuration = kamikazeAttackDuration;
+            this.cannonSize = cannonSize;
+            this.cannonSpeed = cannonSpeed;
+            this.kamikazeSpawnPeriod = kamikazeSpawnPeriod;
+            this.pursuitDuration = pursuitDuration;
+            this.pursuitSpeed = pursuitSpeed;
+            this.pursuitAccel = pursuitAccel;
+            this.pursuitCollideDamage = pursuitCollideDamage;
             this.closeRangeAttackPool = closeRangeAttackPool;
             this.longRangeAttackPool = longRangeAttackPool;
             this.enragedAttackPool = enragedAttackPool;
