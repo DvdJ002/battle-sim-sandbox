@@ -101,8 +101,14 @@ public class Enemy implements Steerable<Vector2> {
 
         health -= damageAct.amount;
         // Check if health went over 100 or under 0
-        if (health <= 0f){ isAlive = false; }
+        if (health <= 0f){
+            die();
+        }
         else if (health > enemyConfig.maxHealth) { health = enemyConfig.maxHealth; }
+    }
+
+    public void die() {
+        isAlive = false;
     }
 
     public void updateSteeringTarget(float x, float y) {

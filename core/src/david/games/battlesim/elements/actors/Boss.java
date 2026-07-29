@@ -66,6 +66,7 @@ public class Boss extends Enemy {
     public void update(float delta, GameContext context){
         super.update(delta, context);
 
+        checkHealth(context);
         checkPhaseChange();
 
         Player player = context.player;
@@ -133,6 +134,19 @@ public class Boss extends Enemy {
         }
         updateSteeringTarget(mirroredLocation.x, mirroredLocation.y);
     }
+
+    // When the boss dies it is a special case because all the spawned enemies must die as well
+    private void checkHealth(GameContext context) {
+        if (health <= 0f){
+            for (Enemy enemy : context.enemies) {
+                enemy.isAlive = false;
+            }
+        }
+    }
+
+    // Boss checks its own health so this method is not applicable
+    @Override
+    public void die() { }
 
 
     /*******************************************************************************/

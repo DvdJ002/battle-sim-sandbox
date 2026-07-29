@@ -154,7 +154,10 @@ public class BattleWorld {
         }
 
         if (!isWavesLeft() && enemies.isEmpty()) {
-            stopStage(WorldState.WON);
+            System.out.println("Enemy array is empty");
+            if (!bossFight) {
+                stopStage(WorldState.WON);
+            }
         }
     }
     private void updateOtherActors(float delta){

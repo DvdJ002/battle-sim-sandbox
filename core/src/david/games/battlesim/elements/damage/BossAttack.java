@@ -13,6 +13,5 @@ public enum BossAttack {
 
     // Phase 2
     SUMMON_KAMIKAZES, // Both
-    PURSUIT, // Both
-    ENRAGED_FINAL // TODO
+    PURSUIT // Both
 }

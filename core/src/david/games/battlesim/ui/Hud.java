@@ -114,7 +114,7 @@ public class Hud {
         sr.rect(x + rectSize + padding, y  + padding/2, barWidth * dashRechargePercentage, barHeight);
 
         /**************** BOSS *****************/
-        if (worldState.bossFight) {
+        if (worldState.bossFight && !worldState.enemies.isEmpty()) {
             Boss bossEnemy = (Boss) worldState.enemies.get(0);
 
             x = 150f;
@@ -156,12 +156,16 @@ public class Hud {
     public void drawText(SpriteBatch batch, BitmapFont font, BattleWorld worldState, int levelCode) {
         float x =  GameConfig.WIDTH - padding - 140f;
         float y =  GameConfig.HEIGHT - padding;
+
+        /**************** BOSS BEATEN *****************/
+        if (worldState.bossFight && worldState.enemies.isEmpty()) {
+            drawBossBeatenText(batch, font, worldState);
+            return;
+        }
+
         float time = worldState.levelTimer;
         if (time <= 3f) {
             font.setColor(Color.RED);
-        }
-        if (time <= 0f) {
-            return;
         }
 
         font.draw(batch, String.format("Left: %.1f", time) , x, y);
@@ -183,6 +187,21 @@ public class Hud {
         font.setColor(Color.BLACK);
         font.draw(batch, (worldState.currentWave) + "/" + worldState.levelConfig.waves.size(), x, y);
         font.draw(batch, (worldState.currentWave) + "/" + worldState.levelConfig.waves.size(), x + 1f, y);
+
+
+    }
+
+    public void drawBossBeatenText(SpriteBatch batch, BitmapFont font, BattleWorld worldState) {
+        System.out.println("Drawing boss beaten text!");
+        float x =  GameConfig.WIDTH - GameConfig.WIDTH/4f*3;
+        float y =  GameConfig.HEIGHT - GameConfig.HEIGHT/7f;
+        float linePadding = 33f;
+
+        font.draw(batch, "Congratulations, you have beaten the final boss", x - 135f, y);
+        font.getData().setScale(0.87f);
+        font.draw(batch, "Try the newly unlocked bonus level to fight a special enemy", x - 153f, y - linePadding*1.2f);
+        font.getData().setScale(1f);
+        font.draw(batch, "Esc - Leave fight", x + 95f, y - linePadding*3f);
     }
 
     public void drawDebugOverlay(ShapeRenderer sr, BattleWorld worldState) {
