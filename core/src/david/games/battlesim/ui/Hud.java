@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 
 import static david.games.battlesim.BattleGame.assetManager;
 
@@ -158,8 +157,10 @@ public class Hud {
         float y =  GameConfig.HEIGHT - padding;
 
         /**************** BOSS BEATEN *****************/
-        if (worldState.bossFight && worldState.enemies.isEmpty()) {
-            drawBossBeatenText(batch, font, worldState);
+        if (worldState.bossFight) {
+            if (worldState.enemies.isEmpty()) {
+                drawBossBeatenText(batch, font);
+            }
             return;
         }
 
@@ -168,8 +169,9 @@ public class Hud {
             font.setColor(Color.RED);
         }
 
-        font.draw(batch, String.format("Left: %.1f", time) , x, y);
-        font.draw(batch, String.format("Left: %.1f", time) , x + 1f, y);
+        String timeText = String.format("Left: %.1f", time);
+        font.draw(batch, timeText, x, y);
+        font.draw(batch, timeText, x + 1f, y);
 
         if (worldState.tutorialMode)
         {
@@ -191,15 +193,14 @@ public class Hud {
 
     }
 
-    public void drawBossBeatenText(SpriteBatch batch, BitmapFont font, BattleWorld worldState) {
-        System.out.println("Drawing boss beaten text!");
+    public void drawBossBeatenText(SpriteBatch batch, BitmapFont font) {
         float x =  GameConfig.WIDTH - GameConfig.WIDTH/4f*3;
         float y =  GameConfig.HEIGHT - GameConfig.HEIGHT/7f;
         float linePadding = 33f;
 
         font.draw(batch, "Congratulations, you have beaten the final boss", x - 135f, y);
         font.getData().setScale(0.87f);
-        font.draw(batch, "Try the newly unlocked bonus level to fight a special enemy", x - 153f, y - linePadding*1.2f);
+        font.draw(batch, "Try the newly unlocked bonus level to fight a special enemy", x - 150f, y - linePadding*1.2f);
         font.getData().setScale(1f);
         font.draw(batch, "Esc - Leave fight", x + 95f, y - linePadding*3f);
     }

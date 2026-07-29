@@ -7,6 +7,6 @@ public class DamageAction {
     public StatusEffect type;
     public float intensity;
     public float duration;
-    public Vector2 sourcePosition;
+    public final Vector2 sourcePosition = new Vector2();
 }
 

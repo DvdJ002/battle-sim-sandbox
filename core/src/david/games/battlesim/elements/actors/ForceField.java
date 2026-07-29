@@ -18,6 +18,8 @@ import david.games.battlesim.util.GameUtil;
 public class ForceField {
     public Circle hitbox;
     Texture texture;
+    DamageAction damageAct;
+    Vector2 position;
 
     public float maxDamage, duration, size;
     public boolean isAlive = true, fromPlayer, waning;
@@ -26,6 +28,8 @@ public class ForceField {
     public ForceField(float x, float y, float maxDamage, float duration, float size, boolean fromPlayer, boolean waning) {
         // Player's is blue and enemy's is dark
         texture = fromPlayer ? assetManager.get(AssetPaths.FORCE_FIELD_BLUE, Texture.class) : assetManager.get(AssetPaths.FORCE_FIELD_DARK, Texture.class);
+
+        position = new Vector2(x, y);
         hitbox = new Circle();
         hitbox.radius = size;
         hitbox.x = x;
@@ -35,6 +39,7 @@ public class ForceField {
         this.size = size;
         this.fromPlayer = fromPlayer;
         this.waning = waning;
+        damageAct = GameUtil.getDamageAction(StatusEffect.NONE, 0f, 0f, 0f);
 
         activeTimer = duration;
     }
@@ -53,16 +58,16 @@ public class ForceField {
         for (Enemy enemy : context.enemies) {
             // Checks if field is hitting enemy
             if (isAlive && fromPlayer && overlaps(hitbox, enemy.hitbox)) {
-                DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.NONE, damage, 0f, 0f);
-                damageAct.sourcePosition = new Vector2(hitbox.x, hitbox.y);
+                damageAct.amount = damage;
+                damageAct.sourcePosition.set(position);
                 enemy.takeHit(damageAct);
             }
         }
         // Checks if field is hitting player
         if (isAlive && !fromPlayer) {
             if ((context.player.shielding && overlaps(hitbox, context.player.shieldHitbox)) || (!context.player.shielding && overlaps(hitbox, context.player.hitbox))) {
-                DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.NONE, damage, 0f, 0f);
-                damageAct.sourcePosition = new Vector2(hitbox.x, hitbox.y);
+                damageAct.amount = damage;
+                damageAct.sourcePosition.set(position);
                 context.player.takeHit(damageAct);
             }
         }

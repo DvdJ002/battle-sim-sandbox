@@ -22,11 +22,16 @@ import david.games.battlesim.util.GameUtil;
 public class Bullet implements Pool.Poolable {
     public Circle hitbox;
     Texture texture;
+    Vector2 position;
+    DamageAction damageAct;
+
     public float angle, speed, damage, size;
     public boolean isAlive = true, fromPlayer;
 
     public Bullet(float x, float y, float angle, float speed, float damage, float size, boolean fromPlayer) {
         texture = assetManager.get(AssetPaths.BULLET_BLUE, Texture.class);
+
+        position = new Vector2(x, y);
         hitbox = new Circle();
         hitbox.radius = size;
         hitbox.x = x;
@@ -36,6 +41,8 @@ public class Bullet implements Pool.Poolable {
         this.damage = damage;
         this.size = size;
         this.fromPlayer = fromPlayer;
+
+        damageAct = GameUtil.getDamageAction(StatusEffect.NONE, damage, 0f, 0f);
     }
     public Bullet(){
         this(0f, 0f, 90f, 20f, 20f, 30f, true);
@@ -52,8 +59,7 @@ public class Bullet implements Pool.Poolable {
         for (Enemy enemy : context.enemies) {
             // Checks if bullet hit enemy
             if (isAlive && fromPlayer && overlaps(hitbox, enemy.hitbox)) {
-                DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.NONE, damage, 0f, 0f);
-                damageAct.sourcePosition = new Vector2(hitbox.x, hitbox.y);
+                damageAct.sourcePosition.set(position);
                 enemy.takeHit(damageAct);
                 isAlive = false;
             }
@@ -61,8 +67,7 @@ public class Bullet implements Pool.Poolable {
         // Checks if bullet hit player
         if (isAlive && !fromPlayer) {
             if ((context.player.shielding && overlaps(hitbox, context.player.shieldHitbox)) || (!context.player.shielding && overlaps(hitbox, context.player.hitbox))) {
-                DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.NONE, damage, 0f, 0f);
-                damageAct.sourcePosition = new Vector2(hitbox.x, hitbox.y);
+                damageAct.sourcePosition.set(position);
                 context.player.takeHit(damageAct);
                 isAlive = false;
             }
@@ -70,6 +75,8 @@ public class Bullet implements Pool.Poolable {
 
         hitbox.x += MathUtils.cosDeg(angle) * speed * delta;
         hitbox.y += MathUtils.sinDeg(angle) * speed * delta;
+        position.x = hitbox.x;
+        position.y = hitbox.y;
         applyBounds();
     }
 
@@ -85,6 +92,8 @@ public class Bullet implements Pool.Poolable {
         hitbox.x = x;
         hitbox.y = y;
         hitbox.radius = size;
+        position.x = x;
+        position.y = y;
 
         this.angle = angle;
         this.speed = speed;
@@ -98,5 +107,7 @@ public class Bullet implements Pool.Poolable {
         isAlive = true;
         hitbox.x = 0f;
         hitbox.y = 0f;
+        position.x = 0f;
+        position.y = 0f;
     }
 }

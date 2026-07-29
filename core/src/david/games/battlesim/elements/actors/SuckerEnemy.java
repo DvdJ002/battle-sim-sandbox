@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector2;
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.database.EnemyConfig;
 import david.games.battlesim.elements.GameContext;
-import david.games.battlesim.elements.damage.DamageAction;
 import david.games.battlesim.elements.damage.StatusEffect;
 import david.games.battlesim.elements.spawners.ForceFieldSpawner;
 import david.games.battlesim.util.GameUtil;
@@ -30,6 +29,7 @@ public class SuckerEnemy extends Enemy {
 
         texture = assetManager.get(AssetPaths.SUCKER, Texture.class);
         steeringBehavior = new Arrive<>(this, target);
+        damageAct = GameUtil.getDamageAction(StatusEffect.KNOCKBACK, 0f, -suckIntensity, 0f);
     }
 
     @Override
@@ -42,8 +42,7 @@ public class SuckerEnemy extends Enemy {
 
         // Sucker reached necessary distance from player and activated suck
         if (!isInvincible && isNear(hitbox.x, hitbox.y, playerPosition.x, playerPosition.y, detectionRange)){
-            DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.KNOCKBACK, 0f, -suckIntensity, 0f);
-            damageAct.sourcePosition = new Vector2(hitbox.x, hitbox.y);
+            damageAct.sourcePosition.set(position);
             player.takeHit(damageAct);
 
             activateForceField(context.forceFieldSpawner);

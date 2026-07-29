@@ -100,7 +100,7 @@ public class BattleWorld {
     public void update(float delta, InputState inputState){
         mousePosition = inputState.mousePosition;
 
-        if (inputState.debugSpawnEnemy) {
+        if (GameConfig.DEBUG_MODE && inputState.debugSpawnEnemy) {
             //enemies.add(new ShooterEnemy(enemyConfigDatabase.get("shooter"), mousePosition.x, mousePosition.y));
             //enemies.add(new KamikazeEnemy(enemyConfigDatabase.get("kamikaze"),mousePosition.x, mousePosition.y));
             //enemies.add(new SlasherEnemy(enemyConfigDatabase.get("slasher"), mousePosition.x, mousePosition.y));
@@ -154,7 +154,6 @@ public class BattleWorld {
         }
 
         if (!isWavesLeft() && enemies.isEmpty()) {
-            System.out.println("Enemy array is empty");
             if (!bossFight) {
                 stopStage(WorldState.WON);
             }

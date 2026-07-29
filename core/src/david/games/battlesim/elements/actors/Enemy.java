@@ -25,6 +25,7 @@ public class Enemy implements Steerable<Vector2> {
     Sound invincibleSound;
     SteerableTargetObj target;
     EnemyConfig enemyConfig;
+    DamageAction damageAct;
     protected static final SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<>(new Vector2());
     SteeringBehavior<Vector2> steeringBehavior;
     protected Vector2 linearVelocity = new Vector2(1f, 1f), position;

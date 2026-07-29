@@ -1,11 +1,8 @@
 package david.games.battlesim.config.database;
 
-import com.badlogic.gdx.Game;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import david.games.battlesim.config.EnemySteeringState;
@@ -125,7 +122,7 @@ public final class EnemyConfigDatabase {
                 850f,
                 430f,
                 0.7f,
-                0.99f,
+                0.25f,
                 1100f,
                 20f,
                 10f,
@@ -152,8 +149,8 @@ public final class EnemyConfigDatabase {
                 95f,
                 450f,
                 30f,
-                2.5f,
-                0.5f,
+                2.9f,
+                0.75f,
                 10f,
                 1500f,
                 900f,
@@ -167,7 +164,6 @@ public final class EnemyConfigDatabase {
         // 5 - SLAM (Close), 6 - EXPLOSION (Both), 7 - CANNONBALLS (Long), 8 - SUMMON_KAMIKAZES, 9 - PURSUIT
         boss.closeRangeAttackPool = Arrays.asList(1, 1, 4, 5, 5, 6);
         boss.longRangeAttackPool = Arrays.asList(1, 1, 2, 2, 3, 3, 3, 3, 4, 6, 7);
-        //boss.enragedAttackPool = Arrays.asList(1, 2, 3, 4, 5, 6); // Plus final is hardcoded
         //boss.enragedAttackPool = Arrays.asList(8, 9); // Plus final is hardcoded
 
         setDefaultAiConfig(boss);

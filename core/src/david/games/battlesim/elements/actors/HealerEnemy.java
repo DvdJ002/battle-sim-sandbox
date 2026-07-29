@@ -14,7 +14,6 @@ import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.GameConfig;
 import david.games.battlesim.config.database.EnemyConfig;
 import david.games.battlesim.elements.GameContext;
-import david.games.battlesim.elements.damage.DamageAction;
 import david.games.battlesim.elements.damage.StatusEffect;
 import david.games.battlesim.util.GameUtil;
 
@@ -39,6 +38,7 @@ public class HealerEnemy extends Enemy {
         texture = assetManager.get(AssetPaths.HEALER, Texture.class);
         beamTexture = assetManager.get(AssetPaths.HEALER_BEAM, Texture.class);
         steeringBehavior = new Arrive<>(this, target);
+        damageAct = GameUtil.getDamageAction(StatusEffect.NONE, -healAmount, 0f, 0f);
 
         roamLocationTimer = roamPeriod;
         roam();
@@ -118,14 +118,15 @@ public class HealerEnemy extends Enemy {
 
         // Only heal if within detection range
         if (canHealEnemy()){
-            DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.NONE, -healAmount, 0f, 0f);
-            damageAct.sourcePosition = new Vector2(position.x, position.y);
+            damageAct.sourcePosition.set(position);
             healedEnemy.takeHit(damageAct);
         }
 
         // Healer "hides" behind the enemy, achieve that by calculating angle from player to enemy and adding an offset
         float anglePlayerToEnemy = GameUtil.findAngleBetweenPoints(context.player.position.x, context.player.position.y, healedEnemy.position.x, healedEnemy.position.y);
-        Vector2 targetPosition = GameUtil.angleToCirclePoints(healedEnemy.position.x, healedEnemy.position.y, healedEnemy.hitbox.width * 0.8f, anglePlayerToEnemy);
+        Vector2 targetPosition = new Vector2();
+        GameUtil.angleToCirclePoints(healedEnemy.position.x, healedEnemy.position.y, healedEnemy.hitbox.width * 0.8f, anglePlayerToEnemy, targetPosition);
+
         updateSteeringTarget(targetPosition.x, targetPosition.y);
     }
 

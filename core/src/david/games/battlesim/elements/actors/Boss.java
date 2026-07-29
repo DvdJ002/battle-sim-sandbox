@@ -27,6 +27,7 @@ public class Boss extends Enemy {
 
     public final EnemyConfig.BossConfig config;
     private final Sound explosionSound, slamSound, spawnSound;
+    private final Vector2 mirroredLocation = new Vector2();
 
     // State enums
     public BossState state;
@@ -60,6 +61,7 @@ public class Boss extends Enemy {
         finishAttacking();
 
         steeringBehavior = new Arrive<>(this, target);
+        damageAct = GameUtil.getDamageAction(StatusEffect.NONE, collideDamage, 0f, 0f);
     }
 
     @Override
@@ -74,8 +76,8 @@ public class Boss extends Enemy {
 
         // Damage player if touching
         if ((player.shielding && overlaps(player.shieldHitbox, hitbox)) || (!player.shielding && overlaps(player.hitbox, hitbox))) {
-            DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.NONE, collideDamage, 0f, 0f);
-            damageAct.sourcePosition = new Vector2(position.x, position.y);
+            damageAct.sourcePosition.set(position);
+
             player.takeHit(damageAct);
         }
 
@@ -125,7 +127,7 @@ public class Boss extends Enemy {
         float anglePlayerToCenter = GameUtil.findAngleBetweenPoints(playerPosition.x, playerPosition.y, GameConfig.WIDTH/2f, GameConfig.HEIGHT/2f);
         float distancePlayerToCenter = Vector2.dst(playerPosition.x, playerPosition.y, GameConfig.WIDTH/2f, GameConfig.HEIGHT/2f);
         // Apply bounds
-        Vector2 mirroredLocation = GameUtil.angleToCirclePoints(GameConfig.WIDTH/2f, GameConfig.HEIGHT/2f,  distancePlayerToCenter, anglePlayerToCenter);
+        GameUtil.angleToCirclePoints(GameConfig.WIDTH/2f, GameConfig.HEIGHT/2f,  distancePlayerToCenter, anglePlayerToCenter, mirroredLocation);
         if (mirroredLocation.x > GameConfig.WIDTH * 0.8f) {
             mirroredLocation.x = GameConfig.WIDTH * 0.8f;
         }
@@ -323,9 +325,12 @@ public class Boss extends Enemy {
         Vector2 bossCenter = new Vector2(position.x + hitbox.width/2f, position.y + hitbox.height/2f);
         float angleEnemyCenterToPlayer = GameUtil.findAngleBetweenPoints(bossCenter.x, bossCenter.y, context.player.position.x, context.player.position.y);
 
-        Vector2 spawnPointLeft = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, 30f, angleEnemyCenterToPlayer + 90f);
+        Vector2 spawnPointLeft = new Vector2();
+        GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, 30f, angleEnemyCenterToPlayer + 90f, spawnPointLeft);
         float angleLeftPointToPlayer = GameUtil.findAngleBetweenPoints(spawnPointLeft.x, spawnPointLeft.y, context.player.position.x, context.player.position.y);
-        Vector2 spawnPointRight = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, 30f, angleEnemyCenterToPlayer - 90f);
+
+        Vector2 spawnPointRight = new Vector2();
+        GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, 30f, angleEnemyCenterToPlayer - 90f, spawnPointRight);
         float angleRightPointToPlayer = GameUtil.findAngleBetweenPoints(spawnPointRight.x, spawnPointRight.y, context.player.position.x, context.player.position.y);
 
         context.bulletSpawner.spawn(spawnPointLeft.x, spawnPointLeft.y, angleLeftPointToPlayer, config.bulletSpeed, config.bulletDamage, config.bulletSize,false);
@@ -341,10 +346,17 @@ public class Boss extends Enemy {
         Vector2 bossCenter = new Vector2(position.x + hitbox.width/2f, position.y + hitbox.height/2f);
         float angleToPlayer = GameUtil.findAngleBetweenPoints(bossCenter.x, bossCenter.y, context.player.position.x, context.player.position.y);
 
-        Vector2 spawnPointLeft = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.enemySpawnDistance, angleToPlayer + 90f);
-        Vector2 spawnPointRight = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.enemySpawnDistance, angleToPlayer - 90f);
+        Vector2 spawnPointLeft = new Vector2();
+        GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.enemySpawnDistance, angleToPlayer + 90f, spawnPointLeft);
 
-        context.enemies.add(new SlasherEnemy(context.enemyConfigDatabase.get("slasher"), spawnPointLeft.x, spawnPointLeft.y));
+        Vector2 spawnPointRight = new Vector2();
+        GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.enemySpawnDistance, angleToPlayer - 90f, spawnPointRight);
+
+        Vector2 spawnPointBehind = new Vector2();
+        GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.enemySpawnDistance, angleToPlayer - 180f, spawnPointBehind);
+
+        context.enemies.add(new ShooterEnemy(context.enemyConfigDatabase.get("shooter"), spawnPointLeft.x, spawnPointLeft.y));
+        context.enemies.add(new SlasherEnemy(context.enemyConfigDatabase.get("slasher"), spawnPointBehind.x, spawnPointBehind.y));
         context.enemies.add(new ShooterEnemy(context.enemyConfigDatabase.get("shooter"), spawnPointRight.x, spawnPointRight.y));
 
         spawnSound.play(GameConfig.VOLUME_DEFAULT);
@@ -359,9 +371,8 @@ public class Boss extends Enemy {
         Vector2 bossCenter = new Vector2(position.x + hitbox.width/2f, position.y + hitbox.height/2f);
         float angleToPlayer = GameUtil.findAngleBetweenPoints(bossCenter.x, bossCenter.y, context.player.position.x, context.player.position.y);
 
-        //Vector2 spawnPointLeft = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer + 150f);
-        //Vector2 spawnPointRight = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.kamikazeSpawnDistance, angleToPlayer + 210f);
-        Vector2 spawnPointBehind = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.enemySpawnDistance, angleToPlayer + 180f);
+        Vector2 spawnPointBehind = new Vector2();
+        GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.enemySpawnDistance, angleToPlayer + 180f, spawnPointBehind);
 
         context.enemies.add(new HealerEnemy(context.enemyConfigDatabase.get("healer"), spawnPointBehind.x, spawnPointBehind.y));
 
@@ -428,7 +439,8 @@ public class Boss extends Enemy {
     }
     private void explode(GameContext context) {
         DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.KNOCKBACK, config.explosionDamage, config.explosionKbIntensity, 0f);
-        damageAct.sourcePosition = new Vector2(position.x, position.y);
+        damageAct.sourcePosition.set(position);
+
         context.player.takeHit(damageAct);
 
         explosionSound.play(GameConfig.VOLUME_DEFAULT);
@@ -492,7 +504,9 @@ public class Boss extends Enemy {
     private void summonKamikaze(GameContext context) {
         Vector2 bossCenter = new Vector2(position.x + hitbox.width/2f, position.y + hitbox.height/2f);
         float angleToPlayer = GameUtil.findAngleBetweenPoints(bossCenter.x, bossCenter.y, context.player.position.x, context.player.position.y);
-        Vector2 spawnPointFront = GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.enemySpawnDistance, angleToPlayer);
+
+        Vector2 spawnPointFront = new Vector2();
+        GameUtil.angleToCirclePoints(bossCenter.x, bossCenter.y, config.enemySpawnDistance, angleToPlayer, spawnPointFront);
 
         context.enemies.add(new KamikazeEnemy(context.enemyConfigDatabase.get("kamikaze"), spawnPointFront.x, spawnPointFront.y));
 

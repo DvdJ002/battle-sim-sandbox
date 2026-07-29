@@ -13,7 +13,6 @@ import com.badlogic.gdx.math.Vector2;
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.database.EnemyConfig;
 import david.games.battlesim.elements.GameContext;
-import david.games.battlesim.elements.damage.DamageAction;
 import david.games.battlesim.elements.damage.StatusEffect;
 import david.games.battlesim.elements.spawners.BulletSpawner;
 import david.games.battlesim.util.GameUtil;
@@ -23,7 +22,7 @@ public class ShooterEnemy extends Enemy {
     private float  reloadDuration, bulletSpeed, evadeRange, bulletSize;
     private float speedEvade, speedChase;
     public boolean evading = true, reloading = true;
-    private float reloadTimer = 0f;
+    private float reloadTimer;
 
     public ShooterEnemy(EnemyConfig enemyConfig, float x, float y){
         super(enemyConfig, x, y);
@@ -37,6 +36,7 @@ public class ShooterEnemy extends Enemy {
 
         texture = assetManager.get(AssetPaths.SHOOTER, Texture.class);
         steeringBehavior = new Evade<>(this, target);
+        damageAct = GameUtil.getDamageAction(StatusEffect.NONE, collideDamage, 0f, 0f);
 
         reloadTimer = reloadDuration;
     }
@@ -55,8 +55,8 @@ public class ShooterEnemy extends Enemy {
 
         // Player damages shooter enemy if touching
         if (overlaps(player.hitbox, hitbox)) {
-            DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.NONE, collideDamage, 0f, 0f);
-            damageAct.sourcePosition = new Vector2(player.hitbox.x, player.hitbox.y);
+            damageAct.sourcePosition.set(player.position);
+
             takeHit(damageAct);
         }
 

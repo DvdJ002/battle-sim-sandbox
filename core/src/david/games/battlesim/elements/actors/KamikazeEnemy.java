@@ -12,7 +12,6 @@ import david.games.battlesim.assets.AssetDescriptors;
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.database.EnemyConfig;
 import david.games.battlesim.config.GameConfig;
-import david.games.battlesim.elements.damage.DamageAction;
 import david.games.battlesim.elements.damage.StatusEffect;
 import david.games.battlesim.elements.GameContext;
 import david.games.battlesim.util.GameUtil;
@@ -31,6 +30,7 @@ public class KamikazeEnemy extends Enemy {
         texture = assetManager.get(AssetPaths.KAMIKAZE, Texture.class);
         explosionSound = assetManager.get(AssetDescriptors.KAMIKAZE_EXPLOSION_SOUND);
         steeringBehavior = new Arrive<>(this, target).setDecelerationRadius(GameConfig.WIDTH * 0.1f);
+        damageAct = GameUtil.getDamageAction(StatusEffect.KNOCKBACK, this.damage, knockbackIntensity, 0f);
     }
 
     @Override
@@ -43,8 +43,7 @@ public class KamikazeEnemy extends Enemy {
 
         // Kamikaze reached necessary distance from player and exploded
         if (isNear(hitbox.x, hitbox.y, playerPosition.x, playerPosition.y, explodingRange)){
-            DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.KNOCKBACK, this.damage, knockbackIntensity, 0f);
-            damageAct.sourcePosition = new Vector2(hitbox.x, hitbox.y);
+            damageAct.sourcePosition.set(position);
             player.takeHit(damageAct);
             isAlive = false;
 

@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Vector2;
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.database.EnemyConfig;
 import david.games.battlesim.config.GameConfig;
-import david.games.battlesim.elements.damage.DamageAction;
 import david.games.battlesim.elements.damage.StatusEffect;
 import david.games.battlesim.elements.GameContext;
 import david.games.battlesim.util.GameUtil;
@@ -35,6 +34,7 @@ public class SlasherEnemy extends Enemy {
 
         texture = assetManager.get(AssetPaths.SLASHER, Texture.class);
         steeringBehavior = new Arrive<>(this, target).setDecelerationRadius(GameConfig.WIDTH * 1.5f);
+        damageAct = GameUtil.getDamageAction(StatusEffect.SLOWED, collideDamage, slowIntensity, slowDuration);
     }
 
     @Override
@@ -47,8 +47,7 @@ public class SlasherEnemy extends Enemy {
 
         // Damage player if touching
         if ((player.shielding && overlaps(player.shieldHitbox, hitbox)) || (!player.shielding && overlaps(player.hitbox, hitbox))) {
-            DamageAction damageAct = GameUtil.getDamageAction(StatusEffect.SLOWED, collideDamage, slowIntensity, slowDuration);
-            damageAct.sourcePosition = new Vector2(hitbox.x, hitbox.y);
+            damageAct.sourcePosition.set(position);
             player.takeHit(damageAct);
         }
 

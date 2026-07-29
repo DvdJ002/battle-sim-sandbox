@@ -36,7 +36,6 @@ public class BattleScreen extends ScreenAdapter {
     private OrthographicCamera camera;
     private Viewport viewport;
     private BattleWorld world;
-    private LevelConfigDatabase levelConfigDatabase;
 
     OrthographicCamera hudCamera;
     private Viewport hudViewport;
@@ -44,12 +43,12 @@ public class BattleScreen extends ScreenAdapter {
     private Sound winSound, loseSound;
 
     private int currentLevelCode;
-    private boolean isDebugEnabled, isTutorialMode;
+    private boolean isDebugActive, isTutorialMode;
 
     public BattleScreen(BattleGame game, int levelCode) {
         this.game = game;
         this.currentLevelCode = levelCode;
-        this.isDebugEnabled = false;
+        this.isDebugActive = false;
         this.isTutorialMode = (levelCode == 0);
     }
 
@@ -66,7 +65,7 @@ public class BattleScreen extends ScreenAdapter {
         viewport = new FitViewport(GameConfig.WIDTH, GameConfig.HEIGHT, camera);
         world = new BattleWorld();
         world.setTutorial(isTutorialMode);
-        levelConfigDatabase = new LevelConfigDatabase();
+        LevelConfigDatabase levelConfigDatabase = new LevelConfigDatabase();
 
         hudCamera = new OrthographicCamera();
         hudViewport = new FitViewport(GameConfig.WIDTH, GameConfig.HEIGHT, hudCamera);
@@ -106,7 +105,7 @@ public class BattleScreen extends ScreenAdapter {
         hud.drawBars(sr, world);
         sr.end();
 
-        if (isDebugEnabled) { 
+        if (isDebugActive) {
             sr.begin(ShapeRenderer.ShapeType.Line);
             hud.drawDebugOverlay(sr, world); 
             sr.end();
@@ -134,11 +133,13 @@ public class BattleScreen extends ScreenAdapter {
         inputState.resetGamePressed = Gdx.input.isKeyJustPressed(Input.Keys.R);
         inputState.debugSpawnEnemy = Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE);
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
-            isDebugEnabled = true;
-        }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
-            isDebugEnabled = false;
+        if (GameConfig.DEBUG_MODE) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+                isDebugActive = true;
+            }
+            else if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
+                isDebugActive = false;
+            }
         }
 
         mousePosition.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -156,7 +157,7 @@ public class BattleScreen extends ScreenAdapter {
             case LOST:
             case STOPPED:
             case EXIT_REQUESTED:
-                loseSound.play(GameConfig.VOLUME_LOUD);
+                loseSound.play(GameConfig.VOLUME_DEFAULT);
                 endScreen();
                 return;
             case RUNNING: break;
