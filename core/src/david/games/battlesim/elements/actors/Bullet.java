@@ -94,6 +94,7 @@ public class Bullet implements Pool.Poolable {
         hitbox.radius = size;
         position.x = x;
         position.y = y;
+        damageAct.amount = damage;
 
         this.angle = angle;
         this.speed = speed;

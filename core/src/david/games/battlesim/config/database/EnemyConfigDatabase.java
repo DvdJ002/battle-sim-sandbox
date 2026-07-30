@@ -114,7 +114,7 @@ public final class EnemyConfigDatabase {
         EnemyConfig.BossConfig boss = new EnemyConfig.BossConfig(
                 1.5f,
                 1f,
-                7000f,
+                5650f,
                 GameConfig.BOSS_SIZE,
                 125f,
                 1.8f,
