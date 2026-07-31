@@ -114,7 +114,7 @@ public class Boss extends Enemy {
     private void checkPhaseChange() {
         if (health <= config.maxHealth * config.enragedHealthThreshold && phase == BossPhase.PHASE_1) {
             phase = BossPhase.PHASE_2;
-            texture = assetManager.get(AssetPaths.BOSS_2, Texture.class);
+            finishAttacking();
 
             steeringState.maxLinearSpeed = config.enragedSpeed;
             steeringState.maxAngularSpeed = config.enragedSpeed;
@@ -180,7 +180,6 @@ public class Boss extends Enemy {
             currentAttack = (enemyCount > 1) ? BossAttack.PURSUIT : BossAttack.SUMMON_KAMIKAZES;
         }
 
-        //currentAttack = BossAttack.PURSUIT;
 
         state = BossState.ATTACKING;
     }
@@ -255,6 +254,7 @@ public class Boss extends Enemy {
         state = BossState.IDLE;
         currentAttack = BossAttack.NONE;
         idleTimer = config.baseIdleDuration;
+        isStatic = false;
 
         texture = (phase == BossPhase.PHASE_1) ? assetManager.get(AssetPaths.BOSS_1, Texture.class) : assetManager.get(AssetPaths.BOSS_2, Texture.class);
     }
@@ -451,6 +451,7 @@ public class Boss extends Enemy {
         steeringState.maxAngularSpeed = config.baseSpeed;
         steeringState.maxLinearAcceleration = GameConfig.DEFAULT_ACCEL;
         steeringState.maxAngularAcceleration = GameConfig.DEFAULT_ACCEL;
+        isStatic = false;
         finishAttacking();
     }
 
