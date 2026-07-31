@@ -298,6 +298,9 @@ public class BattleWorld {
     public void reset() {
         player.reset();
         player.setPosition(levelConfig.playerStart.x, levelConfig.playerStart.y);
+        if (bossFight) {
+            ((Boss) enemies.get(0)).reset(); // Reset boss movement config to avoid unexpected behavior
+        }
         enemies.clear();
         forceFields.clear();
 

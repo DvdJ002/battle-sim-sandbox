@@ -150,6 +150,15 @@ public class Boss extends Enemy {
     @Override
     public void die() { }
 
+    public void reset() {
+        steeringState.maxLinearSpeed = config.baseSpeed;
+        steeringState.maxAngularSpeed = config.baseSpeed;
+        steeringState.maxLinearAcceleration = GameConfig.DEFAULT_ACCEL;
+        steeringState.maxAngularAcceleration = GameConfig.DEFAULT_ACCEL;
+        isStatic = false;
+        finishAttacking();
+    }
+
 
     /*******************************************************************************/
     /******************************** ATTACK GENERAL *******************************/
