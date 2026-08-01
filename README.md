@@ -14,7 +14,7 @@ The player is a circular "tank" with a range of abilities.
 Picture of player and it's ultimate ability.
 
 ![Enemy image](docs/Pictures/player.png)
-![Enemy image](docs/Pictures/player.png)
+![Enemy image](docs/Pictures/player_ultimate.png)
 
 **Shoot:**
 The player's primary damage dealer. Shoot bullets at enemies that deal 13 damage. There is a short cooldown between bullets so the player cannot shoot at a super high rate.
@@ -62,8 +62,8 @@ the ultimate ability a powerful tactic against them.
 - Other relevant values: Small, fast bullets
 
 **Visual:**
-
 Shooter with a bullet it just shot
+
 ![Enemy image](docs/Pictures/shooter_shooting.png)
 
 ---
@@ -250,7 +250,7 @@ Two times during the level, a large kamikaze will spawn in the middle of the are
 
 **Wave Structure:**
 1. A large slasher encircled by 3 healers, top row
-2. - X. Keep spawning healers every 1.5 seconds, alternating top and bottom, with two waves including a large kamikaze
+2. Keep spawning healers every 1.5 seconds, alternating top and bottom, with two waves including a large kamikaze
 
 **Notes:** The large slasher (Chosen One) is practically unkillable until the end when the healers stop spawning. You have to focus the waves of healers and kill them as they spawn, other wise you will run out of time to kill the slasher at the end.
 
@@ -264,7 +264,7 @@ First, a singular healer is spawned. As the healer is killed, a large number of 
 
 **Wave Structure:**
 1. A healer middle top
-2. - X. - Keep spawning shooters every 1.5 seconds
+2. Keep spawning shooters every 1.5 seconds
 
 **Notes:** There are two ways to "solve" this level. It is not meant to be fought normally.
 
@@ -310,7 +310,6 @@ The two phases are very different in aggression and behavior. The state transiti
 Boss in idle and enraged state, respectively
 
 ![Enemy image](docs/Pictures/boss_idle.png)
-
 ![Enemy image](docs/Pictures/boss_enraged.png)
 
 
