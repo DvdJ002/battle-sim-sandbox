@@ -13,8 +13,8 @@ The player is a circular "tank" with a range of abilities.
 
 Picture of player and it's ultimate ability.
 
-![Enemy image](docs/pictures/player.png)
-![Enemy image](docs/pictures/player.png)
+![Enemy image](docs/Pictures/player.png)
+![Enemy image](docs/Pictures/player.png)
 
 **Shoot:**
 The player's primary damage dealer. Shoot bullets at enemies that deal 13 damage. There is a short cooldown between bullets so the player cannot shoot at a super high rate.
@@ -64,7 +64,7 @@ the ultimate ability a powerful tactic against them.
 **Visual:**
 
 Shooter with a bullet it just shot
-![Enemy image](docs/pictures/shooter_shooting.png)
+![Enemy image](docs/Pictures/shooter_shooting.png)
 
 ---
 
@@ -84,7 +84,7 @@ It will dash when it reaches a certain detection range, and if you get hit, it d
 **Visual:**
 Large and normal slashers attacking the player
 
-![Enemy image](docs/pictures/slasher_attack.png)
+![Enemy image](docs/Pictures/slasher_attack.png)
 
 
 ---
@@ -105,7 +105,7 @@ The explosion will deal high damage and apply knockback. The KB is implemented b
 **Visual:**
 Kamikaze
 
-![Enemy image](docs/pictures/kamikaze.png)
+![Enemy image](docs/Pictures/kamikaze.png)
 
 ---
 
@@ -124,7 +124,7 @@ The Sucker is a large, slow, tanky, AOE enemy that sucks you into a force field 
 **Visual:**
 Sucker chasing (left) and sucking the player (right)
 
-![Enemy image](docs/pictures/sucker_both_states.png)
+![Enemy image](docs/Pictures/sucker_both_states.png)
 
 
 ---
@@ -149,7 +149,7 @@ If you kill the enemy it is actively healing, it will also die. If you kill the 
 **Visual:**
 Three healers healing a large slasher
 
-![Enemy image](docs/pictures/healers_healing.png)
+![Enemy image](docs/Pictures/healers_healing.png)
 
 
 ## Special Enemies
@@ -309,9 +309,9 @@ The two phases are very different in aggression and behavior. The state transiti
 
 Boss in idle and enraged state, respectively
 
-![Enemy image](docs/pictures/boss_idle.png)
+![Enemy image](docs/Pictures/boss_idle.png)
 
-![Enemy image](docs/pictures/boss_enraged.png)
+![Enemy image](docs/Pictures/boss_enraged.png)
 
 
 ## Attacks
