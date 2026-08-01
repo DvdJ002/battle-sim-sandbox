@@ -9,7 +9,12 @@ Enemy textures are simple 2D sprites drawn in MS Paint. Other assets (like effec
 
 
 ## Player
-The player is a circular "tank" with a range of abilities.
+The player is a circular "tank" with a range of abilities. 
+
+Picture of player and it's ultimate ability.
+
+![Enemy image](docs/pictures/player.png)
+![Enemy image](docs/pictures/player.png)
 
 **Shoot:**
 The player's primary damage dealer. Shoot bullets at enemies that deal 13 damage. There is a short cooldown between bullets so the player cannot shoot at a super high rate.
@@ -58,8 +63,8 @@ the ultimate ability a powerful tactic against them.
 
 **Visual:**
 
-Image of a shooter or two and a flying bullet
-![Enemy image](path/to/image.png)
+Shooter with a bullet it just shot
+![Enemy image](docs/pictures/shooter_shooting.png)
 
 ---
 
@@ -77,8 +82,9 @@ It will dash when it reaches a certain detection range, and if you get hit, it d
 - Detection range: Short
 
 **Visual:**
+Large and normal slashers attacking the player
 
-![Enemy image](path/to/image.png)
+![Enemy image](docs/pictures/slasher_attack.png)
 
 
 ---
@@ -97,9 +103,9 @@ The explosion will deal high damage and apply knockback. The KB is implemented b
 - Detection range: Short
 
 **Visual:**
+Kamikaze
 
-![Enemy image](path/to/image.png)
-
+![Enemy image](docs/pictures/kamikaze.png)
 
 ---
 
@@ -116,8 +122,9 @@ The Sucker is a large, slow, tanky, AOE enemy that sucks you into a force field 
 - Detection range: Medium
 
 **Visual:**
+Sucker chasing (left) and sucking the player (right)
 
-![Enemy image](path/to/image.png)
+![Enemy image](docs/pictures/sucker_both_states.png)
 
 
 ---
@@ -140,9 +147,9 @@ If you kill the enemy it is actively healing, it will also die. If you kill the 
 - Detection range: Medium
 
 **Visual:**
+Three healers healing a large slasher
 
-![Enemy image](path/to/image.png)
-
+![Enemy image](docs/pictures/healers_healing.png)
 
 
 ## Special Enemies
@@ -299,6 +306,12 @@ This is the most difficult level in the game.
 The two phases are very different in aggression and behavior. The state transition is indicated by a change to a multi-colored texture. The idle period becomes shorter, and the boss starts pursuing the player.
 - Phase 1: In this phase, the boss has a high number of attacks available. It will mirror the player's movement by default.
 - Phase 2 (enraged): When the boss' health threshold reaches 25%, it will transition into an enraged mode, where it follows the player constantly and has two available attacks that complement each other.
+
+Boss in idle and enraged state, respectively
+
+![Enemy image](docs/pictures/boss_idle.png)
+
+![Enemy image](docs/pictures/boss_enraged.png)
 
 
 ## Attacks
