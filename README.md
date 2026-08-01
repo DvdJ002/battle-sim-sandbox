@@ -2,26 +2,29 @@
 
 ## Short Summary
 
-Explain:
 A simple 2D top-down battle game. The player fights waves of enemies with different behaviors, abilities, and mechanics while completing time-limited levels.
-The game is made with libGDX and uses simple 2D sprites drawn in MS Paint. Other assets and sounds are taken from free websites like icons8.com and freesound.org. Classic OOP architecture with an Enemy superclass from which all enemies are derived from.
+The game is made with libGDX and uses classic OOP architecture.
+
+Enemy textures are simple 2D sprites drawn in MS Paint. Other assets (like effect icons, sounds) are taken from free websites like icons8.com and freesound.org.   
 
 
 ## Player
 The player is a circular "tank" with a range of abilities.
-**Shoot**
+
+**Shoot:**
 The player's primary damage dealer. Shoot bullets at enemies that deal 13 damage. There is a short cooldown between bullets so the player cannot shoot at a super high rate.
 
-**Ultimate**
+**Ultimate:**
 This is an AOE force field attack that deals waning damage to enemies in range and makes the player invincible and static for the duration
 
-**Shield**
+**Shield:**
 A defensive shield that blocks all damage. If broken, it cannot be used until it recharges. While the shield is activated, the player cannot shoot, dash, and the dash bar does not recharge.
 
-**Dash**
+**Dash:**
 A movement ability that lets the player jump/teleport quickly in the movement direction. Implemented by giving the player a sudden movement boost.
 
 **Stats**
+
 HP: 100
 Shield health: 100
 Speed: 280
@@ -29,6 +32,7 @@ Bullet damage: 1
 Force field damage: 3 continuous, waning
 
 **Controls**
+
 Shoot: LMB | Move: WASD | Dash: Space | Shield: RMB | Ult: Q 
 
 ## Enemies
@@ -39,8 +43,9 @@ Enemy pathfinding and movement AI is implemented with the gdx.ai library, enemie
 **Role: Range pressure**
 
 The shooter is a careful enemy that constantly shoots bullet in your direction every 2 seconds. 
-It avoids you if too close, and chases you if they are far. They are most effective in numbers.
+It avoids you if you get too close, and chases you if you go far. They are most effective in numbers.
 Unlike most other enemies, the player deals damage to them upon collision instead of vice versa. 
+
 Since the shooter often cannot brake in time when chasing after the player, its momentum will carry it into the player, making 
 the ultimate ability a powerful tactic against them.
 
@@ -61,8 +66,9 @@ Image of a shooter or two and a flying bullet
 ### Slasher
 
 **Role: Offensive pursuer**
+
 The slasher is an aggressive enemy that dashes at you and applies a dangerous 1 second slow effect.
-It will dash when it reaches a certain detection range, and if if hits you it deals collision damage and applies a slow effect.  
+It will dash when it reaches a certain detection range, and if you get hit, it deals collision damage and applies a slow effect.  
 
 **Stats:**
 - HP: 120
@@ -80,7 +86,8 @@ It will dash when it reaches a certain detection range, and if if hits you it de
 ### Kamikaze
 
 **Role: Explosive kamikaze**
-Kamikaze is a smaller enemy that will chase you directly and explode upon reaching the your vicinity. 
+
+Kamikaze is a smaller enemy that will chase you directly and explode upon reaching your vicinity. 
 The explosion will deal high damage and apply knockback. The KB is implemented by giving the player sudden opposite angle velocity.
 
 **Stats:**
@@ -99,7 +106,8 @@ The explosion will deal high damage and apply knockback. The KB is implemented b
 ### Sucker
 
 **Role: Tanky AOE**
-The Sucker is a large, slow, tanky, AEO enemy that sucks you into a force field if you get too close.
+
+The Sucker is a large, slow, tanky, AOE enemy that sucks you into a force field if you get too close.
 
 **Stats:**
 - HP: 250
@@ -116,11 +124,13 @@ The Sucker is a large, slow, tanky, AEO enemy that sucks you into a force field 
 
 ### Healer
 
-**Role: Hiding healer**
-The Healer is a small enemy with a low HP pool that chooses an enemy, starts following it and continuously heals it.
-It will follow the enemy and it's only able to heal it if the enemy is within range. It will also try to put the enemy between it and the player.
+**Role: Elusive assistance**
+
+The Healer is a small enemy with a low HP pool. When it finds an enemy, it will "lock-on" to it; which entails following and continuously healing it.
+It's only able to heal the enemy if within range. It "hides" from the player by trying to use the enemy it is healing between itself and the player.
+
 If there is no enemy within range it will simply roam around randomly until one is found. 
-If you kill the enemy it is actively healing, it will also die. If you kill the chosen enemy while it is not actively healing, it will simply switch back to roam and search for a new enemy.
+If you kill the enemy it is actively healing, it will also die. If you kill the locked-on enemy while it is not actively healing, it will simply switch back to roam and search for a new enemy.
 
 
 **Stats:**
@@ -134,7 +144,6 @@ If you kill the enemy it is actively healing, it will also die. If you kill the 
 ![Enemy image](path/to/image.png)
 
 
----
 
 ## Special Enemies
 
@@ -144,11 +153,10 @@ These are special versions of the normal enemies. They include:
 - Large kamikaze (more health and stronger explosion)
 - Special healer (massive healing range and fast healing)
 
----
 
 # Levels
 
-The game has 8 levels that challenge you on different scenarios. Levels consists of different waves, and a new wave is triggered either when enough time passes, or when you kill a certain amount of enemies. There is also a level timer that pressures you to complete all the waves in time.
+The game has 8 levels that challenge you on different scenarios. Levels consists of waves, and a new wave is triggered either when enough time passes, or when you kill a certain amount of enemies. There is also a level timer that pressures you to complete all the waves in time.
 
 ## Level 1: Entourage
 
@@ -158,12 +166,10 @@ The game has 8 levels that challenge you on different scenarios. Levels consists
 Waves of a large enemy accompanied with two normal versions of the same enemy type
 
 **Wave Structure:**
-1. Large shooter with 3 normal placed in front of it
-2. Large slasher with 2 normal placed far on the sides
-3. Large kamikaze with 2 normal placed close on the sides
+1. Large shooter with 3 normal shooters placed in front of it
+2. Large slasher with 2 normal slashers placed far on the sides
+3. Large kamikaze with 2 normal kamikazes placed close on the sides
 
-
----
 
 ## Level 2 - War on two fronts
 
@@ -179,8 +185,6 @@ Two waves of shooters from both sides, finishes with 2 kamikaze
 
 **Notes:** Using force field is very strong (arguably necessary) against the numerous shooters
 
-
----
 
 ## Level 3 - Spontaneous explosion
 
@@ -200,8 +204,6 @@ Starts with a circle of kamikazes that force your ultimate (otherwise unsurvivab
 
 **Notes:** Consider saving your ultimate for the very last wave
 
-
----
  
 ## Level 4 - Vacuum cleaned
 
@@ -214,8 +216,6 @@ A sucker spawns in each corner and a row of shooters at the top. After 4 enemies
 1. Suckers spawns in each corner and a row of shooters at the top
 2. Sucker in the middle
 
-
----
  
 ## Level 5 - Front line
 
@@ -232,25 +232,21 @@ A "front line" of suckers with a healer behind each. Every 2 enemies killed a ka
 
 **Notes:** You cannot kill the suckers in time if you don't kill the healers first
 
-
----
  
 ## Level 6 - The Chosen One
 
 **Duration / Time Limit:** 55 seconds
 
 **Enemy Composition:** 
-A large slasher encircled by 3 special healers. Then, the levels keeps spawning healers every 1.5 seconds, alternating top and bottom.
+A large slasher encircled by 3 special healers. Then, the level keeps spawning healers every 1.5 seconds, alternating top and bottom.
 Two times during the level, a large kamikaze will spawn in the middle of the arena.
 
 **Wave Structure:**
 1. A large slasher encircled by 3 healers, top row
-2-X - Keep spawning healers every 1.5 seconds, alternating top and bottom, with two waves including a large kamikaze
+2. - X. Keep spawning healers every 1.5 seconds, alternating top and bottom, with two waves including a large kamikaze
 
 **Notes:** The large slasher (Chosen One) is practically unkillable until the end when the healers stop spawning. You have to focus the waves of healers and kill them as they spawn, other wise you will run out of time to kill the slasher at the end.
 
-
----
 
 ## Level 7 - Hornet's Nest
 
@@ -261,12 +257,10 @@ First, a singular healer is spawned. As the healer is killed, a large number of 
 
 **Wave Structure:**
 1. A healer middle top
-2-X - Keep spawning shooters every 1.5 seconds
+2. - X. - Keep spawning shooters every 1.5 seconds
 
 **Notes:** There are two ways to "solve" this level. It is not meant to be fought normally.
 
-
----
 
 ## Level 8 - Well-rounded attack
 
@@ -286,7 +280,7 @@ A combination of many enemy types, forcing the player to handle melee pressure, 
 
 ## General
 
-The boss is a large, difficult enemy, with a wide range of close and long range attacks. The fight has two phases, with the transition being at 25% HP. The boss constantly cycles between an idle and attacking. The boss appearance indicates the state it is in; two exclamation marks on its body means that it is currently attacking, which is important to distinguish certain telemarked attacks.
+The boss is a large, difficult enemy, with a wide range of close and long range attacks. The fight has two phases. The boss constantly cycles between an idle and attacking. The boss appearance indicates the state it is in; two exclamation marks on its body means that it is currently attacking, which is important to distinguish certain telemarked attacks.
 
 The idle state is a fixed duration, and when it ends, the boss chooses an attack based on the enemy's position (close, long range), and the current state of the arena. The boss by default tries to mirror the player's position in the arena, unless some attack is overriding this behavior. 
 This is the most difficult level in the game. 
@@ -295,22 +289,23 @@ This is the most difficult level in the game.
 - HP: 5650
 - Idle state duration: 1.8 seconds
 - Base speed: Slow, mirrors player
-- Enraged speed: Slow, mirrors player
-- Close range threshold: Medium
+- Enraged speed: Medium, pursues player
+- Close range radius: Medium
 - Enraged threshold: 25% of HP
 - Collide damage: 1.5
 
 **Phases:**
-The two phases are very different in aggression and behavior. The state transition is indicated by a change to a multi-colored texture. The idle period becomes smaller, and the boss starts pursuing the player.
+
+The two phases are very different in aggression and behavior. The state transition is indicated by a change to a multi-colored texture. The idle period becomes shorter, and the boss starts pursuing the player.
 - Phase 1: In this phase, the boss has a high number of attacks available. It will mirror the player's movement by default.
-- Phase 2 (enraged): When the boss' health threshold reached 25%, it will transition into an enraged mode, where it follows the player constantly and has two available attacks.
+- Phase 2 (enraged): When the boss' health threshold reaches 25%, it will transition into an enraged mode, where it follows the player constantly and has two available attacks that complement each other.
 
 
 ## Attacks
 
 ### Bullets (Long range)
 
-**Description:** The boss shoots pairs of medium-sized bullets that deal 20 damage for 5 seconds.
+**Description:** The boss shoots pairs of medium-sized bullets for 5 seconds that deal 20 damage.
 
 **Counterplay:** Dodging is relatively simple if you are not too close
 
@@ -318,7 +313,7 @@ The two phases are very different in aggression and behavior. The state transiti
 
 ### Slam/Force field (Close range)
 
-**Description:** Creates a large force field with waning damaget that lasts 3.5 seconds and deals 1.5 damage.
+**Description:** Creates a large force field with waning damage that lasts 3.5 seconds and deals 1.5 damage.
 
 ---
 
@@ -349,13 +344,13 @@ The two phases are very different in aggression and behavior. The state transiti
 **Description:** 
 This two-stage attack starts with a telemarked pause/grace period during which the boss stands completely still for 3 seconds. After that, it rushes at the player and, if it reaches a suitable range, explodes to deal immense 150 damage with knockback.  
 
-**Counterplay:** Since the explosion deals so much damage, it's important to prioritize avoiding it or using ultimate to counter it
+**Counterplay:** Since the explosion deals so much damage, it's important to prioritize avoiding it or using ultimate to counter it.
 
 ---
 
 ### Cannonballs (Long range)
 
-**Description:** Similarly to the bullets attack, it shoots out large, but slow bullets for 4 seconds. They deal 95 damage.
+**Description:** Similarly to the bullets attack, it shoots large, but slow, bullets for 4 seconds. They deal 95 damage.
 
 ---
 
@@ -368,13 +363,14 @@ This two-stage attack starts with a telemarked pause/grace period during which t
 **Description:** The boss pursues the player at a very high speed, while also being invincible and dealing increased collision damage.
 
 
-## Decision making
-There is a few mechanics here when the boss decides on an attack. 
+## Attack choosing logic
+There is a few mechanics here when the boss is choosing an attack. 
 
-The first variable is long vs close range attacks. There's also many attacks that are in the pool in for both ranges.
-The next variable is the amount of currently alive enemies. If the boss detects that an enemy present, it will spawn a healer instead of offensives. This is a limitation so the fight does not become too overwhelming (offensive summons two times in a row is already incredibly difficult to play against). 
+The first variable is long vs close range attacks. There's some attacks that are only chosen for specific ranges, but still many attacks are in the pool for both ranges.
+
+The next variable is the amount of currently alive enemies. If the boss detects that an enemy is present, it will not spawn offensives, but instead a healer. This limitation exists so the fight does not become too overwhelming (offensive summons two times in a row is already incredibly difficult to play against). 
 
 Also, if there is more than 3 spawned enemies alive, it will not opt to summon anything. This is to prevent the boss spawning a large number of healers which would be too strong.  
 
-Finally, during the enraged state, it will not perform the kamikaze attack if there is any number of kamikaze still alive. Conversely, it will also not perform a pursuit if there are no kamikaze alive (since that attack by itself is pointless if not paired with kamikazes).
+Finally, during the enraged state, it will not perform the kamikaze attack if there is any number of kamikaze still alive. Conversely, it will not perform a pursuit if there are no kamikaze alive (since that attack by itself is pointless if not paired with kamikazes).
 
