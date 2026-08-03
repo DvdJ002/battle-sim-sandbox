@@ -1,6 +1,5 @@
 package david.games.battlesim.elements.actors;
 
-import static david.games.battlesim.config.GameConfig.VOLUME_DEFAULT;
 import static david.games.battlesim.util.GameUtil.findAngleBetweenPoints;
 
 import com.badlogic.gdx.audio.Sound;
@@ -18,8 +17,8 @@ import david.games.battlesim.assets.AssetDescriptors;
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.GameConfig;
 import david.games.battlesim.config.database.PlayerConfig;
-import david.games.battlesim.elements.damage.DamageAction;
-import david.games.battlesim.elements.damage.StatusEffect;
+import david.games.battlesim.elements.data.DamageAction;
+import david.games.battlesim.elements.data.StatusEffect;
 import david.games.battlesim.elements.spawners.BulletSpawner;
 import david.games.battlesim.elements.spawners.ForceFieldSpawner;
 import david.games.battlesim.util.GameUtil;

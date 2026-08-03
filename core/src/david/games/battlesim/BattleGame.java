@@ -1,10 +1,8 @@
 package david.games.battlesim;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -20,7 +18,7 @@ public class BattleGame extends Game {
 	ShapeRenderer sr;
 	public static AssetManager assetManager;
 	private Screen currentScreen;
-	public SaveManager saveManager;
+	public static SaveManager saveManager;
 
 	@Override
 	public void create () {
@@ -100,8 +98,13 @@ public class BattleGame extends Game {
 		return sr;
 	}
 
-	public void saveProgress(int levelReached) {
-		saveManager.save(levelReached);
+	public void saveLevelProgress(int levelReached) {
+		saveManager.setLevelReached(levelReached);
+		saveManager.save();
+	}
+	public void saveInfiniteBest(int best) {
+		saveManager.setInfiniteBest(best);
+		saveManager.save();
 	}
 
 	public boolean isLevelReached(int levelCode) {

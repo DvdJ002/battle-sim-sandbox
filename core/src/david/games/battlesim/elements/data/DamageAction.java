@@ -1,4 +1,4 @@
-package david.games.battlesim.elements.damage;
+package david.games.battlesim.elements.data;
 
 import com.badlogic.gdx.math.Vector2;
 

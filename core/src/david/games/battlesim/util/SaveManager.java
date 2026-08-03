@@ -12,16 +12,23 @@ public class SaveManager
 {
     private static final String SAVE_FILE = "save.json";
     FileHandle file = Gdx.files.local(SAVE_FILE);
-    private SaveData progress;
+    public SaveData progress;
     public SaveManager() {
         progress = new SaveData();
         initSave();
     }
 
-    // Saves the data into the file and updates the progress
-    public void save(int levelReached) {
-        Json json = new Json();
+    public void setLevelReached(int levelReached) {
         progress.levelReached = levelReached;
+
+    }
+    public void setInfiniteBest(int best) {
+        progress.infiniteHighScore = best;
+    }
+
+    // Saves the data into the file and updates the progress
+    public void save() {
+        Json json = new Json();
         String data = json.toJson(progress);
         file.writeString(data, false);
 
@@ -30,7 +37,9 @@ public class SaveManager
 
     public void initSave() {
         if (!file.exists()) {
-            save(1);
+            progress.infiniteHighScore = 0;
+            progress.levelReached = 1;
+            save();
         }
 
         progress = new Json().fromJson(SaveData.class, file.readString());

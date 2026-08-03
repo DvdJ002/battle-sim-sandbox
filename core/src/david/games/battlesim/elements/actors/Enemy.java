@@ -16,7 +16,7 @@ import david.games.battlesim.assets.AssetDescriptors;
 import david.games.battlesim.config.database.EnemyConfig;
 import david.games.battlesim.config.EnemySteeringState;
 import david.games.battlesim.config.GameConfig;
-import david.games.battlesim.elements.damage.DamageAction;
+import david.games.battlesim.elements.data.DamageAction;
 import david.games.battlesim.elements.GameContext;
 
 public class Enemy implements Steerable<Vector2> {

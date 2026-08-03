@@ -31,6 +31,7 @@ import david.games.battlesim.elements.actors.SlasherEnemy;
 import david.games.battlesim.elements.actors.SuckerEnemy;
 import david.games.battlesim.elements.spawners.BulletSpawner;
 import david.games.battlesim.elements.spawners.ForceFieldSpawner;
+import david.games.battlesim.util.GameUtil;
 import david.games.battlesim.util.InputState;
 
 public class BattleWorld {
@@ -46,10 +47,9 @@ public class BattleWorld {
     public ArrayList<ForceField> forceFields;
     EnemyConfigDatabase enemyConfigDatabase;
     public LevelConfig levelConfig;
-    public int currentWave = 0;
+    public int currentWave = 0, currentInfiniteCredits = 0;
     public float levelTimer = 0f;
-    public boolean tutorialMode = false;
-    public boolean bossFight = false;
+    public boolean tutorialMode = false, infiniteMode = false, bossFight = false;
 
     public BattleWorld() {
         state = WorldState.STOPPED;
@@ -239,13 +239,19 @@ public class BattleWorld {
         LevelWaveConfig nextWave = levelConfig.waves.get(currentWave);
         if (
            (nextWave.timeLeft != -1f && nextWave.timeLeft >= levelTimer) ||
-           (nextWave.enemiesLeft != -1f && nextWave.enemiesLeft == enemies.size()))
-        {
+           (nextWave.enemiesLeft != -1f && nextWave.enemiesLeft == enemies.size())
+        ) {
             spawnEnemiesFromConfig(nextWave.spawns);
             currentWave++;
 
             if (tutorialMode) {
-                player.changeHealth(300f);
+                player.changeHealth(player.config.maxHealth);
+            }
+
+            // In infinite waves are added as they are beaten
+            if (infiniteMode) {
+                currentInfiniteCredits += GameConfig.INFINITE_INCREMENT;
+                levelConfig.waves.add(GameUtil.generateInfiniteWave(currentInfiniteCredits));
             }
         }
     }
@@ -292,6 +298,10 @@ public class BattleWorld {
 
     public void setTutorial(boolean isTutorial) {
         tutorialMode = isTutorial;
+    }
+
+    public void setInfinite(boolean isInfinite) {
+        infiniteMode = isInfinite;
     }
 
     /********************* WORLD OPERATIONS *********************/

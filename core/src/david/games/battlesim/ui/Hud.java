@@ -19,8 +19,8 @@ import david.games.battlesim.elements.actors.Boss;
 import david.games.battlesim.elements.actors.Enemy;
 import david.games.battlesim.elements.actors.ForceField;
 import david.games.battlesim.elements.actors.Bullet;
-import david.games.battlesim.elements.damage.BossState;
-import david.games.battlesim.elements.damage.StatusEffect;
+import david.games.battlesim.elements.data.BossState;
+import david.games.battlesim.elements.data.StatusEffect;
 import david.games.battlesim.world.BattleWorld;
 
 public class Hud {
@@ -156,14 +156,6 @@ public class Hud {
         float x =  GameConfig.WIDTH - padding - 140f;
         float y =  GameConfig.HEIGHT - padding;
 
-        /**************** BOSS BEATEN *****************/
-        if (worldState.bossFight) {
-            if (worldState.enemies.isEmpty()) {
-                drawBossBeatenText(batch, font);
-            }
-            return;
-        }
-
         float time = worldState.levelTimer;
         if (time <= 3f) {
             font.setColor(Color.RED);
@@ -172,11 +164,6 @@ public class Hud {
         String timeText = String.format("Left: %.1f", time);
         font.draw(batch, timeText, x, y);
         font.draw(batch, timeText, x + 1f, y);
-
-        if (worldState.tutorialMode)
-        {
-            drawTutorialText(batch, font, worldState.currentWave);
-        }
 
         // Stage hasn't started yet
         if (worldState.currentWave < 1) {
@@ -189,8 +176,6 @@ public class Hud {
         font.setColor(Color.BLACK);
         font.draw(batch, (worldState.currentWave) + "/" + worldState.levelConfig.waves.size(), x, y);
         font.draw(batch, (worldState.currentWave) + "/" + worldState.levelConfig.waves.size(), x + 1f, y);
-
-
     }
 
     public void drawBossBeatenText(SpriteBatch batch, BitmapFont font) {
@@ -273,6 +258,18 @@ public class Hud {
                 font.draw(batch, "R - reset | Esc - Exit level", x + 50f, y - 5*linePadding);
                 break;
         }
+    }
+
+    public void drawInfiniteText(SpriteBatch batch, BitmapFont font, int currentWave, int best) {
+        float x =  GameConfig.WIDTH - padding - 110f;
+        float y =  GameConfig.HEIGHT - padding;
+
+        font.draw(batch, "Best: " + best, x - 30f, y);
+
+        y -= 2*padding;
+        x -= 2*padding;
+        font.setColor(Color.BLACK);
+        font.draw(batch, "Wave: " + currentWave, x, y);
     }
 
     public void drawLevelTitle(SpriteBatch batch, BitmapFont font, int levelCode) {

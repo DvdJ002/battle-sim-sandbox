@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import static david.games.battlesim.BattleGame.assetManager;
+import static david.games.battlesim.BattleGame.saveManager;
 
 import david.games.battlesim.BattleGame;
 import david.games.battlesim.assets.AssetDescriptors;
@@ -43,13 +44,14 @@ public class BattleScreen extends ScreenAdapter {
     private Sound winSound, loseSound;
 
     private int currentLevelCode;
-    private boolean isDebugActive, isTutorialMode;
+    private boolean isDebugActive, isTutorialMode, isInfiniteMode;
 
     public BattleScreen(BattleGame game, int levelCode) {
         this.game = game;
         this.currentLevelCode = levelCode;
         this.isDebugActive = false;
         this.isTutorialMode = (levelCode == 0);
+        this.isInfiniteMode = (levelCode == 100);
     }
 
     @Override
@@ -63,8 +65,11 @@ public class BattleScreen extends ScreenAdapter {
 
         camera = new OrthographicCamera();
         viewport = new FitViewport(GameConfig.WIDTH, GameConfig.HEIGHT, camera);
+
         world = new BattleWorld();
         world.setTutorial(isTutorialMode);
+        world.setInfinite(isInfiniteMode);
+
         LevelConfigDatabase levelConfigDatabase = new LevelConfigDatabase();
 
         hudCamera = new OrthographicCamera();
@@ -93,7 +98,20 @@ public class BattleScreen extends ScreenAdapter {
         world.draw(batch);
         batch.setProjectionMatrix(hudCamera.combined);
         hud.drawIcons(batch, world);
-        hud.drawText(batch, font, world, currentLevelCode);
+
+        if (isInfiniteMode) {
+            hud.drawInfiniteText(batch, font, world.currentWave, saveManager.progress.infiniteHighScore);
+        }
+        else if (world.bossFight) {
+            if (world.enemies.isEmpty()) { hud.drawBossBeatenText(batch, font); }
+        }
+        else if (world.tutorialMode) {
+            hud.drawTutorialText(batch, font, world.currentWave);
+        }
+        else {
+            hud.drawText(batch, font, world, currentLevelCode);
+        }
+
         batch.end();
 
         // Shape rendering (hud)
@@ -157,6 +175,9 @@ public class BattleScreen extends ScreenAdapter {
             case LOST:
             case STOPPED:
             case EXIT_REQUESTED:
+                if (isInfiniteMode) {
+                    game.saveInfiniteBest(world.currentWave);
+                }
                 loseSound.play(GameConfig.VOLUME_DEFAULT);
                 endScreen();
                 return;
@@ -167,12 +188,12 @@ public class BattleScreen extends ScreenAdapter {
     public void saveLevelProgress(int levelCode) {
         // If the level is unlocked anyways don't do anything
         if (!game.isLevelReached(levelCode)) {
-            game.saveProgress(levelCode);
+            game.saveLevelProgress(levelCode);
         }
     }
 
     public void endScreen() {
-        if (isTutorialMode) { game.setScreen(new MenuScreen(game)); }
+        if (isTutorialMode || isInfiniteMode) { game.setScreen(new MenuScreen(game)); }
         else { game.setScreen(new LevelsScreen(game)); }
     }
 

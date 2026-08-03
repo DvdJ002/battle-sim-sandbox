@@ -410,6 +410,19 @@ public final class LevelConfigDatabase {
         config = new LevelConfig(0f, new Vector2(400f, 200f), waves);
 
         levelConfigs.put("level9", config);
+
+        /* ***************** Infinite mode ***************** */
+        // Wave 1
+        waves = new ArrayList<>();
+        spawnConfigs = new ArrayList<>();
+
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(400f, 500f)));
+
+        waves.add(new LevelWaveConfig(0f, 0f, spawnConfigs));
+
+        config = new LevelConfig(0f, new Vector2(400f, 200f), waves);
+
+        levelConfigs.put("level100", config);
     }
 
     public LevelConfig get(String type) {

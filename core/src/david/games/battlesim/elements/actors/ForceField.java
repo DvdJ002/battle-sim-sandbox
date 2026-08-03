@@ -11,8 +11,8 @@ import com.badlogic.gdx.math.Vector2;
 
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.elements.GameContext;
-import david.games.battlesim.elements.damage.DamageAction;
-import david.games.battlesim.elements.damage.StatusEffect;
+import david.games.battlesim.elements.data.DamageAction;
+import david.games.battlesim.elements.data.StatusEffect;
 import david.games.battlesim.util.GameUtil;
 
 public class ForceField {

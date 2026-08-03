@@ -20,6 +20,8 @@ public class GameConfig {
 
     public static final boolean DEBUG_MODE = false;
 
+    public static final float INFINITE_INCREMENT = 10;
+
     private GameConfig() {
     }
 }

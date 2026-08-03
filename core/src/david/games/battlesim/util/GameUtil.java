@@ -3,8 +3,13 @@ package david.games.battlesim.util;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-import david.games.battlesim.elements.damage.DamageAction;
-import david.games.battlesim.elements.damage.StatusEffect;
+import java.util.ArrayList;
+
+import david.games.battlesim.config.database.EnemySpawnConfig;
+import david.games.battlesim.config.database.LevelConfig;
+import david.games.battlesim.config.database.LevelWaveConfig;
+import david.games.battlesim.elements.data.DamageAction;
+import david.games.battlesim.elements.data.StatusEffect;
 
 public final class GameUtil {
 
@@ -41,6 +46,19 @@ public final class GameUtil {
         damageAction.duration = duration;
 
         return damageAction;
+    }
+
+    // TODO spawning logic
+    public static LevelWaveConfig generateInfiniteWave(int credits) {
+        ArrayList<EnemySpawnConfig> spawnConfigs = new ArrayList<>();
+
+        // Enemy placements logic
+        spawnConfigs.add(new EnemySpawnConfig("shooter_large", new Vector2(400f, 440f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(300f, 340f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(400f, 340f)));
+        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(500f, 340f)));
+
+        return new LevelWaveConfig(-1f, 0f, spawnConfigs);
     }
 
     private GameUtil() {

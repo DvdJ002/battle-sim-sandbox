@@ -79,16 +79,24 @@ public class MenuScreen extends ScreenAdapter {
                 new TextureRegion(assetManager.get(AssetPaths.TITLE, Texture.class))
         ));
 
-        TextButton levelsButton = new TextButton("Play", skin);
-        levelsButton.addListener(new ClickListener() {
+        TextButton levelsClassicButton = new TextButton("Play", skin);
+        levelsClassicButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new LevelsScreen(game));
             }
         });
 
-        TextButton leaderboardButton = new TextButton("Tutorial", skin);
-        leaderboardButton.addListener(new ClickListener() {
+        TextButton levelsInfiniteButton = new TextButton("Infinite", skin);
+        levelsInfiniteButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new BattleScreen(game, 100));
+            }
+        });
+
+        TextButton tutorialButton = new TextButton("Tutorial", skin);
+        tutorialButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new BattleScreen(game, 0));
@@ -111,8 +119,9 @@ public class MenuScreen extends ScreenAdapter {
         ));
 
         buttonTable.add(titleImage).padTop(10).padBottom(100).colspan(1).row();
-        buttonTable.add(levelsButton).padBottom(15).expandX().fill().row();
-        buttonTable.add(leaderboardButton).padBottom(15).expandX().fill().row();
+        buttonTable.add(levelsClassicButton).padBottom(15).expandX().fill().row();
+        buttonTable.add(levelsInfiniteButton).padBottom(15).expandX().fill().row();
+        buttonTable.add(tutorialButton).padBottom(15).expandX().fill().row();
         buttonTable.add(quitButton).fillX();
 
         buttonTable.top();

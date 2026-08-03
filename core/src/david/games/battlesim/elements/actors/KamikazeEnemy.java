@@ -12,7 +12,7 @@ import david.games.battlesim.assets.AssetDescriptors;
 import david.games.battlesim.assets.AssetPaths;
 import david.games.battlesim.config.database.EnemyConfig;
 import david.games.battlesim.config.GameConfig;
-import david.games.battlesim.elements.damage.StatusEffect;
+import david.games.battlesim.elements.data.StatusEffect;
 import david.games.battlesim.elements.GameContext;
 import david.games.battlesim.util.GameUtil;
 
