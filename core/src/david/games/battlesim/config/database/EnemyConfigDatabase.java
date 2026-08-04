@@ -138,6 +138,7 @@ public final class EnemyConfigDatabase {
                 1f,
                 50f,
                 3f,
+                3f,
                 1100f,
                 700f,
                 10f,

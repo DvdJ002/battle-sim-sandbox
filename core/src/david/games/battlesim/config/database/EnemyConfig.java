@@ -94,7 +94,7 @@ public class EnemyConfig {
         public int dashCount;
         public float dashBaseCooldown, dashLastCooldown;
         // Attack: Summon offensives/healers
-        public float enemySpawnDistance;
+        public float enemySpawnDistance, maxEnemiesSpawned;
         // Attack: Explosion
         public float explosionGraceDuration, explosionSeekSpeed, explosionSeekAccel, explosionSeekDuration, explosionKbIntensity, explosionDetectionRange, explosionDamage;
         // Attack: Cannon balls
@@ -110,7 +110,7 @@ public class EnemyConfig {
                 float collideDamage, float damage, float maxHealth, float size, float baseSpeed, float baseIdleDuration, float closeDetectionRange,
                 float enragedSpeed, float enragedAcceleration, float enragedIdleDuration, float enragedHealthThreshold,
                 float bulletSpeed, float bulletDamage, float bulletSize, float bulletAttackDuration, float bulletFireRate, float forceFieldDamage, float forceFieldDuration, float forceFieldSize,
-                float dashIntensity, float dashLastIntensity, int dashCount, float dashBaseCooldown, float dashLastCooldown, float enemySpawnDistance,
+                float dashIntensity, float dashLastIntensity, int dashCount, float dashBaseCooldown, float dashLastCooldown, float enemySpawnDistance, float maxEnemiesSpawned,
                 float explosionGraceDuration, float explosionSeekSpeed, float explosionSeekAccel, float explosionSeekDuration, float explosionKbIntensity, float explosionDetectionRange, float explosionDamage,
                 float cannonDuration, float cannonFireRate, float cannonDamage, float cannonSpeed, float cannonSize, float kamikazeAttackDuration, float kamikazeSpawnPeriod,
                 float pursuitDuration, float pursuitSpeed, float pursuitAccel, float pursuitCollideDamage,
@@ -137,6 +137,7 @@ public class EnemyConfig {
             this.dashCount = dashCount;
             this.dashBaseCooldown = dashBaseCooldown;
             this.dashLastCooldown = dashLastCooldown;
+            this.maxEnemiesSpawned = maxEnemiesSpawned;
             this.enemySpawnDistance = enemySpawnDistance;
             this.explosionGraceDuration = explosionGraceDuration;
             this.explosionSeekSpeed = explosionSeekSpeed;

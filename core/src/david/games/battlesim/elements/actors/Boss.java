@@ -179,8 +179,8 @@ public class Boss extends Enemy {
                 // Don't summon new attackers if enemies are already present as RNG can get too overwhelming, summon healers instead
                 currentAttack = BossAttack.SUMMON_HEALERS;
             }
-            if (currentAttack == BossAttack.SUMMON_HEALERS && enemyCount > 4) {
-                // Don't spawn healers if there are already more than 3 enemies spawned
+            if (currentAttack == BossAttack.SUMMON_HEALERS && enemyCount > config.maxEnemiesSpawned) {
+                // Don't spawn healers if there are already more than max enemies spawned
                 currentAttack = BossAttack.DASH;
             }
         }
