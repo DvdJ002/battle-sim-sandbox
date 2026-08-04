@@ -48,19 +48,6 @@ public final class GameUtil {
         return damageAction;
     }
 
-    // TODO spawning logic
-    public static LevelWaveConfig generateInfiniteWave(int credits) {
-        ArrayList<EnemySpawnConfig> spawnConfigs = new ArrayList<>();
-
-        // Enemy placements logic
-        spawnConfigs.add(new EnemySpawnConfig("shooter_large", new Vector2(400f, 440f)));
-        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(300f, 340f)));
-        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(400f, 340f)));
-        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(500f, 340f)));
-
-        return new LevelWaveConfig(-1f, 0f, spawnConfigs);
-    }
-
     private GameUtil() {
         throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }

@@ -23,7 +23,9 @@ public class SaveManager
 
     }
     public void setInfiniteBest(int best) {
-        progress.infiniteHighScore = best;
+        if (best > progress.infiniteHighScore) {
+            progress.infiniteHighScore = best;
+        }
     }
 
     // Saves the data into the file and updates the progress

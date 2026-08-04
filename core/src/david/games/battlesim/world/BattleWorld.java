@@ -15,6 +15,7 @@ import david.games.battlesim.config.GameConfig;
 import david.games.battlesim.config.database.EnemyConfigDatabase;
 
 import david.games.battlesim.config.database.EnemySpawnConfig;
+import david.games.battlesim.config.database.InfiniteLevelDatabase;
 import david.games.battlesim.config.database.LevelConfig;
 import david.games.battlesim.config.database.PlayerConfigDatabase;
 import david.games.battlesim.config.database.LevelWaveConfig;
@@ -47,7 +48,9 @@ public class BattleWorld {
     public ArrayList<ForceField> forceFields;
     EnemyConfigDatabase enemyConfigDatabase;
     public LevelConfig levelConfig;
-    public int currentWave = 0, currentInfiniteCredits = 0;
+    InfiniteLevelDatabase infiniteLevelDatabase;
+
+    public int currentWave = 0;
     public float levelTimer = 0f;
     public boolean tutorialMode = false, infiniteMode = false, bossFight = false;
 
@@ -241,18 +244,16 @@ public class BattleWorld {
            (nextWave.timeLeft != -1f && nextWave.timeLeft >= levelTimer) ||
            (nextWave.enemiesLeft != -1f && nextWave.enemiesLeft == enemies.size())
         ) {
+            // In infinite, the wave to spawn is updated in real time, and the next empty wave is prepared
+            if (infiniteMode) {
+                nextWave = infiniteLevelDatabase.generateWave(currentWave, player.position);
+                levelConfig.waves.add(infiniteLevelDatabase.prepareNextWave());
+            }
+
             spawnEnemiesFromConfig(nextWave.spawns);
             currentWave++;
 
-            if (tutorialMode) {
-                player.changeHealth(player.config.maxHealth);
-            }
-
-            // In infinite waves are added as they are beaten
-            if (infiniteMode) {
-                currentInfiniteCredits += GameConfig.INFINITE_INCREMENT;
-                levelConfig.waves.add(GameUtil.generateInfiniteWave(currentInfiniteCredits));
-            }
+            if (tutorialMode) { player.changeHealth(player.config.maxHealth); }
         }
     }
 
@@ -293,15 +294,14 @@ public class BattleWorld {
     }
 
     private boolean isWavesLeft() {
-        return currentWave < levelConfig.waves.size();
+        return (currentWave < levelConfig.waves.size()) || infiniteMode;
     }
 
-    public void setTutorial(boolean isTutorial) {
-        tutorialMode = isTutorial;
-    }
+    public void setTutorial(boolean isTutorial) { tutorialMode = isTutorial; }
 
     public void setInfinite(boolean isInfinite) {
         infiniteMode = isInfinite;
+        infiniteLevelDatabase = new InfiniteLevelDatabase();
     }
 
     /********************* WORLD OPERATIONS *********************/
