@@ -247,6 +247,7 @@ public class BattleWorld {
             // In infinite, the wave to spawn is updated in real time, and the next empty wave is prepared
             if (infiniteMode) {
                 nextWave = infiniteLevelDatabase.generateWave(currentWave, player.position);
+                levelTimer = nextWave.timeLeft;
                 levelConfig.waves.add(infiniteLevelDatabase.prepareNextWave());
             }
 

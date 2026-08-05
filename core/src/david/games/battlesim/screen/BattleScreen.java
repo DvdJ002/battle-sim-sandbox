@@ -100,7 +100,7 @@ public class BattleScreen extends ScreenAdapter {
         hud.drawIcons(batch, world);
 
         if (isInfiniteMode) {
-            hud.drawInfiniteText(batch, font, world.currentWave, saveManager.progress.infiniteHighScore);
+            hud.drawInfiniteText(batch, font, world.levelTimer, world.currentWave, saveManager.progress.infiniteHighScore);
         }
         else if (world.bossFight) {
             if (world.enemies.isEmpty()) { hud.drawBossBeatenText(batch, font); }

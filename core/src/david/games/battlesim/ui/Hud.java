@@ -260,16 +260,19 @@ public class Hud {
         }
     }
 
-    public void drawInfiniteText(SpriteBatch batch, BitmapFont font, int currentWave, int best) {
-        float x =  GameConfig.WIDTH - padding - 110f;
+    public void drawInfiniteText(SpriteBatch batch, BitmapFont font, float timeLeft, int currentWave, int best) {
+        float x =  GameConfig.WIDTH - padding - 265f;
         float y =  GameConfig.HEIGHT - padding;
-
-        font.draw(batch, "Best: " + best, x - 30f, y);
+        font.draw(batch, "Wave: " + (currentWave - 1) + " (Best " + best + ")", x, y);
+        font.draw(batch, "Wave: " + (currentWave - 1) + " (Best " + best + ")", x + 1f, y);
 
         y -= 2*padding;
-        x -= 2*padding;
+        x += 6*padding;
         font.setColor(Color.BLACK);
-        font.draw(batch, "Wave: " + currentWave, x, y);
+
+        String timeText = String.format("Left: %.1f", timeLeft);
+        font.draw(batch, timeText, x, y);
+        font.draw(batch, timeText, x + 1f, y);
     }
 
     public void drawLevelTitle(SpriteBatch batch, BitmapFont font, int levelCode) {
