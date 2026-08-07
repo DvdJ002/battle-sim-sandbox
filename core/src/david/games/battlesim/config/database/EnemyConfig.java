@@ -80,6 +80,23 @@ public class EnemyConfig {
         }
     }
 
+    public static class SummonerConfig extends EnemyConfig {
+        public final int spawnAmount;
+        public final float movementPadding, cooldownTime, spawnDelayTime;
+        public final String kamikazeIdentifier, slasherIdentifier;
+
+        public SummonerConfig(float collideDamage, float damage, float maxHealth, float size,  int spawnAmount, float movementPadding, float cooldownTime, float spawnDelayTime, String kamikazeIdentifier, String slasherIdentifier
+        ) {
+            super(collideDamage, damage, maxHealth, size);
+            this.spawnAmount = spawnAmount;
+            this.movementPadding = movementPadding;
+            this.cooldownTime = cooldownTime;
+            this.spawnDelayTime = spawnDelayTime;
+            this.kamikazeIdentifier = kamikazeIdentifier;
+            this.slasherIdentifier = slasherIdentifier;
+        }
+    }
+
     public static class BossConfig extends EnemyConfig {
         // General (phase 1 and 2)
         public float baseSpeed, baseIdleDuration, closeDetectionRange;

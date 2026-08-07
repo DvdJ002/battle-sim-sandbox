@@ -86,10 +86,10 @@ public class LevelsScreen extends ScreenAdapter {
         Image titleImage = new Image(new TextureRegionDrawable(
                 new TextureRegion(assetManager.get(AssetPaths.STAGE_SELECT, Texture.class))
         ));
-        buttonTable.add(titleImage).padTop(10).padBottom(100).colspan(5).row();
+        buttonTable.add(titleImage).padTop(10).padBottom(100).colspan(4).row();
 
         // Level buttons
-        for (int i = 1; i < 9; i++){
+        for (int i = 1; i < 10; i++){
             final int level = i;
 
             final TextButton button = new TextButton("Level " + level, skin);
@@ -105,9 +105,9 @@ public class LevelsScreen extends ScreenAdapter {
             });
 
             if (i % 4 == 0) {
-                buttonTable.add(button).padBottom(10).expandX().fill().row();
+                buttonTable.add(button).padBottom(10).growX().row();
             } else {
-                buttonTable.add(button).padBottom(10).expandX().fill();
+                buttonTable.add(button).padBottom(10).growX();
             }
 
             if (!game.isLevelReached(i)) {
@@ -116,23 +116,22 @@ public class LevelsScreen extends ScreenAdapter {
         }
 
         // Boss button
-        final TextButton level9Button = new TextButton("Boss level", skin);
-        level9Button.addListener(new ClickListener() {
+        final TextButton bossButton = new TextButton("Boss level", skin);
+        bossButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (level9Button.isDisabled()) {
+                if (bossButton.isDisabled()) {
                     return;
                 }
 
-                game.setScreen(new BattleScreen(game, 9));
+                game.setScreen(new BattleScreen(game, 10));
             }
         });
 
         // Span two columns and center it
-        buttonTable.add(); // empty column
-        buttonTable.add(level9Button).colspan(2).padBottom(10).expandX().fill();
-        if (!game.isLevelReached(9)) {
-            level9Button.setDisabled(true);
+        buttonTable.add(bossButton).colspan(2).padBottom(10).growX();
+        if (!game.isLevelReached(10)) {
+            bossButton.setDisabled(true);
         }
         buttonTable.add(); // empty column
         buttonTable.row();
@@ -145,9 +144,9 @@ public class LevelsScreen extends ScreenAdapter {
                 game.setScreen(new MenuScreen(game));
             }
         });
-        buttonTable.add(menuButton).padTop(140).padBottom(50).colspan(5);
+        buttonTable.add(menuButton).padTop(140).padBottom(50).colspan(4);
 
-        table.add(buttonTable);
+        table.add(buttonTable).expand().fill();
         table.setFillParent(true);
 
         return table;

@@ -65,6 +65,18 @@ public final class EnemyConfigDatabase {
 
         configs.put("healer", healer);
 
+        /* ************** Summoner enemy ************** */
+        EnemyConfig.SummonerConfig summoner = new EnemyConfig.SummonerConfig(
+                1.1f, 0f, 300f, GameConfig.DEFAULT_ENEMY_SIZE*1.6f, 3, 0.75f, 1.5f, 1f, "kamikaze_small", "slasher_small"
+        );
+        setDefaultAiConfig(summoner);
+        summoner.steeringState.maxLinearAcceleration = 125f;
+        summoner.steeringState.maxAngularAcceleration = 125f;
+        summoner.steeringState.maxLinearSpeed = 125f;
+        summoner.steeringState.maxAngularSpeed = 125f;
+
+        configs.put("summoner", summoner);
+
 
         /* --------------------------------------------------------------- */
         /* ----------------------- SPECIAL ENEMIES ----------------------- */
@@ -86,6 +98,14 @@ public final class EnemyConfigDatabase {
 
         configs.put("slasher_large", slasherLarge);
 
+        /* ************** Small slasher enemy ************** */
+        EnemyConfig.SlasherConfig slasherSmall = new EnemyConfig.SlasherConfig(
+                0.8f, 0f, 50f, GameConfig.SMALL_ENEMY_SIZE, 1f, 300f, 150f, 0.5f, 110f
+        );
+        setDefaultAiConfig(slasherSmall);
+
+        configs.put("slasher_small", slasherSmall);
+
         /* ************** Large kamikaze enemy ************** */
         EnemyConfig.KamikazeConfig kamikazeLarge = new EnemyConfig.KamikazeConfig(
                 2f, 190f, 180f, GameConfig.DEFAULT_ENEMY_SIZE * 1.4f, 150f, 25f
@@ -95,6 +115,16 @@ public final class EnemyConfigDatabase {
         kamikazeLarge.steeringState.maxAngularAcceleration = 550.0f;
 
         configs.put("kamikaze_large", kamikazeLarge);
+
+        /* ************** Small kamikaze enemy ************** */
+        EnemyConfig.KamikazeConfig kamikazeSmall = new EnemyConfig.KamikazeConfig(
+                2f, 30f, 40f, GameConfig.SMALL_ENEMY_SIZE, 70f, 12f
+        );
+        setDefaultAiConfig(kamikazeSmall);
+        kamikazeSmall.steeringState.maxLinearAcceleration = 400.0f;
+        kamikazeSmall.steeringState.maxAngularAcceleration = 400.0f;
+
+        configs.put("kamikaze_small", kamikazeSmall);
 
         /* ************** Special healer enemy ************** */
         EnemyConfig.HealerConfig healerSpecial = new EnemyConfig.HealerConfig(

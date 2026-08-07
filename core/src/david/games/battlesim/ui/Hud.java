@@ -305,6 +305,9 @@ public class Hud {
             case 8:
                 font.draw(batch, "Level 8: Well-rounded attack", x - 55f, y);
                 break;
+            case 9:
+                font.draw(batch, "Level 9: Fly swatter", x + 25f, y);
+                break;
             default:
                 break;
         }

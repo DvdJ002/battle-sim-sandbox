@@ -9,6 +9,7 @@ public class AssetPaths {
     public static final String SUCKER = "gameplay/actors/sucker.png";
     public static final String HEALER = "gameplay/actors/healer.png";
     public static final String HEALER_BEAM = "gameplay/actors/healer_beam.png";
+    public static final String SUMMONER = "gameplay/actors/summoner.png";
     public static final String PLAYER = "gameplay/actors/player.png";
     public static final String PLAYER_SHIELD = "gameplay/actors/player_shield.png";
     public static final String BULLET_BLUE = "gameplay/actors/bullet_blue.png";

@@ -327,10 +327,11 @@ public final class LevelConfigDatabase {
         // Wave 3
         spawnConfigs = new ArrayList<>();
 
-        spawnConfigs.add(new EnemySpawnConfig("slasher", new Vector2(100f, 100f)));
         spawnConfigs.add(new EnemySpawnConfig("slasher", new Vector2(100f, 500f)));
+        spawnConfigs.add(new EnemySpawnConfig("summoner", new Vector2(400f, 300f)));
+        spawnConfigs.add(new EnemySpawnConfig("healer_special", new Vector2(440f, 300f)));
+        spawnConfigs.add(new EnemySpawnConfig("healer_special", new Vector2(360f, 300f)));
         spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(700f, 100f)));
-        spawnConfigs.add(new EnemySpawnConfig("shooter", new Vector2(700f, 500f)));
 
         waves.add(new LevelWaveConfig(35f, -1f, spawnConfigs));
 
@@ -347,6 +348,38 @@ public final class LevelConfigDatabase {
         config = new LevelConfig(88f, new Vector2(400f, 300f), waves);
 
         levelConfigs.put("level8", config);
+
+        /* ************** Level 9 ************** */
+        // Wave 1
+        waves = new ArrayList<>();
+        spawnConfigs = new ArrayList<>();
+
+        spawnConfigs.add(new EnemySpawnConfig("healer_special", new Vector2(50f, 450f)));
+        spawnConfigs.add(new EnemySpawnConfig("healer_special", new Vector2(750f, 450f)));
+        spawnConfigs.add(new EnemySpawnConfig("summoner", new Vector2(100f, 450f)));
+        spawnConfigs.add(new EnemySpawnConfig("summoner", new Vector2(700f, 450f)));
+
+        waves.add(new LevelWaveConfig(50f, -1f, spawnConfigs));
+
+        // Wave 2
+        spawnConfigs = new ArrayList<>();
+
+        spawnConfigs.add(new EnemySpawnConfig("sucker", new Vector2(400f, 450f)));
+
+        waves.add(new LevelWaveConfig(49.5f, -1f, spawnConfigs));
+
+        // Wave 3
+        spawnConfigs = new ArrayList<>();
+
+        spawnConfigs.add(new EnemySpawnConfig("slasher_large", new Vector2(100f, 150f)));
+        spawnConfigs.add(new EnemySpawnConfig("summoner", new Vector2(100f, 300f)));
+        spawnConfigs.add(new EnemySpawnConfig("kamikaze_large", new Vector2(100f, 450f)));
+
+        waves.add(new LevelWaveConfig(22f, -1f, spawnConfigs));
+
+        config = new LevelConfig(53f, new Vector2(400f, 300f), waves);
+
+        levelConfigs.put("level9", config);
 
         /* ************** Level 0 / Tutorial ************** */
         // Wave 1
@@ -409,7 +442,7 @@ public final class LevelConfigDatabase {
 
         config = new LevelConfig(0f, new Vector2(400f, 200f), waves);
 
-        levelConfigs.put("level9", config);
+        levelConfigs.put("level10", config);
 
         /* ***************** Infinite mode ***************** */
         // Wave 1

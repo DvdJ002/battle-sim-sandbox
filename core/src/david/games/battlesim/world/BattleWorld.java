@@ -30,6 +30,7 @@ import david.games.battlesim.elements.actors.Player;
 import david.games.battlesim.elements.actors.ShooterEnemy;
 import david.games.battlesim.elements.actors.SlasherEnemy;
 import david.games.battlesim.elements.actors.SuckerEnemy;
+import david.games.battlesim.elements.actors.SummonerEnemy;
 import david.games.battlesim.elements.spawners.BulletSpawner;
 import david.games.battlesim.elements.spawners.ForceFieldSpawner;
 import david.games.battlesim.util.GameUtil;
@@ -64,7 +65,7 @@ public class BattleWorld {
         // Player, input, enemies
         player = new Player(new PlayerConfigDatabase().get(), 100f, 100f);
 
-        enemies = new ArrayList<>();
+        enemies = new ArrayList<>(GameConfig.EXPECTED_MAX_ENEMIES);
         enemyConfigDatabase = new EnemyConfigDatabase();
 
         // Context creation
@@ -108,7 +109,7 @@ public class BattleWorld {
             //enemies.add(new KamikazeEnemy(enemyConfigDatabase.get("kamikaze"),mousePosition.x, mousePosition.y));
             //enemies.add(new SlasherEnemy(enemyConfigDatabase.get("slasher"), mousePosition.x, mousePosition.y));
             //enemies.add(new SuckerEnemy(enemyConfigDatabase.get("sucker"), mousePosition.x, mousePosition.y));
-            enemies.add(new HealerEnemy(enemyConfigDatabase.get("healer"), mousePosition.x, mousePosition.y));
+            enemies.add(new SummonerEnemy(enemyConfigDatabase.get("summoner"), mousePosition.x, mousePosition.y));
 
             //enemies.add(new ShooterEnemy(enemyConfigDatabase.get("shooter_large"), mousePosition.x, mousePosition.y));
             //enemies.add(new SlasherEnemy(enemyConfigDatabase.get("slasher_large"), mousePosition.x, mousePosition.y));
@@ -280,6 +281,9 @@ public class BattleWorld {
                 case "healer":
                 case "healer_special":
                     enemies.add(new HealerEnemy(enemyConfigDatabase.get(enemySpawn.type), enemySpawn.position.x, enemySpawn.position.y));
+                    break;
+                case "summoner":
+                    enemies.add(new SummonerEnemy(enemyConfigDatabase.get(enemySpawn.type), enemySpawn.position.x, enemySpawn.position.y));
                     break;
                 case "boss":
                     enemies.add(new Boss(enemyConfigDatabase.get(enemySpawn.type), enemySpawn.position.x, enemySpawn.position.y));

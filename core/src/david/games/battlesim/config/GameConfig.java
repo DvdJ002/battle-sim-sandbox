@@ -9,6 +9,7 @@ public class GameConfig {
 
     public static final float DEFAULT_PLAYER_SIZE = 35f;
     public static final float DEFAULT_ENEMY_SIZE = 50f;
+    public static final float SMALL_ENEMY_SIZE = 29f;
     public static final float BOSS_SIZE = 90f;
 
     public static final float EFFECT_ICON_SIZE = 40f;
@@ -17,6 +18,8 @@ public class GameConfig {
     public static final float VOLUME_LOUD = 0.7f;
 
     public static final float DEFAULT_ACCEL = 200f;
+
+    public static final int EXPECTED_MAX_ENEMIES = 40;
 
     public static final boolean DEBUG_MODE = false;
 

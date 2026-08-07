@@ -63,6 +63,7 @@ public class BattleGame extends Game {
 		assetManager.load(AssetPaths.SUCKER, Texture.class);
 		assetManager.load(AssetPaths.HEALER, Texture.class);
 		assetManager.load(AssetPaths.HEALER_BEAM, Texture.class);
+		assetManager.load(AssetPaths.SUMMONER, Texture.class);
 		assetManager.load(AssetPaths.PLAYER, Texture.class);
 		assetManager.load(AssetPaths.PLAYER_SHIELD, Texture.class);
 		assetManager.load(AssetPaths.BULLET_BLUE, Texture.class);
